@@ -7,12 +7,10 @@ import (
 	"time"
 )
 
-func UdpRequest(address string, statusPacket []byte, expectedHeader []byte) ([]byte, error) {
-	nullResponse := make([]byte, 0)
-
+func udpRequest(address string, statusPacket []byte, expectedHeader []byte) ([]byte, error) {
 	conn, err := net.Dial("udp4", address)
 	if err != nil {
-		return nullResponse, err
+		return nil, err
 	}
 	defer conn.Close()
 
@@ -22,18 +20,22 @@ func UdpRequest(address string, statusPacket []byte, expectedHeader []byte) ([]b
 		TimeoutInMs = 500
 	)
 
+	getTimeout := func() time.Time {
+		return time.Now().Add(time.Duration(TimeoutInMs) * time.Millisecond)
+	}
 	response := make([]byte, BufferSize)
+	responseLength := 0
 
 	for i := 0; i < Retries; i++ {
-		conn.SetDeadline(timeInFuture(TimeoutInMs))
+		conn.SetDeadline(getTimeout())
 
 		_, err = conn.Write(statusPacket)
 		if err != nil {
-			return nullResponse, err
+			return nil, err
 		}
 
-		conn.SetDeadline(timeInFuture(TimeoutInMs))
-		_, err = conn.Read(response)
+		conn.SetDeadline(getTimeout())
+		responseLength, err = conn.Read(response)
 		if err != nil {
 			continue
 		}
@@ -42,18 +44,14 @@ func UdpRequest(address string, statusPacket []byte, expectedHeader []byte) ([]b
 	}
 
 	if err != nil {
-		return nullResponse, err
+		return nil, err
 	}
 
 	isValidHeader := bytes.Equal(response[:len(expectedHeader)], expectedHeader)
 	if !isValidHeader {
 		err = errors.New(address + ": Response error, invalid header.")
-		return nullResponse, err
+		return nil, err
 	}
 
-	return response, nil
-}
-
-func timeInFuture(delta int) time.Time {
-	return time.Now().Add(time.Duration(delta) * time.Millisecond)
+	return response[:responseLength], nil
 }

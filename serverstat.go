@@ -11,7 +11,7 @@ import (
 func Stat(address string) (QuakeServer, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'}
-	response, err := UdpRequest(address, statusPacket, expectedHeader)
+	response, err := udpRequest(address, statusPacket, expectedHeader)
 
 	if err != nil {
 		return QuakeServer{}, err
@@ -68,7 +68,7 @@ func Stat(address string) (QuakeServer, error) {
 func StatServerQtv(address string) (QtvServer, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
-	response, err := UdpRequest(address, statusPacket, expectedHeader)
+	response, err := udpRequest(address, statusPacket, expectedHeader)
 
 	if err != nil {
 		return QtvServer{}, err
