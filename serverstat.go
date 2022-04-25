@@ -59,13 +59,13 @@ func Stat(address string) (QuakeServer, error) {
 	qserver.NumPlayers = len(qserver.Players)
 	qserver.NumSpectators = len(qserver.Spectators)
 
-	qtvServer, _ := StatQtv(address)
+	qtvServer, _ := StatServerQtv(address)
 	qserver.QtvAddress = qtvServer.Address
 
 	return qserver, nil
 }
 
-func StatQtv(address string) (QtvServer, error) {
+func StatServerQtv(address string) (QtvServer, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
 	response, err := UdpRequest(address, statusPacket, expectedHeader)
