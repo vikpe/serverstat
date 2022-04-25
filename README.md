@@ -1,2 +1,3 @@
 # qw-serverstat
-Fetch info from QuakeWorld servers.
+
+> Fetch info from QuakeWorld servers
