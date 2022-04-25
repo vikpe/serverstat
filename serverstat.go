@@ -21,15 +21,9 @@ func Stat(address string) (QuakeServer, error) {
 	scanner := bufio.NewScanner(strings.NewReader(string(responseBody)))
 	scanner.Scan()
 
-	settings := strings.FieldsFunc(scanner.Text(), func(r rune) bool {
-		if r == '\\' {
-			return true
-		}
-		return false
-	})
+	settings := strings.FieldsFunc(scanner.Text(), func(r rune) bool { return r == '\\' })
 
 	qserver := newQuakeServer()
-	qserver.Address = address
 
 	for i := 0; i < len(settings)-1; i += 2 {
 		qserver.Settings[settings[i]] = settings[i+1]
@@ -37,7 +31,7 @@ func Stat(address string) (QuakeServer, error) {
 
 	if val, ok := qserver.Settings["hostname"]; ok {
 		qserver.Settings["hostname"] = quakeTextToPlainText(val)
-		qserver.Title = qserver.Settings["hostname"]
+
 	}
 	if val, ok := qserver.Settings["map"]; ok {
 		qserver.Map = val
@@ -76,6 +70,8 @@ func Stat(address string) (QuakeServer, error) {
 		}
 	}
 
+	qserver.Address = address
+	qserver.Title = qserver.Settings["hostname"]
 	qserver.NumPlayers = len(qserver.Players)
 	qserver.NumSpectators = len(qserver.Spectators)
 
