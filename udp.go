@@ -2,7 +2,7 @@ package serverstat
 
 import (
 	"bytes"
-	"log"
+	"errors"
 	"net"
 	"time"
 )
@@ -47,7 +47,7 @@ func UdpRequest(address string, statusPacket []byte, expectedHeader []byte) ([]b
 
 	isValidHeader := bytes.Equal(response[:len(expectedHeader)], expectedHeader)
 	if !isValidHeader {
-		log.Println(address + ": Response error, invalid header.")
+		err = errors.New(address + ": Response error, invalid header.")
 		return nullResponse, err
 	}
 
