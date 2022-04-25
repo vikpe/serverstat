@@ -75,8 +75,8 @@ func parseClientString(clientStr string) (Client, error) {
 }
 
 func parseClientsStrings(clientStrings []string) ([]Player, []Spectator) {
-	var players []Player
-	var spectators []Spectator
+	players := make([]Player, 0)
+	spectators := make([]Spectator, 0)
 
 	for _, clientStr := range clientStrings {
 		var client, err = parseClientString(clientStr)
