@@ -2,62 +2,29 @@ package serverstat
 
 import (
 	"bufio"
-	"bytes"
 	"encoding/csv"
 	"log"
-	"net"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 )
 
+func main() {
+	info, _ := Stat("95.216.18.118:28001")
+	log.Println(info.Title, info.Map)
+}
+
 func Stat(address string) (QuakeServer, error) {
-	conn, err := net.Dial("udp4", address)
-	if err != nil {
-		return QuakeServer{}, err
-	}
-	defer conn.Close()
-
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a}
-	buffer := make([]byte, 8192)
-	bufferLength := 0
-
-	const (
-		Retries     = 3
-		TimeoutInMs = 500
-	)
-
-	for i := 0; i < Retries; i++ {
-		conn.SetDeadline(timeInFuture(TimeoutInMs))
-
-		_, err = conn.Write(statusPacket)
-		if err != nil {
-			return QuakeServer{}, err
-		}
-
-		conn.SetDeadline(timeInFuture(TimeoutInMs))
-		bufferLength, err = conn.Read(buffer)
-		if err != nil {
-			continue
-		}
-
-		break
-	}
+	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'}
+	response, err := UdpRequest(address, statusPacket, expectedHeader)
 
 	if err != nil {
 		return QuakeServer{}, err
 	}
 
-	validHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'}
-	responseHeader := buffer[:len(validHeader)]
-	isValidHeader := bytes.Equal(responseHeader, validHeader)
-	if !isValidHeader {
-		log.Println(address + ": Response error")
-		return QuakeServer{}, err
-	}
-
-	responseBody := buffer[len(validHeader):bufferLength]
+	responseBody := response[len(expectedHeader):]
 	scanner := bufio.NewScanner(strings.NewReader(string(responseBody)))
 	scanner.Scan()
 
@@ -126,54 +93,15 @@ func Stat(address string) (QuakeServer, error) {
 }
 
 func StatQtv(address string) (QtvServer, error) {
-	conn, err := net.Dial("udp4", address)
-	if err != nil {
-		return QtvServer{}, err
-	}
-	defer conn.Close()
-
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
-	buffer := make([]byte, 8192)
-	bufferLength := 0
-
-	const (
-		Retries     = 3
-		TimeoutInMs = 500
-	)
-
-	for i := 0; i < Retries; i++ {
-		conn.SetDeadline(timeInFuture(TimeoutInMs))
-
-		_, err = conn.Write(statusPacket)
-		if err != nil {
-			return QtvServer{}, err
-		}
-
-		conn.SetDeadline(timeInFuture(TimeoutInMs))
-		bufferLength, err = conn.Read(buffer)
-		if err != nil {
-			continue
-		}
-
-		break
-	}
+	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
+	response, err := UdpRequest(address, statusPacket, expectedHeader)
 
 	if err != nil {
-		// no logging here. it seems that servers may not reply if they do not support
-		// this specific "32" status request.
 		return QtvServer{}, err
 	}
 
-	validHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
-	responseHeader := buffer[:len(validHeader)]
-	isValidHeader := bytes.Equal(responseHeader, validHeader)
-	if !isValidHeader {
-		// some servers react to the specific "32" status message but will send the regular
-		// status message because they misunderstood our command.
-		return QtvServer{}, err
-	}
-
-	responseBody := buffer[5:bufferLength]
+	responseBody := response[5:]
 	reader := csv.NewReader(strings.NewReader(string(responseBody)))
 	reader.Comma = ' '
 
