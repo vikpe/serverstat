@@ -46,15 +46,8 @@ func Stat(address string) (QuakeServer, error) {
 	}
 
 	for scanner.Scan() {
-		reader := csv.NewReader(strings.NewReader(scanner.Text()))
-		reader.Comma = ' '
+		var client, err = parseClientString(scanner.Text())
 
-		clientRecord, err := reader.Read()
-		if err != nil {
-			continue
-		}
-
-		client, err := parseClientRecord(clientRecord)
 		if err != nil {
 			continue
 		}

@@ -1,6 +1,7 @@
 package serverstat
 
 import (
+	"encoding/csv"
 	"errors"
 	"fmt"
 	"strconv"
@@ -59,6 +60,18 @@ func parseClientRecord(clientRecord []string) (Client, error) {
 		IsSpec: isSpec,
 	}, nil
 
+}
+
+func parseClientString(clientStr string) (Client, error) {
+	reader := csv.NewReader(strings.NewReader(clientStr))
+	reader.Comma = ' '
+
+	clientRecord, err := reader.Read()
+	if err != nil {
+		return Client{}, nil
+	}
+
+	return parseClientRecord(clientRecord)
 }
 
 func isBotName(name string) bool {
