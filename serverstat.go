@@ -65,6 +65,18 @@ func Stat(address string) (QuakeServer, error) {
 	return qserver, nil
 }
 
+/*
+// TODO: fixme
+func StatServerQtvUsers(address string) []string {
+
+	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x0a}
+	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x20}
+	response, err := serverstat.UdpRequest("95.216.18.118:28001", statusPacket, expectedHeader)
+	scanner := bufio.NewScanner(strings.NewReader(string(response)))
+	scanner.Scan()
+}
+*/
+
 func StatServerQtvStream(address string) (QtvStream, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
