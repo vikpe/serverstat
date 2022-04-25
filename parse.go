@@ -8,6 +8,23 @@ import (
 	"strings"
 )
 
+func parseQtvusersResponseBody(responseBody []byte) []string {
+	// example response body: 12 "djevulsk" "serp" "player" "rst" "twitch.tv/vikpe"
+	fullText := string(responseBody)
+	const QuoteChar = "\""
+
+	if !strings.Contains(fullText, QuoteChar) {
+		return make([]string, 0)
+	}
+
+	indexFirstQuote := strings.Index(fullText, QuoteChar)
+	indexLastQuote := strings.LastIndex(fullText, QuoteChar)
+	namesText := fullText[indexFirstQuote+1 : indexLastQuote]
+	namesText = quakeTextToPlainText(namesText)
+
+	return strings.Split(namesText, "\" \"")
+}
+
 func parseClientRecord(clientRecord []string) (Client, error) {
 	columnCount := len(clientRecord)
 	const ExpectedColumnCount = 9

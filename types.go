@@ -25,10 +25,11 @@ type Spectator struct {
 }
 
 type QtvStream struct {
-	Id            int
-	Title         string
-	Url           string
-	NumSpectators int
+	Id             int
+	Title          string
+	Url            string
+	SpectatorNames []string
+	NumSpectators  int
 }
 
 func newQtvStream() QtvStream {

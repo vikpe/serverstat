@@ -59,25 +59,21 @@ func Stat(address string) (QuakeServer, error) {
 	qserver.NumPlayers = len(qserver.Players)
 	qserver.NumSpectators = len(qserver.Spectators)
 
-	qtvServerStream, _ := StatServerQtvStream(address)
+	qtvServerStream, _ := statQtvStream(address)
 	qserver.QtvStream = qtvServerStream
 
 	return qserver, nil
 }
 
-/*
-// TODO: fixme
-func StatServerQtvUsers(address string) []string {
-
+func statQtvStreamUsers(address string) []string {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x0a}
-	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x20}
-	response, err := serverstat.UdpRequest("95.216.18.118:28001", statusPacket, expectedHeader)
-	scanner := bufio.NewScanner(strings.NewReader(string(response)))
-	scanner.Scan()
+	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's'}
+	response, _ := udpRequest(address, statusPacket, expectedHeader)
+	responseBody := response[len(expectedHeader):]
+	return parseQtvusersResponseBody(responseBody)
 }
-*/
 
-func StatServerQtvStream(address string) (QtvStream, error) {
+func statQtvStream(address string) (QtvStream, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
 	response, err := udpRequest(address, statusPacket, expectedHeader)
@@ -108,11 +104,22 @@ func StatServerQtvStream(address string) (QtvStream, error) {
 		return QtvStream{}, err
 	}
 
+	numberOfSpectators := stringToInt(record[IndexClientCount])
+
+	var spectatorNames []string
+
+	if numberOfSpectators > 0 {
+		spectatorNames = statQtvStreamUsers(address)
+	} else {
+		spectatorNames = make([]string, 0)
+	}
+
 	return QtvStream{
-		Id:            stringToInt(record[IndexId]),
-		Title:         record[IndexTitle],
-		Url:           record[IndexAddress],
-		NumSpectators: stringToInt(record[IndexClientCount]),
+		Id:             stringToInt(record[IndexId]),
+		Title:          record[IndexTitle],
+		Url:            record[IndexAddress],
+		SpectatorNames: spectatorNames,
+		NumSpectators:  numberOfSpectators,
 	}, nil
 }
 
