@@ -45,23 +45,14 @@ func Stat(address string) (QuakeServer, error) {
 		qserver.MaxSpectators = value
 	}
 
+	var clientStrings []string
 	for scanner.Scan() {
-		var client, err = parseClientString(scanner.Text())
-
-		if err != nil {
-			continue
-		}
-
-		if client.IsSpec {
-			qserver.Spectators = append(qserver.Spectators, Spectator{
-				Name:    client.Name,
-				NameInt: client.NameInt,
-				IsBot:   client.IsBot,
-			})
-		} else {
-			qserver.Players = append(qserver.Players, client.Player)
-		}
+		clientStrings = append(clientStrings, scanner.Text())
 	}
+
+	players, spectators := parseClientsStrings(clientStrings)
+	qserver.Players = players
+	qserver.Spectators = spectators
 
 	qserver.Address = address
 	qserver.Title = qserver.Settings["hostname"]

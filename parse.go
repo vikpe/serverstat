@@ -74,6 +74,31 @@ func parseClientString(clientStr string) (Client, error) {
 	return parseClientRecord(clientRecord)
 }
 
+func parseClientsStrings(clientStrings []string) ([]Player, []Spectator) {
+	var players []Player
+	var spectators []Spectator
+
+	for _, clientStr := range clientStrings {
+		var client, err = parseClientString(clientStr)
+
+		if err != nil {
+			continue
+		}
+
+		if client.IsSpec {
+			spectators = append(spectators, Spectator{
+				Name:    client.Name,
+				NameInt: client.NameInt,
+				IsBot:   client.IsBot,
+			})
+		} else {
+			players = append(players, client.Player)
+		}
+	}
+
+	return players, spectators
+}
+
 func isBotName(name string) bool {
 	switch name {
 	case
