@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"log"
 	"net"
+	"time"
 )
 
 func UdpRequest(address string, statusPacket []byte, expectedHeader []byte) ([]byte, error) {
@@ -50,4 +51,8 @@ func UdpRequest(address string, statusPacket []byte, expectedHeader []byte) ([]b
 	}
 
 	return response, nil
+}
+
+func timeInFuture(delta int) time.Time {
+	return time.Now().Add(time.Duration(delta) * time.Millisecond)
 }

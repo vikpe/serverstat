@@ -3,17 +3,10 @@ package serverstat
 import (
 	"bufio"
 	"encoding/csv"
-	"log"
 	"strconv"
 	"strings"
 	"sync"
-	"time"
 )
-
-func main() {
-	info, _ := Stat("95.216.18.118:28001")
-	log.Println(info.Title, info.Map)
-}
 
 func Stat(address string) (QuakeServer, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a}
@@ -157,8 +150,4 @@ func StatMany(addresses []string) []QuakeServer {
 	wg.Wait()
 
 	return servers
-}
-
-func timeInFuture(delta int) time.Time {
-	return time.Now().Add(time.Duration(delta) * time.Millisecond)
 }
