@@ -16,12 +16,13 @@ func UdpRequest(address string, statusPacket []byte, expectedHeader []byte) ([]b
 	}
 	defer conn.Close()
 
-	response := make([]byte, 8192)
-
 	const (
+		BufferSize  = 8192
 		Retries     = 3
 		TimeoutInMs = 500
 	)
+
+	response := make([]byte, BufferSize)
 
 	for i := 0; i < Retries; i++ {
 		conn.SetDeadline(timeInFuture(TimeoutInMs))
