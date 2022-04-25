@@ -24,17 +24,32 @@ type Spectator struct {
 	IsBot   bool
 }
 
+type QtvStream struct {
+	Id            int
+	Title         string
+	Url           string
+	NumSpectators int
+}
+
+func newQtvStream() QtvStream {
+	return QtvStream{
+		Id:            0,
+		Title:         "",
+		Url:           "",
+		NumSpectators: 0,
+	}
+}
+
 type QtvServer struct {
 	Title         string
 	Address       string
-	Numspectators int
-	Spectators    []string
+	NumSpectators int
 }
 
 type QuakeServer struct {
 	Title         string
 	Address       string
-	QtvAddress    string
+	QtvStream     QtvStream
 	Map           string
 	NumPlayers    int
 	MaxPlayers    int
@@ -52,6 +67,6 @@ func newQuakeServer() QuakeServer {
 		Settings:   map[string]string{},
 		Players:    make([]Player, 0),
 		Spectators: make([]Spectator, 0),
-		QtvAddress: "",
+		QtvStream:  newQtvStream(),
 	}
 }

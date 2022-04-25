@@ -59,19 +59,19 @@ func Stat(address string) (QuakeServer, error) {
 	qserver.NumPlayers = len(qserver.Players)
 	qserver.NumSpectators = len(qserver.Spectators)
 
-	qtvServer, _ := StatServerQtv(address)
-	qserver.QtvAddress = qtvServer.Address
+	qtvServerStream, _ := StatServerQtvStream(address)
+	qserver.QtvStream = qtvServerStream
 
 	return qserver, nil
 }
 
-func StatServerQtv(address string) (QtvServer, error) {
+func StatServerQtvStream(address string) (QtvStream, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
 	response, err := udpRequest(address, statusPacket, expectedHeader)
 
 	if err != nil {
-		return QtvServer{}, err
+		return QtvStream{}, err
 	}
 
 	responseBody := response[5:]
@@ -80,24 +80,27 @@ func StatServerQtv(address string) (QtvServer, error) {
 
 	record, err := reader.Read()
 	if err != nil {
-		return QtvServer{}, err
+		return QtvStream{}, err
 	}
 
 	const (
-		IndexTitle   = 2
-		IndexAddress = 3
+		IndexId          = 1
+		IndexTitle       = 2
+		IndexAddress     = 3
+		IndexClientCount = 4
 	)
 
 	if record[IndexAddress] == "" {
 		// these are the servers that are not configured correctly,
 		// that means they are not reporting their qtv ip as they should.
-		return QtvServer{}, err
+		return QtvStream{}, err
 	}
 
-	return QtvServer{
-		Title:      record[IndexTitle],
-		Address:    record[IndexAddress],
-		Spectators: make([]string, 0),
+	return QtvStream{
+		Id:            stringToInt(record[IndexId]),
+		Title:         record[IndexTitle],
+		Url:           record[IndexAddress],
+		NumSpectators: stringToInt(record[IndexClientCount]),
 	}, nil
 }
 
