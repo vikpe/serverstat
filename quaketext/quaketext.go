@@ -1,5 +1,12 @@
 package quaketext
 
+/* TODO:
+type MarkupFunction func(value string, colorCode rune) string
+
+func ToMarkup(quakeText string, markupFunc MarkupFunction) string {
+	return ""
+}*/
+
 func ToPlainText(quakeText string) string {
 	const quakeCharsetSize = 256
 	quakeCharset := [quakeCharsetSize]rune{
