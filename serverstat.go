@@ -13,9 +13,9 @@ import (
 
 type Player struct {
 	Name    string
-	NameInt []int
+	NameRaw []byte
 	Team    string
-	TeamInt []int
+	TeamRaw []byte
 	Skin    string
 	Colors  [2]int
 	Frags   int
@@ -31,7 +31,7 @@ type client struct {
 
 type Spectator struct {
 	Name    string
-	NameInt []int
+	NameRaw []byte
 	IsBot   bool
 }
 

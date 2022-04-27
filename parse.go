@@ -56,9 +56,7 @@ func parseClientRecord(clientRecord []string) (client, error) {
 	}
 
 	name := quaketext.ToPlainText(nameQuakeStr)
-	nameInt := stringToIntArray(name)
 	team := quaketext.ToPlainText(clientRecord[IndexTeam])
-	teamInt := stringToIntArray(team)
 	colorTop := stringToInt(clientRecord[IndexColorTop])
 	colorBottom := stringToInt(clientRecord[IndexColorBottom])
 	ping := stringToInt(clientRecord[IndexPing])
@@ -66,9 +64,9 @@ func parseClientRecord(clientRecord []string) (client, error) {
 	return client{
 		Player: Player{
 			Name:    name,
-			NameInt: nameInt,
+			NameRaw: []byte(nameQuakeStr),
 			Team:    team,
-			TeamInt: teamInt,
+			TeamRaw: []byte(clientRecord[IndexTeam]),
 			Skin:    clientRecord[IndexSkin],
 			Colors:  [2]int{colorTop, colorBottom},
 			Frags:   stringToInt(clientRecord[IndexFrags]),
@@ -107,7 +105,7 @@ func parseClientsStrings(clientStrings []string) ([]Player, []Spectator) {
 		if client.IsSpec {
 			spectators = append(spectators, Spectator{
 				Name:    client.Name,
-				NameInt: client.NameInt,
+				NameRaw: client.NameRaw,
 				IsBot:   client.IsBot,
 			})
 		} else {
