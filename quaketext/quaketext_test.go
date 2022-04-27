@@ -17,7 +17,7 @@ func TestToPlainText(t *testing.T) {
 		Ascii     = Letters + Numbers + MiscChars
 	)
 
-	var tested = make(map[byte]bool, 0)
+	var testedBytes = make(map[byte]bool, 0)
 
 	// white and red ascii
 	for _, charByte := range []byte(Ascii) {
@@ -25,12 +25,12 @@ func TestToPlainText(t *testing.T) {
 
 		// white text
 		assert.Equal(t, expectedChar, quaketext.ToPlainText([]byte{charByte}))
-		tested[charByte] = true
+		testedBytes[charByte] = true
 
 		// red text
 		charByteRedColor := charByte + 128
 		assert.Equal(t, expectedChar, quaketext.ToPlainText([]byte{charByteRedColor}))
-		tested[charByteRedColor] = true
+		testedBytes[charByteRedColor] = true
 	}
 
 	// yellow and brown numbers
@@ -39,11 +39,11 @@ func TestToPlainText(t *testing.T) {
 
 		charByteYellowColor := charByte - 30
 		assert.Equal(t, expectedNumber, quaketext.ToPlainText([]byte{charByteYellowColor}))
-		tested[charByteYellowColor] = true
+		testedBytes[charByteYellowColor] = true
 
 		charByteBrownColor := charByteYellowColor + 128
 		assert.Equal(t, expectedNumber, quaketext.ToPlainText([]byte{charByteBrownColor}))
-		tested[charByteBrownColor] = true
+		testedBytes[charByteBrownColor] = true
 	}
 
 	// colored non-alphanumeric chars
@@ -61,7 +61,7 @@ func TestToPlainText(t *testing.T) {
 	for expectedChar, specialCharBytes := range miscCharsMap {
 		for _, charByte := range specialCharBytes {
 			assert.Equal(t, expectedChar, quaketext.ToPlainText([]byte{charByte}), charByte)
-			tested[charByte] = true
+			testedBytes[charByte] = true
 		}
 	}
 
@@ -71,17 +71,17 @@ func TestToPlainText(t *testing.T) {
 
 	for _, charByte := range unknownCharBytes {
 		assert.Equal(t, expectedChar, quaketext.ToPlainText([]byte{charByte}), charByte)
-		tested[charByte] = true
+		testedBytes[charByte] = true
 	}
 
 	// validate test coverage
 	for i := byte(0); i < byte(255); i++ {
-		if !tested[i] {
+		if !testedBytes[i] {
 			log.Printf("Did not test %d, expected '%s'", i, quaketext.ToPlainText([]byte{i}))
 		}
 	}
 
-	totalTested := 1 + len(tested)
+	totalTested := 1 + len(testedBytes)
 	expectTested := 255 + 1
 
 	if totalTested < expectTested {
