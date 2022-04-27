@@ -1,6 +1,6 @@
 package quaketext
 
-func ToPlainText(quakeText []byte) string {
+func ToPlainText(quakeText string) string {
 	const quakeCharsetSize = 256
 	quakeCharset := [quakeCharsetSize]rune{
 		'#', '#', '#', '#', '#', '.', '#', '#',

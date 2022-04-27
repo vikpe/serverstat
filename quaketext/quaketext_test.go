@@ -24,12 +24,12 @@ func TestToPlainText(t *testing.T) {
 		expectedChar := string(charByte)
 
 		// white text
-		assert.Equal(t, expectedChar, quaketext.ToPlainText([]byte{charByte}))
+		assert.Equal(t, expectedChar, quaketext.ToPlainText(string(charByte)))
 		testedBytes[charByte] = true
 
 		// red text
 		charByteRedColor := charByte + 128
-		assert.Equal(t, expectedChar, quaketext.ToPlainText([]byte{charByteRedColor}))
+		assert.Equal(t, expectedChar, quaketext.ToPlainText(string(charByteRedColor)))
 		testedBytes[charByteRedColor] = true
 	}
 
@@ -38,11 +38,11 @@ func TestToPlainText(t *testing.T) {
 		expectedNumber := string(charByte)
 
 		charByteYellowColor := charByte - 30
-		assert.Equal(t, expectedNumber, quaketext.ToPlainText([]byte{charByteYellowColor}))
+		assert.Equal(t, expectedNumber, quaketext.ToPlainText(string(charByteYellowColor)))
 		testedBytes[charByteYellowColor] = true
 
 		charByteBrownColor := charByteYellowColor + 128
-		assert.Equal(t, expectedNumber, quaketext.ToPlainText([]byte{charByteBrownColor}))
+		assert.Equal(t, expectedNumber, quaketext.ToPlainText(string(charByteBrownColor)))
 		testedBytes[charByteBrownColor] = true
 	}
 
@@ -60,7 +60,7 @@ func TestToPlainText(t *testing.T) {
 
 	for expectedChar, specialCharBytes := range miscCharsMap {
 		for _, charByte := range specialCharBytes {
-			assert.Equal(t, expectedChar, quaketext.ToPlainText([]byte{charByte}), charByte)
+			assert.Equal(t, expectedChar, quaketext.ToPlainText(string(charByte)), charByte)
 			testedBytes[charByte] = true
 		}
 	}
@@ -70,14 +70,14 @@ func TestToPlainText(t *testing.T) {
 	expectedChar := "#"
 
 	for _, charByte := range unknownCharBytes {
-		assert.Equal(t, expectedChar, quaketext.ToPlainText([]byte{charByte}), charByte)
+		assert.Equal(t, expectedChar, quaketext.ToPlainText(string(charByte)), charByte)
 		testedBytes[charByte] = true
 	}
 
 	// validate test coverage
 	for i := byte(0); i < byte(255); i++ {
 		if !testedBytes[i] {
-			log.Printf("Did not test %d, expected '%s'", i, quaketext.ToPlainText([]byte{i}))
+			log.Printf("Did not test %d, expected '%s'", i, quaketext.ToPlainText(string(i)))
 		}
 	}
 
@@ -90,7 +90,7 @@ func TestToPlainText(t *testing.T) {
 }
 
 func ExampleToPlainText() {
-	quakeText := []byte{109, 109, 91, 99, 104, 97, 114, 93, 28, 32, 32, 91, 116, 101, 115, 116, 93, 109, 109}
+	quakeText := string([]byte{109, 109, 91, 99, 104, 97, 114, 93, 28, 32, 32, 91, 116, 101, 115, 116, 93, 109, 109})
 	plainText := quaketext.ToPlainText(quakeText)
 	fmt.Println(plainText)
 	// Output: mm[char]•••[test]mm
