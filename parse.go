@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/vikpe/qw-serverstat/quaketext"
 )
 
 func parseQtvusersResponseBody(responseBody []byte) []string {
@@ -20,18 +22,18 @@ func parseQtvusersResponseBody(responseBody []byte) []string {
 	indexFirstQuote := strings.Index(fullText, QuoteChar)
 	indexLastQuote := strings.LastIndex(fullText, QuoteChar)
 	namesText := fullText[indexFirstQuote+1 : indexLastQuote]
-	namesText = quakeTextToPlainText(namesText)
+	namesText = quaketext.ToPlainText([]byte(namesText))
 
 	return strings.Split(namesText, "\" \"")
 }
 
-func parseClientRecord(clientRecord []string) (Client, error) {
+func parseClientRecord(clientRecord []string) (client, error) {
 	columnCount := len(clientRecord)
 	const ExpectedColumnCount = 9
 
 	if columnCount != ExpectedColumnCount {
 		err := errors.New(fmt.Sprintf("invalid player column count %d.", columnCount))
-		return Client{}, err
+		return client{}, err
 	}
 
 	const (
@@ -53,15 +55,15 @@ func parseClientRecord(clientRecord []string) (Client, error) {
 		nameQuakeStr = strings.TrimPrefix(nameQuakeStr, SpectatorPrefix)
 	}
 
-	name := quakeTextToPlainText(nameQuakeStr)
+	name := quaketext.ToPlainText([]byte(nameQuakeStr))
 	nameInt := stringToIntArray(name)
-	team := quakeTextToPlainText(clientRecord[IndexTeam])
+	team := quaketext.ToPlainText([]byte(clientRecord[IndexTeam]))
 	teamInt := stringToIntArray(team)
 	colorTop := stringToInt(clientRecord[IndexColorTop])
 	colorBottom := stringToInt(clientRecord[IndexColorBottom])
 	ping := stringToInt(clientRecord[IndexPing])
 
-	return Client{
+	return client{
 		Player: Player{
 			Name:    name,
 			NameInt: nameInt,
@@ -79,13 +81,13 @@ func parseClientRecord(clientRecord []string) (Client, error) {
 
 }
 
-func parseClientString(clientStr string) (Client, error) {
+func parseClientString(clientStr string) (client, error) {
 	reader := csv.NewReader(strings.NewReader(clientStr))
 	reader.Comma = ' '
 
 	clientRecord, err := reader.Read()
 	if err != nil {
-		return Client{}, nil
+		return client{}, nil
 	}
 
 	return parseClientRecord(clientRecord)
