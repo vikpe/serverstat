@@ -8,47 +8,25 @@ func ToMarkup(quakeText string, markupFunc MarkupFunction) string {
 }*/
 
 func ToPlainText(quakeText string) string {
-	const quakeCharsetSize = 256
-	quakeCharset := [quakeCharsetSize]rune{
-		'#', '#', '#', '#', '#', '.', '#', '#',
-		'#', '#', '#', '#', ' ', '#', '.', '.',
-		'[', ']', '0', '1', '2', '3', '4', '5',
-		'6', '7', '8', '9', '•', '<', '=', '>',
-		'•', '!', '"', '#', '$', '%', '&', '\'',
-		'(', ')', '*', '+', ',', '-', '.', '/',
-		'0', '1', '2', '3', '4', '5', '6', '7',
-		'8', '9', ':', ';', '<', '=', '>', '?',
-		'@', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
-		'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-		'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-		'X', 'Y', 'Z', '[', '\\', ']', '^', '_',
-		'`', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
-		'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-		'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
-		'x', 'y', 'z', '{', '|', '}', '~', '<',
-
-		'<', '=', '>', '#', '#', '.', '#', '#',
-		'#', '#', ' ', '#', ' ', '>', '.', '.',
-		'[', ']', '0', '1', '2', '3', '4', '5',
-		'6', '7', '8', '9', '•', '<', '=', '>',
-		'•', '!', '"', '#', '$', '%', '&', '\'',
-		'(', ')', '*', '+', ',', '-', '.', '/',
-		'0', '1', '2', '3', '4', '5', '6', '7',
-		'8', '9', ':', ';', '<', '=', '>', '?',
-		'@', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
-		'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-		'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-		'X', 'Y', 'Z', '[', '\\', ']', '^', '_',
-		'`', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
-		'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-		'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
-		'x', 'y', 'z', '{', '|', '}', '~', '<',
+	charsetToprows := []string{
+		"•", "", "", "", "", "•", "", "", "", "", "", "", "", "", "•", "•",
+		"[", "]", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "•", "", "", "",
 	}
-	plainTextChars := make([]rune, 0)
+	charsetTopRowsSize := byte(len(charsetToprows))
+	plainTextBytes := make([]byte, 0)
 
-	for _, charIndex := range quakeText {
-		plainTextChars = append(plainTextChars, quakeCharset[charIndex])
+	for _, sourceByte := range []byte(quakeText) {
+		sourceByte &= 0x7f // remove color
+
+		if sourceByte == 127 { // weird left arrow at end of charset
+			continue
+		} else if sourceByte < charsetTopRowsSize {
+			translatedBytes := []byte(charsetToprows[sourceByte])
+			plainTextBytes = append(plainTextBytes, translatedBytes...)
+		} else {
+			plainTextBytes = append(plainTextBytes, sourceByte)
+		}
 	}
 
-	return string(plainTextChars)
+	return string(plainTextBytes)
 }

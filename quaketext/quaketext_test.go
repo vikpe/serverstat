@@ -10,88 +10,78 @@ import (
 )
 
 func TestToPlainText(t *testing.T) {
-	const (
-		Letters   = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-		Numbers   = "0123456789"
-		MiscChars = "~!@#$%^&*()-_+={}[]\\|<,>.?/\"';:`"
-		Ascii     = Letters + Numbers + MiscChars
-	)
+	// printable ascii table
+	var ascii []byte
 
-	var testedBytes = make(map[byte]bool, 0)
+	for i := ' '; i <= '~'; i++ {
+		ascii = append(ascii, byte(i))
+	}
 
-	// white and red ascii
-	for _, charByte := range []byte(Ascii) {
-		expectedChar := string(charByte)
+	testedBytes := make(map[byte]bool, 128)
 
-		// white text
-		assert.Equal(t, expectedChar, quaketext.ToPlainText(string(charByte)))
+	for b := 0; b < 128; b++ {
+		testedBytes[byte(b)] = false
+	}
+
+	for i := range ascii {
+		charByte := ascii[i]
+		char := string(charByte)
+
+		// normal ascii
+		charsWhite := string([]byte{charByte})
+		assert.Equal(t, char, quaketext.ToPlainText(charsWhite))
+
+		// red ascii
+		charByteRed := charByte + 128
+		charsRed := string([]byte{charByteRed})
+		assert.Equal(t, char, quaketext.ToPlainText(charsRed))
+
+		// yellow numbers
+		if char >= "0" && char <= "9" {
+			charsYellow := string([]byte{charByte - 30})
+			assert.Equal(t, char, quaketext.ToPlainText(charsYellow)) // yellow numbers
+
+			testedBytes[charByte-30] = true
+		}
+
 		testedBytes[charByte] = true
-
-		// red text
-		charByteRedColor := charByte + 128
-		assert.Equal(t, expectedChar, quaketext.ToPlainText(string(charByteRedColor)))
-		testedBytes[charByteRedColor] = true
+		testedBytes[charByte+128] = true
 	}
 
-	// yellow and brown numbers
-	for _, charByte := range []byte(Numbers) {
-		expectedNumber := string(charByte)
-
-		charByteYellowColor := charByte - 30
-		assert.Equal(t, expectedNumber, quaketext.ToPlainText(string(charByteYellowColor)))
-		testedBytes[charByteYellowColor] = true
-
-		charByteBrownColor := charByteYellowColor + 128
-		assert.Equal(t, expectedNumber, quaketext.ToPlainText(string(charByteBrownColor)))
-		testedBytes[charByteBrownColor] = true
+	// top two rows of charset + last char (127)
+	specialCases := map[string][]byte{
+		"":  {1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 29, 30, 31, 127},
+		"•": {0, 5, 14, 15, 28},
+		"[": {16},
+		"]": {17},
 	}
 
-	// colored non-alphanumeric chars
-	var miscCharsMap = map[string][]byte{
-		" ": {12, 12 + 128, 138},
-		"•": {28, 28 + 128, 32, 32 + 128},
-		".": {5, 5 + 128, 14, 14 + 128, 15, 15 + 128},
-		"<": {29, 127, 128, 157},
-		"=": {30, 30 + 128, 129},
-		">": {31, 130, 141, 159},
-		"[": {16, 16 + 128},
-		"]": {17, 17 + 128},
-	}
+	for expectedChar, charBytes := range specialCases {
+		for _, charByte := range charBytes {
+			chars := string([]byte{charByte})
+			assert.Equal(t, expectedChar, quaketext.ToPlainText(chars), charByte)
 
-	for expectedChar, specialCharBytes := range miscCharsMap {
-		for _, charByte := range specialCharBytes {
-			assert.Equal(t, expectedChar, quaketext.ToPlainText(string(charByte)), charByte)
 			testedBytes[charByte] = true
 		}
 	}
 
-	// unknown chars
-	unknownCharBytes := []byte{0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13, 131, 132, 134, 135, 136, 137, 139}
-	expectedChar := "#"
+	hasTestedAllBytes := true
 
-	for _, charByte := range unknownCharBytes {
-		assert.Equal(t, expectedChar, quaketext.ToPlainText(string(charByte)), charByte)
-		testedBytes[charByte] = true
-	}
-
-	// validate test coverage
-	for i := byte(0); i < byte(255); i++ {
-		if !testedBytes[i] {
-			log.Printf("Did not test %d, expected '%s'", i, quaketext.ToPlainText(string(i)))
+	for byte_, value := range testedBytes {
+		if !value {
+			log.Println("did not test", byte_)
+			hasTestedAllBytes = false
 		}
 	}
 
-	totalTested := 1 + len(testedBytes)
-	expectTested := 255 + 1
-
-	if totalTested < expectTested {
-		t.Fatalf("Did not test every character. Tested %d of %d", totalTested, expectTested)
+	if !hasTestedAllBytes {
+		t.Fatal("Did not test all chars.")
 	}
 }
 
 func ExampleToPlainText() {
-	quakeText := string([]byte{109, 109, 91, 99, 104, 97, 114, 93, 28, 32, 32, 91, 116, 101, 115, 116, 93, 109, 109})
+	quakeText := "XantoM"
 	plainText := quaketext.ToPlainText(quakeText)
 	fmt.Println(plainText)
-	// Output: mm[char]•••[test]mm
+	// Output: XantoM
 }
