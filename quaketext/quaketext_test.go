@@ -19,10 +19,11 @@ func TestToPlainText(t *testing.T) {
 
 	var tested = make(map[byte]bool, 0)
 
-	// normal and red ascii
+	// white and red ascii
 	for _, charByte := range []byte(Ascii) {
 		expectedChar := string(charByte)
 
+		// white text
 		assert.Equal(t, expectedChar, quaketext.ToPlainText([]byte{charByte}))
 		tested[charByte] = true
 
