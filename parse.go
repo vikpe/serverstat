@@ -64,9 +64,9 @@ func parseClientRecord(clientRecord []string) (client, error) {
 	return client{
 		Player: Player{
 			Name:    name,
-			NameRaw: []byte(nameQuakeStr),
+			NameRaw: nameToRaw(clientRecord[IndexName]),
 			Team:    team,
-			TeamRaw: []byte(clientRecord[IndexTeam]),
+			TeamRaw: nameToRaw(clientRecord[IndexTeam]),
 			Skin:    clientRecord[IndexSkin],
 			Colors:  [2]int{colorTop, colorBottom},
 			Frags:   stringToInt(clientRecord[IndexFrags]),
@@ -140,11 +140,11 @@ func stringToInt(value string) int {
 	return valueAsInt
 }
 
-func stringToIntArray(value string) []int {
-	intArr := make([]int, len(value))
+func nameToRaw(value string) []uint16 {
+	intArr := make([]uint16, len(value))
 
 	for i := range value {
-		intArr[i] = int(value[i])
+		intArr[i] = uint16(value[i])
 	}
 
 	return intArr
