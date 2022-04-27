@@ -5,7 +5,8 @@ import (
 )
 
 func quakeTextToPlainText(quakeText string) string {
-	var charset = [128]string{
+	const charsetSize = 128
+	var charset = [charsetSize]string{
 		"<", "=", ">", "#", "#", ".", "#", "#",
 		"#", "#", " ", "#", " ", ">", ".", ".",
 		"[", "]", "0", "1", "2", "3", "4", "5",
@@ -24,12 +25,17 @@ func quakeTextToPlainText(quakeText string) string {
 		"x", "y", "z", "{", "|", "}", "~", "<",
 	}
 
-	translation := ""
+	plainText := ""
 
 	for _, charByte := range []byte(quakeText) {
 		charByte &= 0x7f // strip color (> 128)
-		translation += charset[charByte]
+
+		if charByte < charsetSize {
+			plainText += charset[charByte]
+		} else {
+			plainText += "?"
+		}
 	}
 
-	return strings.TrimSpace(translation)
+	return strings.TrimSpace(plainText)
 }
