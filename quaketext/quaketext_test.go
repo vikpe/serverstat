@@ -47,15 +47,16 @@ func TestToPlainText(t *testing.T) {
 	}
 
 	// colored non-alphanumeric chars
-	var miscCharsMap = make(map[string][]byte, 0)
-	miscCharsMap[" "] = []byte{12, 12 + 128, 138}
-	miscCharsMap["•"] = []byte{28, 28 + 128, 32, 32 + 128}
-	miscCharsMap["."] = []byte{5, 5 + 128, 14, 14 + 128, 15, 15 + 128}
-	miscCharsMap["<"] = []byte{29, 127, 128, 157}
-	miscCharsMap["="] = []byte{30, 30 + 128, 129}
-	miscCharsMap[">"] = []byte{31, 130, 141, 159}
-	miscCharsMap["["] = []byte{16, 16 + 128}
-	miscCharsMap["]"] = []byte{17, 17 + 128}
+	var miscCharsMap = map[string][]byte{
+		" ": {12, 12 + 128, 138},
+		"•": {28, 28 + 128, 32, 32 + 128},
+		".": {5, 5 + 128, 14, 14 + 128, 15, 15 + 128},
+		"<": {29, 127, 128, 157},
+		"=": {30, 30 + 128, 129},
+		">": {31, 130, 141, 159},
+		"[": {16, 16 + 128},
+		"]": {17, 17 + 128},
+	}
 
 	for expectedChar, specialCharBytes := range miscCharsMap {
 		for _, charByte := range specialCharBytes {
