@@ -19,7 +19,7 @@ func TestToPlainText(t *testing.T) {
 
 	var tested = make(map[byte]bool, 0)
 
-	// normal and brown ascii
+	// normal and red ascii
 	for _, charByte := range []byte(Ascii) {
 		expectedChar := string(charByte)
 
