@@ -1,4 +1,4 @@
-package serverstat
+package qwnet
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func udpRequest(address string, statusPacket []byte, expectedHeader []byte) ([]byte, error) {
+func UdpRequest(address string, statusPacket []byte, expectedHeader []byte) ([]byte, error) {
 	conn, err := net.Dial("udp4", address)
 	if err != nil {
 		return nil, err
