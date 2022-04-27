@@ -6,12 +6,87 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/vikpe/qw-serverstat/quaketext"
+	"github.com/vikpe/qw-serverstat/qwnet"
 )
+
+type Player struct {
+	Name    string
+	NameInt []int
+	Team    string
+	TeamInt []int
+	Skin    string
+	Colors  [2]int
+	Frags   int
+	Ping    int
+	Time    int
+	IsBot   bool
+}
+
+type client struct {
+	Player
+	IsSpec bool
+}
+
+type Spectator struct {
+	Name    string
+	NameInt []int
+	IsBot   bool
+}
+
+type QtvStream struct {
+	Id             int
+	Title          string
+	Url            string
+	SpectatorNames []string
+	NumSpectators  int
+}
+
+func newQtvStream() QtvStream {
+	return QtvStream{
+		Id:            0,
+		Title:         "",
+		Url:           "",
+		NumSpectators: 0,
+	}
+}
+
+type QtvServer struct {
+	Title         string
+	Address       string
+	NumSpectators int
+}
+
+type QuakeServer struct {
+	Title         string
+	Address       string
+	QtvStream     QtvStream
+	Map           string
+	NumPlayers    int
+	MaxPlayers    int
+	NumSpectators int
+	MaxSpectators int
+	Players       []Player
+	Spectators    []Spectator
+	Settings      map[string]string
+}
+
+func newQuakeServer() QuakeServer {
+	return QuakeServer{
+		Title:      "",
+		Address:    "",
+		Settings:   map[string]string{},
+		Players:    make([]Player, 0),
+		Spectators: make([]Spectator, 0),
+		QtvStream:  newQtvStream(),
+	}
+}
 
 func Stat(address string) (QuakeServer, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'}
-	response, err := udpRequest(address, statusPacket, expectedHeader)
+	response, err := qwnet.UdpRequest(address, statusPacket, expectedHeader)
 
 	if err != nil {
 		return QuakeServer{}, err
@@ -30,8 +105,7 @@ func Stat(address string) (QuakeServer, error) {
 	}
 
 	if val, ok := qserver.Settings["hostname"]; ok {
-		qserver.Settings["hostname"] = quakeTextToPlainText(val)
-
+		qserver.Settings["hostname"] = quaketext.ToPlainText([]byte(val))
 	}
 	if val, ok := qserver.Settings["map"]; ok {
 		qserver.Map = val
@@ -68,7 +142,7 @@ func Stat(address string) (QuakeServer, error) {
 func statQtvStreamUsers(address string) []string {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's'}
-	response, _ := udpRequest(address, statusPacket, expectedHeader)
+	response, _ := qwnet.UdpRequest(address, statusPacket, expectedHeader)
 	responseBody := response[len(expectedHeader):]
 	return parseQtvusersResponseBody(responseBody)
 }
@@ -76,7 +150,7 @@ func statQtvStreamUsers(address string) []string {
 func statQtvStream(address string) (QtvStream, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
-	response, err := udpRequest(address, statusPacket, expectedHeader)
+	response, err := qwnet.UdpRequest(address, statusPacket, expectedHeader)
 
 	if err != nil {
 		return QtvStream{}, err
