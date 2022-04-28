@@ -7,7 +7,7 @@ func ToMarkup(quakeText string, markupFunc MarkupFunction) string {
 	return ""
 }*/
 
-func BytesToPlainText(quakeTextBytes []byte) string {
+func BytesToPlainString(quakeTextBytes []byte) string {
 	charsetToprows := []string{
 		"•", "", "", "", "", "•", "", "", "", "", "", "", "", "", "•", "•",
 		"[", "]", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "•", "", "", "",
@@ -31,6 +31,6 @@ func BytesToPlainText(quakeTextBytes []byte) string {
 	return string(plainTextBytes)
 }
 
-func StringToPlainText(quakeText string) string {
-	return BytesToPlainText([]byte(quakeText))
+func StringToPlainString(quakeText string) string {
+	return BytesToPlainString([]byte(quakeText))
 }

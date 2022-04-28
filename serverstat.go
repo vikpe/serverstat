@@ -105,7 +105,7 @@ func Stat(address string) (QuakeServer, error) {
 	}
 
 	if val, ok := qserver.Settings["hostname"]; ok {
-		qserver.Settings["hostname"] = quaketext.StringToPlainText(val)
+		qserver.Settings["hostname"] = quaketext.StringToPlainString(val)
 	}
 	if val, ok := qserver.Settings["map"]; ok {
 		qserver.Map = val

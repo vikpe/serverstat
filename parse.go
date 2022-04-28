@@ -22,7 +22,7 @@ func parseQtvusersResponseBody(responseBody []byte) []string {
 	indexFirstQuote := strings.Index(fullText, QuoteChar)
 	indexLastQuote := strings.LastIndex(fullText, QuoteChar)
 	namesText := fullText[indexFirstQuote+1 : indexLastQuote]
-	namesText = quaketext.StringToPlainText(namesText)
+	namesText = quaketext.StringToPlainString(namesText)
 
 	return strings.Split(namesText, "\" \"")
 }
@@ -55,8 +55,8 @@ func parseClientRecord(clientRecord []string) (client, error) {
 		nameQuakeStr = strings.TrimPrefix(nameQuakeStr, SpectatorPrefix)
 	}
 
-	name := quaketext.StringToPlainText(nameQuakeStr)
-	team := quaketext.StringToPlainText(clientRecord[IndexTeam])
+	name := quaketext.StringToPlainString(nameQuakeStr)
+	team := quaketext.StringToPlainString(clientRecord[IndexTeam])
 	colorTop := stringToInt(clientRecord[IndexColorTop])
 	colorBottom := stringToInt(clientRecord[IndexColorBottom])
 	ping := stringToInt(clientRecord[IndexPing])
