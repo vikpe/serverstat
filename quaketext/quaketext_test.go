@@ -10,7 +10,7 @@ import (
 )
 
 func TestToPlainText(t *testing.T) {
-	// printable ascii table
+	// printable range of ascii table
 	var ascii []byte
 
 	for i := ' '; i <= '~'; i++ {
