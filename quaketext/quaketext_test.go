@@ -80,14 +80,14 @@ func TestToPlainText(t *testing.T) {
 	}
 }
 
-func ExampleStringToPlainText() {
+func ExampleStringToPlainString() {
 	quakeText := "XantoM"
 	plainText := quaketext.StringToPlainString(quakeText)
 	fmt.Println(plainText)
 	// Output: XantoM
 }
 
-func ExampleBytesToPlainText() {
+func ExampleBytesToPlainString() {
 	quakeTextBytes := []byte{88, 97, 110, 116, 111, 77}
 	plainText := quaketext.BytesToPlainString(quakeTextBytes)
 	fmt.Println(plainText)
