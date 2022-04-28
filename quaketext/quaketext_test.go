@@ -31,20 +31,20 @@ func TestToPlainText(t *testing.T) {
 
 		// normal/white ascii
 		charWhite := char
-		assert.Equal(t, char, quaketext.ToPlainText(charWhite))
+		assert.Equal(t, char, quaketext.StringToPlainText(charWhite))
 		testedBytes[charByte] = true
 
 		// red ascii
 		charByteRed := charByte + 128
 		charRed := string([]byte{charByteRed})
-		assert.Equal(t, char, quaketext.ToPlainText(charRed))
+		assert.Equal(t, char, quaketext.StringToPlainText(charRed))
 		testedBytes[charByte+128] = true
 
 		// yellow numbers
 		if char >= "0" && char <= "9" {
 			charByteYellow := charByte - 30
 			charYellow := string([]byte{charByteYellow})
-			assert.Equal(t, char, quaketext.ToPlainText(charYellow)) // yellow numbers
+			assert.Equal(t, char, quaketext.StringToPlainText(charYellow)) // yellow numbers
 			testedBytes[charByteYellow] = true
 		}
 	}
@@ -60,7 +60,7 @@ func TestToPlainText(t *testing.T) {
 	for expectedChar, charBytes := range specialChars {
 		for _, charByte := range charBytes {
 			chars := string([]byte{charByte})
-			assert.Equal(t, expectedChar, quaketext.ToPlainText(chars), charByte)
+			assert.Equal(t, expectedChar, quaketext.StringToPlainText(chars), charByte)
 			testedBytes[charByte] = true
 		}
 	}
@@ -80,9 +80,16 @@ func TestToPlainText(t *testing.T) {
 	}
 }
 
-func ExampleToPlainText() {
+func ExampleStringToPlainText() {
 	quakeText := "XantoM"
-	plainText := quaketext.ToPlainText(quakeText)
+	plainText := quaketext.StringToPlainText(quakeText)
+	fmt.Println(plainText)
+	// Output: XantoM
+}
+
+func ExampleBytesToPlainText() {
+	quakeTextBytes := []byte{88, 97, 110, 116, 111, 77}
+	plainText := quaketext.BytesToPlainText(quakeTextBytes)
 	fmt.Println(plainText)
 	// Output: XantoM
 }
