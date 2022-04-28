@@ -44,7 +44,6 @@ type QtvStream struct {
 
 func newQtvStream() QtvStream {
 	return QtvStream{
-		Id:            0,
 		Title:         "",
 		Url:           "",
 		NumSpectators: 0,
