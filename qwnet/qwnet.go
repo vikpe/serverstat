@@ -14,6 +14,7 @@ func UdpRequest(address string, statusPacket []byte, expectedHeader []byte) ([]b
 	}
 	defer conn.Close()
 
+	// TODO: set as default config, allow using different values
 	const (
 		BufferSize  = 8192
 		Retries     = 3
