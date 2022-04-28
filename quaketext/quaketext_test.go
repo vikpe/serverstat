@@ -17,54 +17,55 @@ func TestToPlainText(t *testing.T) {
 		ascii = append(ascii, byte(i))
 	}
 
+	// keep track of tested bytes
 	testedBytes := make(map[byte]bool, 128)
 
 	for b := 0; b < 128; b++ {
 		testedBytes[byte(b)] = false
 	}
 
+	// test ascii table
 	for i := range ascii {
 		charByte := ascii[i]
-		char := string(charByte)
+		char := string([]byte{charByte})
 
-		// normal ascii
-		charsWhite := string([]byte{charByte})
-		assert.Equal(t, char, quaketext.ToPlainText(charsWhite))
+		// normal/white ascii
+		charWhite := char
+		assert.Equal(t, char, quaketext.ToPlainText(charWhite))
+		testedBytes[charByte] = true
 
 		// red ascii
 		charByteRed := charByte + 128
-		charsRed := string([]byte{charByteRed})
-		assert.Equal(t, char, quaketext.ToPlainText(charsRed))
+		charRed := string([]byte{charByteRed})
+		assert.Equal(t, char, quaketext.ToPlainText(charRed))
+		testedBytes[charByte+128] = true
 
 		// yellow numbers
 		if char >= "0" && char <= "9" {
-			charsYellow := string([]byte{charByte - 30})
-			assert.Equal(t, char, quaketext.ToPlainText(charsYellow)) // yellow numbers
-
-			testedBytes[charByte-30] = true
+			charByteYellow := charByte - 30
+			charYellow := string([]byte{charByteYellow})
+			assert.Equal(t, char, quaketext.ToPlainText(charYellow)) // yellow numbers
+			testedBytes[charByteYellow] = true
 		}
-
-		testedBytes[charByte] = true
-		testedBytes[charByte+128] = true
 	}
 
-	// top two rows of charset + last char (127)
-	specialCases := map[string][]byte{
+	// test top two rows of charset + last char (127)
+	specialChars := map[string][]byte{
 		"":  {1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 29, 30, 31, 127},
 		"•": {0, 5, 14, 15, 28},
 		"[": {16},
 		"]": {17},
 	}
 
-	for expectedChar, charBytes := range specialCases {
+	for expectedChar, charBytes := range specialChars {
 		for _, charByte := range charBytes {
 			chars := string([]byte{charByte})
 			assert.Equal(t, expectedChar, quaketext.ToPlainText(chars), charByte)
-
 			testedBytes[charByte] = true
 		}
 	}
 
+	// validate that all bytes are tested
 	hasTestedAllBytes := true
 
 	for byte_, value := range testedBytes {
