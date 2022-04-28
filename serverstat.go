@@ -3,6 +3,7 @@ package serverstat
 import (
 	"bufio"
 	"encoding/csv"
+	"encoding/json"
 	"strconv"
 	"strings"
 	"sync"
@@ -40,6 +41,19 @@ type QtvStream struct {
 	Url            string
 	SpectatorNames []string
 	NumSpectators  int
+}
+
+func (node *QtvStream) MarshalJSON() ([]byte, error) {
+	if "" == node.Url {
+		return json.Marshal(nil)
+	} else {
+		return json.Marshal(QtvStream{
+			Title:          node.Title,
+			Url:            node.Url,
+			SpectatorNames: node.SpectatorNames,
+			NumSpectators:  node.NumSpectators,
+		})
+	}
 }
 
 func newQtvStream() QtvStream {
