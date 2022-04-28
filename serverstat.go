@@ -36,7 +36,6 @@ type Spectator struct {
 }
 
 type QtvStream struct {
-	Id             int
 	Title          string
 	Url            string
 	SpectatorNames []string
@@ -166,7 +165,6 @@ func statQtvStream(address string) (QtvStream, error) {
 	}
 
 	const (
-		IndexId          = 1
 		IndexTitle       = 2
 		IndexAddress     = 3
 		IndexClientCount = 4
@@ -189,7 +187,6 @@ func statQtvStream(address string) (QtvStream, error) {
 	}
 
 	return QtvStream{
-		Id:             stringToInt(record[IndexId]),
 		Title:          record[IndexTitle],
 		Url:            record[IndexAddress],
 		SpectatorNames: spectatorNames,
