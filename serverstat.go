@@ -51,12 +51,6 @@ func newQtvStream() QtvStream {
 	}
 }
 
-type QtvServer struct {
-	Title         string
-	Address       string
-	NumSpectators int
-}
-
 type QuakeServer struct {
 	Title         string
 	Address       string
