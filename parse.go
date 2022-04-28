@@ -68,10 +68,10 @@ func parseClientRecord(clientRecord []string) (client, error) {
 			Team:    team,
 			TeamRaw: nameToRaw(clientRecord[IndexTeam]),
 			Skin:    clientRecord[IndexSkin],
-			Colors:  [2]int{colorTop, colorBottom},
-			Frags:   stringToInt(clientRecord[IndexFrags]),
-			Ping:    ping,
-			Time:    stringToInt(clientRecord[IndexTime]),
+			Colors:  [2]uint8{uint8(colorTop), uint8(colorBottom)},
+			Frags:   uint16(stringToInt(clientRecord[IndexFrags])),
+			Ping:    uint16(ping),
+			Time:    uint8(stringToInt(clientRecord[IndexTime])),
 			IsBot:   isBotName(name) || isBotPing(ping),
 		},
 		IsSpec: isSpec,
@@ -137,7 +137,7 @@ func isBotPing(ping int) bool {
 
 func stringToInt(value string) int {
 	valueAsInt, _ := strconv.Atoi(value)
-	return valueAsInt
+	return int(valueAsInt)
 }
 
 func nameToRaw(value string) []uint16 {

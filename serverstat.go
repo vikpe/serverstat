@@ -18,10 +18,10 @@ type Player struct {
 	Team    string
 	TeamRaw []uint16
 	Skin    string
-	Colors  [2]int
-	Frags   int
-	Ping    int
-	Time    int
+	Colors  [2]uint8
+	Frags   uint16
+	Ping    uint16
+	Time    uint8
 	IsBot   bool
 }
 
@@ -40,7 +40,7 @@ type QtvStream struct {
 	Title          string
 	Url            string
 	SpectatorNames []string
-	NumSpectators  int
+	NumSpectators  uint8
 }
 
 func (node *QtvStream) MarshalJSON() ([]byte, error) {
@@ -69,10 +69,10 @@ type QuakeServer struct {
 	Address       string
 	QtvStream     QtvStream
 	Map           string
-	NumPlayers    int
-	MaxPlayers    int
-	NumSpectators int
-	MaxSpectators int
+	NumPlayers    uint8
+	MaxPlayers    uint8
+	NumSpectators uint8
+	MaxSpectators uint8
 	Players       []Player
 	Spectators    []Spectator
 	Settings      map[string]string
@@ -118,11 +118,11 @@ func Stat(address string) (QuakeServer, error) {
 	}
 	if val, ok := qserver.Settings["maxclients"]; ok {
 		value, _ := strconv.Atoi(val)
-		qserver.MaxPlayers = value
+		qserver.MaxPlayers = uint8(value)
 	}
 	if val, ok := qserver.Settings["maxspectators"]; ok {
 		value, _ := strconv.Atoi(val)
-		qserver.MaxSpectators = value
+		qserver.MaxSpectators = uint8(value)
 	}
 
 	var clientStrings []string
@@ -136,8 +136,8 @@ func Stat(address string) (QuakeServer, error) {
 
 	qserver.Address = address
 	qserver.Title = qserver.Settings["hostname"]
-	qserver.NumPlayers = len(qserver.Players)
-	qserver.NumSpectators = len(qserver.Spectators)
+	qserver.NumPlayers = uint8(len(qserver.Players))
+	qserver.NumSpectators = uint8(len(qserver.Spectators))
 
 	qtvServerStream, _ := statQtvStream(address)
 	qserver.QtvStream = qtvServerStream
@@ -197,7 +197,7 @@ func statQtvStream(address string) (QtvStream, error) {
 		Title:          record[IndexTitle],
 		Url:            record[IndexAddress],
 		SpectatorNames: spectatorNames,
-		NumSpectators:  numberOfSpectators,
+		NumSpectators:  uint8(numberOfSpectators),
 	}, nil
 }
 
