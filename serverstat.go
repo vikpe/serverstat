@@ -3,11 +3,11 @@ package serverstat
 import (
 	"bufio"
 	"encoding/csv"
-	"encoding/json"
 	"strconv"
 	"strings"
 	"sync"
 
+	"github.com/vikpe/qw-serverstat/qtvstream"
 	"github.com/vikpe/qw-serverstat/quaketext"
 	"github.com/vikpe/qw-serverstat/udpclient"
 )
@@ -36,38 +36,10 @@ type Spectator struct {
 	IsBot   bool
 }
 
-type QtvStream struct {
-	Title          string
-	Url            string
-	SpectatorNames []string
-	NumSpectators  uint8
-}
-
-func (node *QtvStream) MarshalJSON() ([]byte, error) {
-	if "" == node.Url {
-		return json.Marshal(nil)
-	} else {
-		return json.Marshal(QtvStream{
-			Title:          node.Title,
-			Url:            node.Url,
-			SpectatorNames: node.SpectatorNames,
-			NumSpectators:  node.NumSpectators,
-		})
-	}
-}
-
-func newQtvStream() QtvStream {
-	return QtvStream{
-		Title:         "",
-		Url:           "",
-		NumSpectators: 0,
-	}
-}
-
 type QuakeServer struct {
 	Title         string
 	Address       string
-	QtvStream     QtvStream
+	QtvStream     qtvstream.QtvStream
 	Map           string
 	NumPlayers    uint8
 	MaxPlayers    uint8
@@ -85,7 +57,7 @@ func newQuakeServer() QuakeServer {
 		Settings:   map[string]string{},
 		Players:    make([]Player, 0),
 		Spectators: make([]Spectator, 0),
-		QtvStream:  newQtvStream(),
+		QtvStream:  qtvstream.New(),
 	}
 }
 
@@ -156,14 +128,14 @@ func statQtvStreamUsers(address string) []string {
 	return parseQtvusersResponseBody(responseBody)
 }
 
-func statQtvStream(address string) (QtvStream, error) {
+func statQtvStream(address string) (qtvstream.QtvStream, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
 	udpClient := udpclient.New()
 	response, err := udpClient.Request(address, statusPacket, expectedHeader)
 
 	if err != nil {
-		return QtvStream{}, err
+		return qtvstream.QtvStream{}, err
 	}
 
 	responseBody := response[5:]
@@ -172,7 +144,7 @@ func statQtvStream(address string) (QtvStream, error) {
 
 	record, err := reader.Read()
 	if err != nil {
-		return QtvStream{}, err
+		return qtvstream.QtvStream{}, err
 	}
 
 	const (
@@ -184,7 +156,7 @@ func statQtvStream(address string) (QtvStream, error) {
 	if record[IndexAddress] == "" {
 		// these are the servers that are not configured correctly,
 		// that means they are not reporting their qtv ip as they should.
-		return QtvStream{}, err
+		return qtvstream.QtvStream{}, err
 	}
 
 	numberOfSpectators := stringToInt(record[IndexClientCount])
@@ -197,7 +169,7 @@ func statQtvStream(address string) (QtvStream, error) {
 		spectatorNames = make([]string, 0)
 	}
 
-	return QtvStream{
+	return qtvstream.QtvStream{
 		Title:          record[IndexTitle],
 		Url:            record[IndexAddress],
 		SpectatorNames: spectatorNames,
