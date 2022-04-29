@@ -41,14 +41,14 @@ func (client Client) Request(address string, statusPacket []byte, expectedRespon
 	responseLength := 0
 
 	for i := uint8(0); i < client.Config.Retries; i++ {
-		conn.SetDeadline(client.getTimeout())
+		conn.SetDeadline(client.getDeadline())
 
 		_, err = conn.Write(statusPacket)
 		if err != nil {
 			return nil, err
 		}
 
-		conn.SetDeadline(client.getTimeout())
+		conn.SetDeadline(client.getDeadline())
 		responseLength, err = conn.Read(responseBuffer)
 		if err != nil {
 			continue
@@ -72,6 +72,6 @@ func (client Client) Request(address string, statusPacket []byte, expectedRespon
 	return response, nil
 }
 
-func (client Client) getTimeout() time.Time {
+func (client Client) getDeadline() time.Time {
 	return time.Now().Add(time.Duration(client.Config.TimeoutInMs) * time.Millisecond)
 }
