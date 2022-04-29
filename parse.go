@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/vikpe/qw-serverstat/quakeserver"
 	"github.com/vikpe/qw-serverstat/quaketext"
 )
 
@@ -27,13 +28,13 @@ func parseQtvusersResponseBody(responseBody []byte) []string {
 	return strings.Split(namesText, "\" \"")
 }
 
-func parseClientRecord(clientRecord []string) (client, error) {
+func parseClientRecord(clientRecord []string) (quakeserver.client, error) {
 	columnCount := len(clientRecord)
 	const ExpectedColumnCount = 9
 
 	if columnCount != ExpectedColumnCount {
 		err := errors.New(fmt.Sprintf("invalid player column count %d.", columnCount))
-		return client{}, err
+		return quakeserver.client{}, err
 	}
 
 	const (
@@ -61,8 +62,8 @@ func parseClientRecord(clientRecord []string) (client, error) {
 	colorBottom := stringToInt(clientRecord[IndexColorBottom])
 	ping := stringToInt(clientRecord[IndexPing])
 
-	return client{
-		Player: Player{
+	return quakeserver.client{
+		Player: quakeserver.Player{
 			Name:    name,
 			NameRaw: nameToRaw(clientRecord[IndexName]),
 			Team:    team,
@@ -79,21 +80,21 @@ func parseClientRecord(clientRecord []string) (client, error) {
 
 }
 
-func parseClientString(clientStr string) (client, error) {
+func parseClientString(clientStr string) (quakeserver.client, error) {
 	reader := csv.NewReader(strings.NewReader(clientStr))
 	reader.Comma = ' '
 
 	clientRecord, err := reader.Read()
 	if err != nil {
-		return client{}, nil
+		return quakeserver.client{}, nil
 	}
 
 	return parseClientRecord(clientRecord)
 }
 
-func parseClientsStrings(clientStrings []string) ([]Player, []Spectator) {
-	players := make([]Player, 0)
-	spectators := make([]Spectator, 0)
+func parseClientsStrings(clientStrings []string) ([]quakeserver.Player, []quakeserver.Spectator) {
+	players := make([]quakeserver.Player, 0)
+	spectators := make([]quakeserver.Spectator, 0)
 
 	for _, clientStr := range clientStrings {
 		var client, err = parseClientString(clientStr)
@@ -103,7 +104,7 @@ func parseClientsStrings(clientStrings []string) ([]Player, []Spectator) {
 		}
 
 		if client.IsSpec {
-			spectators = append(spectators, Spectator{
+			spectators = append(spectators, quakeserver.Spectator{
 				Name:    client.Name,
 				NameRaw: client.NameRaw,
 				IsBot:   client.IsBot,

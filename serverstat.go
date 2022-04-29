@@ -8,60 +8,12 @@ import (
 	"sync"
 
 	"github.com/vikpe/qw-serverstat/qtvstream"
+	"github.com/vikpe/qw-serverstat/quakeserver"
 	"github.com/vikpe/qw-serverstat/quaketext"
 	"github.com/vikpe/qw-serverstat/udpclient"
 )
 
-type Player struct {
-	Name    string
-	NameRaw []uint16
-	Team    string
-	TeamRaw []uint16
-	Skin    string
-	Colors  [2]uint8
-	Frags   uint16
-	Ping    uint16
-	Time    uint8
-	IsBot   bool
-}
-
-type client struct {
-	Player
-	IsSpec bool
-}
-
-type Spectator struct {
-	Name    string
-	NameRaw []uint16
-	IsBot   bool
-}
-
-type QuakeServer struct {
-	Title         string
-	Address       string
-	QtvStream     qtvstream.QtvStream
-	Map           string
-	NumPlayers    uint8
-	MaxPlayers    uint8
-	NumSpectators uint8
-	MaxSpectators uint8
-	Players       []Player
-	Spectators    []Spectator
-	Settings      map[string]string
-}
-
-func newQuakeServer() QuakeServer {
-	return QuakeServer{
-		Title:      "",
-		Address:    "",
-		Settings:   map[string]string{},
-		Players:    make([]Player, 0),
-		Spectators: make([]Spectator, 0),
-		QtvStream:  qtvstream.New(),
-	}
-}
-
-func Stat(address string) (QuakeServer, error) {
+func Stat(address string) (quakeserver.QuakeServer, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'}
 
@@ -69,7 +21,7 @@ func Stat(address string) (QuakeServer, error) {
 	response, err := udpClient.Request(address, statusPacket, expectedHeader)
 
 	if err != nil {
-		return QuakeServer{}, err
+		return quakeserver.QuakeServer{}, err
 	}
 
 	responseBody := response[len(expectedHeader):]
@@ -78,7 +30,7 @@ func Stat(address string) (QuakeServer, error) {
 
 	settings := strings.FieldsFunc(scanner.Text(), func(r rune) bool { return r == '\\' })
 
-	qserver := newQuakeServer()
+	qserver := quakeserver.New()
 
 	for i := 0; i < len(settings)-1; i += 2 {
 		qserver.Settings[settings[i]] = settings[i+1]
@@ -177,13 +129,13 @@ func statQtvStream(address string) (qtvstream.QtvStream, error) {
 	}, nil
 }
 
-func StatMany(addresses []string) []QuakeServer {
+func StatMany(addresses []string) []quakeserver.QuakeServer {
 	var (
 		wg    sync.WaitGroup
 		mutex sync.Mutex
 	)
 
-	servers := make([]QuakeServer, 0)
+	servers := make([]quakeserver.QuakeServer, 0)
 
 	for _, address := range addresses {
 		wg.Add(1)
