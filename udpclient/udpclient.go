@@ -37,7 +37,7 @@ func (client Client) Request(address string, statusPacket []byte, expectedRespon
 	}
 	defer conn.Close()
 
-	response := make([]byte, client.Config.BufferSize)
+	responseBuffer := make([]byte, client.Config.BufferSize)
 	responseLength := 0
 
 	for i := uint8(0); i < client.Config.Retries; i++ {
@@ -49,7 +49,7 @@ func (client Client) Request(address string, statusPacket []byte, expectedRespon
 		}
 
 		conn.SetDeadline(client.getTimeout())
-		responseLength, err = conn.Read(response)
+		responseLength, err = conn.Read(responseBuffer)
 		if err != nil {
 			continue
 		}
@@ -61,13 +61,15 @@ func (client Client) Request(address string, statusPacket []byte, expectedRespon
 		return nil, err
 	}
 
+	response := responseBuffer[:responseLength]
+
 	isValidResponseHeader := bytes.Equal(response[:len(expectedResponseHeader)], expectedResponseHeader)
 	if !isValidResponseHeader {
 		err = errors.New(address + ": Invalid response header.")
 		return nil, err
 	}
 
-	return response[:responseLength], nil
+	return response, nil
 }
 
 func (client Client) getTimeout() time.Time {
