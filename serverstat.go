@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	"github.com/vikpe/qw-serverstat/quaketext"
-	"github.com/vikpe/qw-serverstat/qwnet"
+	"github.com/vikpe/qw-serverstat/udpclient"
 )
 
 type Player struct {
@@ -93,8 +93,8 @@ func Stat(address string) (QuakeServer, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'}
 
-	udpclient := qwnet.NewUdpClient()
-	response, err := udpclient.Request(address, statusPacket, expectedHeader)
+	udpClient := udpclient.New()
+	response, err := udpClient.Request(address, statusPacket, expectedHeader)
 
 	if err != nil {
 		return QuakeServer{}, err
@@ -150,8 +150,8 @@ func Stat(address string) (QuakeServer, error) {
 func statQtvStreamUsers(address string) []string {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's'}
-	udpclient := qwnet.NewUdpClient()
-	response, _ := udpclient.Request(address, statusPacket, expectedHeader)
+	udpClient := udpclient.New()
+	response, _ := udpClient.Request(address, statusPacket, expectedHeader)
 	responseBody := response[len(expectedHeader):]
 	return parseQtvusersResponseBody(responseBody)
 }
@@ -159,8 +159,8 @@ func statQtvStreamUsers(address string) []string {
 func statQtvStream(address string) (QtvStream, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
-	udpclient := qwnet.NewUdpClient()
-	response, err := udpclient.Request(address, statusPacket, expectedHeader)
+	udpClient := udpclient.New()
+	response, err := udpClient.Request(address, statusPacket, expectedHeader)
 
 	if err != nil {
 		return QtvStream{}, err

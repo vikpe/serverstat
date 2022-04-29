@@ -1,4 +1,4 @@
-package qwnet
+package udpclient
 
 import (
 	"bytes"
@@ -7,42 +7,34 @@ import (
 	"time"
 )
 
-const (
-	defaultBufferSize  uint16 = 8192
-	defaultRetries     uint8  = 3
-	defaultTimeoutInMs uint16 = 500
-)
-
-type UdpClientConfig struct {
+type Config struct {
 	BufferSize  uint16
 	Retries     uint8
 	TimeoutInMs uint16
 }
 
-type UdpClient struct {
-	Config UdpClientConfig
+type Client struct {
+	Config Config
 }
 
-func NewUdpClient() *UdpClient {
-	defaultConfig := UdpClientConfig{
-		BufferSize:  defaultBufferSize,
-		Retries:     defaultRetries,
-		TimeoutInMs: defaultTimeoutInMs,
+func New() *Client {
+	defaultConfig := Config{
+		BufferSize:  8192,
+		Retries:     3,
+		TimeoutInMs: 500,
 	}
-	return NewUdpClientWithConfig(defaultConfig)
+	return NewWithConfig(defaultConfig)
 }
 
-func NewUdpClientWithConfig(config UdpClientConfig) *UdpClient {
-	return &UdpClient{
-		Config: config,
-	}
+func NewWithConfig(config Config) *Client {
+	return &Client{Config: config}
 }
 
-func (client UdpClient) getTimeout() time.Time {
+func (client Client) getTimeout() time.Time {
 	return time.Now().Add(time.Duration(client.Config.TimeoutInMs) * time.Millisecond)
 }
 
-func (client UdpClient) Request(address string, statusPacket []byte, expectedResponseHeader []byte) ([]byte, error) {
+func (client Client) Request(address string, statusPacket []byte, expectedResponseHeader []byte) ([]byte, error) {
 	conn, err := net.Dial("udp4", address)
 	if err != nil {
 		return nil, err
