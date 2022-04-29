@@ -28,13 +28,13 @@ func parseQtvusersResponseBody(responseBody []byte) []string {
 	return strings.Split(namesText, "\" \"")
 }
 
-func parseClientRecord(clientRecord []string) (quakeserver.client, error) {
+func parseClientRecord(clientRecord []string) (quakeserver.Client, error) {
 	columnCount := len(clientRecord)
 	const ExpectedColumnCount = 9
 
 	if columnCount != ExpectedColumnCount {
 		err := errors.New(fmt.Sprintf("invalid player column count %d.", columnCount))
-		return quakeserver.client{}, err
+		return quakeserver.Client{}, err
 	}
 
 	const (
@@ -62,7 +62,7 @@ func parseClientRecord(clientRecord []string) (quakeserver.client, error) {
 	colorBottom := stringToInt(clientRecord[IndexColorBottom])
 	ping := stringToInt(clientRecord[IndexPing])
 
-	return quakeserver.client{
+	return quakeserver.Client{
 		Player: quakeserver.Player{
 			Name:    name,
 			NameRaw: nameToRaw(clientRecord[IndexName]),
@@ -80,13 +80,13 @@ func parseClientRecord(clientRecord []string) (quakeserver.client, error) {
 
 }
 
-func parseClientString(clientStr string) (quakeserver.client, error) {
+func parseClientString(clientStr string) (quakeserver.Client, error) {
 	reader := csv.NewReader(strings.NewReader(clientStr))
 	reader.Comma = ' '
 
 	clientRecord, err := reader.Read()
 	if err != nil {
-		return quakeserver.client{}, nil
+		return quakeserver.Client{}, nil
 	}
 
 	return parseClientRecord(clientRecord)
