@@ -92,7 +92,9 @@ func newQuakeServer() QuakeServer {
 func Stat(address string) (QuakeServer, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'}
-	response, err := qwnet.UdpRequest(address, statusPacket, expectedHeader)
+
+	udpclient := qwnet.NewUdpClient()
+	response, err := udpclient.Request(address, statusPacket, expectedHeader)
 
 	if err != nil {
 		return QuakeServer{}, err
@@ -148,7 +150,8 @@ func Stat(address string) (QuakeServer, error) {
 func statQtvStreamUsers(address string) []string {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's'}
-	response, _ := qwnet.UdpRequest(address, statusPacket, expectedHeader)
+	udpclient := qwnet.NewUdpClient()
+	response, _ := udpclient.Request(address, statusPacket, expectedHeader)
 	responseBody := response[len(expectedHeader):]
 	return parseQtvusersResponseBody(responseBody)
 }
@@ -156,7 +159,8 @@ func statQtvStreamUsers(address string) []string {
 func statQtvStream(address string) (QtvStream, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
-	response, err := qwnet.UdpRequest(address, statusPacket, expectedHeader)
+	udpclient := qwnet.NewUdpClient()
+	response, err := udpclient.Request(address, statusPacket, expectedHeader)
 
 	if err != nil {
 		return QtvStream{}, err
