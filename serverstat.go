@@ -10,7 +10,7 @@ import (
 	"github.com/vikpe/qw-serverstat/qtvstream"
 	"github.com/vikpe/qw-serverstat/quakeserver"
 	"github.com/vikpe/qw-serverstat/quaketext"
-	"github.com/vikpe/qw-serverstat/udpclient"
+	"github.com/vikpe/udpclient"
 )
 
 func Stat(address string) (quakeserver.QuakeServer, error) {
