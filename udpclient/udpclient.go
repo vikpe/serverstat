@@ -30,10 +30,6 @@ func NewWithConfig(config Config) *Client {
 	return &Client{Config: config}
 }
 
-func (client Client) getTimeout() time.Time {
-	return time.Now().Add(time.Duration(client.Config.TimeoutInMs) * time.Millisecond)
-}
-
 func (client Client) Request(address string, statusPacket []byte, expectedResponseHeader []byte) ([]byte, error) {
 	conn, err := net.Dial("udp4", address)
 	if err != nil {
@@ -72,4 +68,8 @@ func (client Client) Request(address string, statusPacket []byte, expectedRespon
 	}
 
 	return response[:responseLength], nil
+}
+
+func (client Client) getTimeout() time.Time {
+	return time.Now().Add(time.Duration(client.Config.TimeoutInMs) * time.Millisecond)
 }
