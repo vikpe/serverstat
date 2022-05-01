@@ -65,9 +65,9 @@ func parseClientRecord(clientRecord []string) (quakeserver.Client, error) {
 	return quakeserver.Client{
 		Player: quakeserver.Player{
 			Name:    name,
-			NameRaw: nameToRaw(clientRecord[IndexName]),
+			NameRaw: []byte(clientRecord[IndexName]),
 			Team:    team,
-			TeamRaw: nameToRaw(clientRecord[IndexTeam]),
+			TeamRaw: []byte(clientRecord[IndexTeam]),
 			Skin:    clientRecord[IndexSkin],
 			Colors:  [2]uint8{uint8(colorTop), uint8(colorBottom)},
 			Frags:   uint16(stringToInt(clientRecord[IndexFrags])),
@@ -138,15 +138,5 @@ func isBotPing(ping int) bool {
 
 func stringToInt(value string) int {
 	valueAsInt, _ := strconv.Atoi(value)
-	return int(valueAsInt)
-}
-
-func nameToRaw(value string) []uint16 {
-	intArr := make([]uint16, len(value))
-
-	for i := range value {
-		intArr[i] = uint16(value[i])
-	}
-
-	return intArr
+	return valueAsInt
 }

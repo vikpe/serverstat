@@ -4,9 +4,9 @@ import "github.com/vikpe/qw-serverstat/qtvstream"
 
 type Player struct {
 	Name    string
-	NameRaw []uint16
+	NameRaw []byte
 	Team    string
-	TeamRaw []uint16
+	TeamRaw []byte
 	Skin    string
 	Colors  [2]uint8
 	Frags   uint16
@@ -22,7 +22,7 @@ type Client struct {
 
 type Spectator struct {
 	Name    string
-	NameRaw []uint16
+	NameRaw []byte
 	IsBot   bool
 }
 
