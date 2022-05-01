@@ -30,13 +30,8 @@ func GetServerInfo(address string) (quakeserver.QuakeServer, error) {
 	scanner := bufio.NewScanner(strings.NewReader(string(responseBody)))
 	scanner.Scan()
 
-	settings := strings.FieldsFunc(scanner.Text(), func(r rune) bool { return r == '\\' })
-
 	qserver := quakeserver.New()
-
-	for i := 0; i < len(settings)-1; i += 2 {
-		qserver.Settings[settings[i]] = settings[i+1]
-	}
+	qserver.Settings = parseSettingsString(scanner.Text())
 
 	if val, ok := qserver.Settings["hostname"]; ok {
 		qserver.Settings["hostname"] = quaketext.NewFromString(val).ToPlainString()
@@ -71,6 +66,17 @@ func GetServerInfo(address string) (quakeserver.QuakeServer, error) {
 	qserver.QtvStream = qtvServerStream
 
 	return qserver, nil
+}
+
+func parseSettingsString(settingsString string) map[string]string {
+	settingsLines := strings.FieldsFunc(settingsString, func(r rune) bool { return r == '\\' })
+	settings := make(map[string]string, len(settingsLines))
+
+	for i := 0; i < len(settingsLines)-1; i += 2 {
+		settings[settingsLines[i]] = settingsLines[i+1]
+	}
+
+	return settings
 }
 
 func parseClientRecord(clientRecord []string) (quakeserver.Client, error) {
