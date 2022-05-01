@@ -83,14 +83,14 @@ func TestToPlainText(t *testing.T) {
 func ExampleNewFromString() {
 	quakeText := "XantoM"
 	qtext := quaketext.NewFromString(quakeText)
-	fmt.Println(qtext)
+	fmt.Println(qtext.ToPlainString())
 	// Output: XantoM
 }
 
 func ExampleNewFromBytes() {
 	quakeTextBytes := []byte{88, 97, 110, 116, 111, 77}
 	qtext := quaketext.NewFromBytes(quakeTextBytes)
-	fmt.Println(qtext)
+	fmt.Println(qtext.ToPlainString())
 	// Output: XantoM
 }
 
