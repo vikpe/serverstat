@@ -1,6 +1,22 @@
 package quakeserver
 
-import "github.com/vikpe/qw-serverstat/qtvstream"
+import (
+	"github.com/vikpe/qw-serverstat/quakeserver/qtvstream"
+)
+
+type QuakeServer struct {
+	Title         string
+	Address       string
+	QtvStream     qtvstream.QtvStream
+	Map           string
+	NumPlayers    uint8
+	MaxPlayers    uint8
+	NumSpectators uint8
+	MaxSpectators uint8
+	Players       []Player
+	Spectators    []Spectator
+	Settings      map[string]string
+}
 
 type Player struct {
 	Name    string
@@ -24,20 +40,6 @@ type Spectator struct {
 	Name    string
 	NameRaw []byte
 	IsBot   bool
-}
-
-type QuakeServer struct {
-	Title         string
-	Address       string
-	QtvStream     qtvstream.QtvStream
-	Map           string
-	NumPlayers    uint8
-	MaxPlayers    uint8
-	NumSpectators uint8
-	MaxSpectators uint8
-	Players       []Player
-	Spectators    []Spectator
-	Settings      map[string]string
 }
 
 func New() QuakeServer {
