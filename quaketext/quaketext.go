@@ -1,5 +1,7 @@
 package quaketext
 
+import "github.com/vikpe/qw-serverstat/quaketext/quakechar"
+
 /* TODO:
 type MarkupFunction func(value string, colorCode rune) string
 
@@ -8,7 +10,7 @@ func ToMarkup(quakeText string, markupFunc MarkupFunction) string {
 }*/
 
 type QuakeText struct {
-	Source []byte
+	Chars []quakechar.QuakeChar
 }
 
 func NewFromString(quakeText string) *QuakeText {
@@ -16,29 +18,21 @@ func NewFromString(quakeText string) *QuakeText {
 }
 
 func NewFromBytes(quakeTextBytes []byte) *QuakeText {
-	return &QuakeText{Source: quakeTextBytes}
+	chars := make([]quakechar.QuakeChar, 0)
+
+	for _, n := range quakeTextBytes {
+		chars = append(chars, *quakechar.New(n))
+	}
+
+	return &QuakeText{Chars: chars}
 }
 
 func (qtext QuakeText) ToPlainString() string {
-	charsetToprows := []string{
-		"•", "", "", "", "", "•", "", "", "", "", "", "", "", "", "•", "•",
-		"[", "]", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "•", "", "", "",
-	}
-	charsetTopRowsSize := byte(len(charsetToprows))
-	plainTextBytes := make([]byte, 0)
+	plainText := ""
 
-	for _, sourceByte := range qtext.Source {
-		sourceByte &= 0x7f // remove color
-
-		if sourceByte == 127 { // weird left arrow at end of charset
-			continue
-		} else if sourceByte < charsetTopRowsSize {
-			translatedBytes := []byte(charsetToprows[sourceByte])
-			plainTextBytes = append(plainTextBytes, translatedBytes...)
-		} else {
-			plainTextBytes = append(plainTextBytes, sourceByte)
-		}
+	for _, char := range qtext.Chars {
+		plainText += char.ToPlainString()
 	}
 
-	return string(plainTextBytes)
+	return plainText
 }
