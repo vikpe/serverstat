@@ -1,19 +1,11 @@
-package quakechar
+package qchar
 
-type QuakeChar struct {
-	Byte byte
+func RemoveColor(qchar byte) byte {
+	return qchar & 0x7f
 }
 
-func New(b byte) *QuakeChar {
-	return &QuakeChar{Byte: b}
-}
-
-func (qchar QuakeChar) RemoveColor() *QuakeChar {
-	return New(qchar.Byte & 0x7f)
-}
-
-func (qchar QuakeChar) ToPlainString() string {
-	plainByte := qchar.RemoveColor().Byte
+func ToPlainString(qchar byte) string {
+	plainByte := RemoveColor(qchar)
 
 	if plainByte == 127 { // weird left arrow at end of charset
 		return ""

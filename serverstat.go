@@ -11,7 +11,7 @@ import (
 
 	"github.com/vikpe/qw-serverstat/quakeserver"
 	"github.com/vikpe/qw-serverstat/quakeserver/qtvstream"
-	"github.com/vikpe/qw-serverstat/quaketext"
+	"github.com/vikpe/qw-serverstat/quaketext/qstring"
 	"github.com/vikpe/udpclient"
 )
 
@@ -34,7 +34,7 @@ func GetServerInfo(address string) (quakeserver.QuakeServer, error) {
 	qserver.Settings = parseSettingsString(scanner.Text())
 
 	if val, ok := qserver.Settings["hostname"]; ok {
-		qserver.Settings["hostname"] = quaketext.NewFromString(val).ToPlainString()
+		qserver.Settings["hostname"] = qstring.ToPlainString(val)
 	}
 	if val, ok := qserver.Settings["map"]; ok {
 		qserver.Map = val
@@ -107,8 +107,8 @@ func parseClientRecord(clientRecord []string) (quakeserver.Client, error) {
 		nameQuakeStr = strings.TrimPrefix(nameQuakeStr, SpectatorPrefix)
 	}
 
-	name := quaketext.NewFromString(nameQuakeStr).ToPlainString()
-	team := quaketext.NewFromString(clientRecord[IndexTeam]).ToPlainString()
+	name := qstring.ToPlainString(nameQuakeStr)
+	team := qstring.ToPlainString(clientRecord[IndexTeam])
 	colorTop := stringToInt(clientRecord[IndexColorTop])
 	colorBottom := stringToInt(clientRecord[IndexColorBottom])
 	ping := stringToInt(clientRecord[IndexPing])
@@ -213,7 +213,7 @@ func parseQtvusersResponseBody(responseBody []byte) []string {
 	indexFirstQuote := strings.Index(fullText, QuoteChar)
 	indexLastQuote := strings.LastIndex(fullText, QuoteChar)
 	namesText := fullText[indexFirstQuote+1 : indexLastQuote]
-	namesText = quaketext.NewFromString(namesText).ToPlainString()
+	namesText = qstring.ToPlainString(namesText)
 
 	return strings.Split(namesText, "\" \"")
 }

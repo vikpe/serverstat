@@ -1,14 +1,14 @@
-package quakechar_test
+package qchar_test
 
 import (
 	"log"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vikpe/qw-serverstat/quaketext/quakechar"
+	"github.com/vikpe/qw-serverstat/quaketext/qchar"
 )
 
-func TestQuakeChar_ToPlainString(t *testing.T) {
+func TestToPlainString(t *testing.T) {
 	// printable range of ascii table
 	var ascii []byte
 
@@ -29,18 +29,18 @@ func TestQuakeChar_ToPlainString(t *testing.T) {
 		char := string([]byte{charByte})
 
 		// normal/white ascii
-		assert.Equal(t, char, quakechar.New(charByte).ToPlainString())
+		assert.Equal(t, char, qchar.ToPlainString(charByte))
 		testedBytes[charByte] = true
 
 		// red ascii
 		charByteRed := charByte + 128
-		assert.Equal(t, char, quakechar.New(charByteRed).ToPlainString())
+		assert.Equal(t, char, qchar.ToPlainString(charByteRed))
 		testedBytes[charByte+128] = true
 
 		// yellow numbers
 		if char >= "0" && char <= "9" {
 			charByteYellow := charByte - 30
-			assert.Equal(t, char, quakechar.New(charByteYellow).ToPlainString()) // yellow numbers
+			assert.Equal(t, char, qchar.ToPlainString(charByteYellow)) // yellow numbers
 			testedBytes[charByteYellow] = true
 		}
 	}
@@ -55,7 +55,7 @@ func TestQuakeChar_ToPlainString(t *testing.T) {
 
 	for expectedChar, charBytes := range specialChars {
 		for _, charByte := range charBytes {
-			assert.Equal(t, expectedChar, quakechar.New(charByte).ToPlainString(), charByte)
+			assert.Equal(t, expectedChar, qchar.ToPlainString(charByte), charByte)
 			testedBytes[charByte] = true
 		}
 	}
@@ -75,8 +75,7 @@ func TestQuakeChar_ToPlainString(t *testing.T) {
 	}
 }
 
-func TestQuakeChar_RemoveColor(t *testing.T) {
-	expect := quakechar.New(100)
-	actual := quakechar.New(228).RemoveColor()
-	assert.Equal(t, expect, actual)
+func TestRemoveColor(t *testing.T) {
+	assert.Equal(t, byte(100), qchar.RemoveColor(228))
+	assert.Equal(t, byte(100), qchar.RemoveColor(100))
 }
