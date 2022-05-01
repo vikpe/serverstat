@@ -31,20 +31,20 @@ func TestToPlainText(t *testing.T) {
 
 		// normal/white ascii
 		charWhite := char
-		assert.Equal(t, char, quaketext.StringToPlainString(charWhite))
+		assert.Equal(t, char, quaketext.NewFromString(charWhite).ToPlainString())
 		testedBytes[charByte] = true
 
 		// red ascii
 		charByteRed := charByte + 128
 		charRed := string([]byte{charByteRed})
-		assert.Equal(t, char, quaketext.StringToPlainString(charRed))
+		assert.Equal(t, char, quaketext.NewFromString(charRed).ToPlainString())
 		testedBytes[charByte+128] = true
 
 		// yellow numbers
 		if char >= "0" && char <= "9" {
 			charByteYellow := charByte - 30
 			charYellow := string([]byte{charByteYellow})
-			assert.Equal(t, char, quaketext.StringToPlainString(charYellow)) // yellow numbers
+			assert.Equal(t, char, quaketext.NewFromString(charYellow).ToPlainString()) // yellow numbers
 			testedBytes[charByteYellow] = true
 		}
 	}
@@ -60,7 +60,7 @@ func TestToPlainText(t *testing.T) {
 	for expectedChar, charBytes := range specialChars {
 		for _, charByte := range charBytes {
 			chars := string([]byte{charByte})
-			assert.Equal(t, expectedChar, quaketext.StringToPlainString(chars), charByte)
+			assert.Equal(t, expectedChar, quaketext.NewFromString(chars).ToPlainString(), charByte)
 			testedBytes[charByte] = true
 		}
 	}
@@ -80,16 +80,22 @@ func TestToPlainText(t *testing.T) {
 	}
 }
 
-func ExampleStringToPlainString() {
+func ExampleNewFromString() {
 	quakeText := "XantoM"
-	plainText := quaketext.StringToPlainString(quakeText)
-	fmt.Println(plainText)
+	qtext := quaketext.NewFromString(quakeText)
+	fmt.Println(qtext)
 	// Output: XantoM
 }
 
-func ExampleBytesToPlainString() {
+func ExampleNewFromBytes() {
 	quakeTextBytes := []byte{88, 97, 110, 116, 111, 77}
-	plainText := quaketext.BytesToPlainString(quakeTextBytes)
-	fmt.Println(plainText)
+	qtext := quaketext.NewFromBytes(quakeTextBytes)
+	fmt.Println(qtext)
 	// Output: XantoM
+}
+
+func ExampleQuakeText_ToPlainString() {
+	quakeText := "XantoM"
+	plainString := quaketext.NewFromString(quakeText).ToPlainString()
+	fmt.Println(plainString)
 }

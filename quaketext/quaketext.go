@@ -7,7 +7,19 @@ func ToMarkup(quakeText string, markupFunc MarkupFunction) string {
 	return ""
 }*/
 
-func BytesToPlainString(quakeTextBytes []byte) string {
+type QuakeText struct {
+	source []byte
+}
+
+func NewFromString(quakeText string) *QuakeText {
+	return NewFromBytes([]byte(quakeText))
+}
+
+func NewFromBytes(quakeTextBytes []byte) *QuakeText {
+	return &QuakeText{source: quakeTextBytes}
+}
+
+func (qtext QuakeText) ToPlainString() string {
 	charsetToprows := []string{
 		"•", "", "", "", "", "•", "", "", "", "", "", "", "", "", "•", "•",
 		"[", "]", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "•", "", "", "",
@@ -15,7 +27,7 @@ func BytesToPlainString(quakeTextBytes []byte) string {
 	charsetTopRowsSize := byte(len(charsetToprows))
 	plainTextBytes := make([]byte, 0)
 
-	for _, sourceByte := range quakeTextBytes {
+	for _, sourceByte := range qtext.source {
 		sourceByte &= 0x7f // remove color
 
 		if sourceByte == 127 { // weird left arrow at end of charset
@@ -29,8 +41,4 @@ func BytesToPlainString(quakeTextBytes []byte) string {
 	}
 
 	return string(plainTextBytes)
-}
-
-func StringToPlainString(quakeText string) string {
-	return BytesToPlainString([]byte(quakeText))
 }
