@@ -35,7 +35,7 @@ func TestToPlainString(t *testing.T) {
 		// red ascii
 		charByteRed := charByte + 128
 		assert.Equal(t, char, qchar.ToPlainString(charByteRed))
-		testedBytes[charByte+128] = true
+		testedBytes[charByteRed] = true
 
 		// yellow numbers
 		if char >= "0" && char <= "9" {
