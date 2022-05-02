@@ -34,18 +34,18 @@ func NewGenericServer() GenericServer {
 }
 
 type QtvStream struct {
-	Title          string
-	Url            string
-	SpectatorNames []string
-	NumSpectators  uint8
+	Title      string
+	Url        string
+	Clients    []Client
+	NumClients uint8
 }
 
 func NewQtvStream() QtvStream {
 	return QtvStream{
-		Title:          "",
-		Url:            "",
-		SpectatorNames: make([]string, 0),
-		NumSpectators:  0,
+		Title:      "",
+		Url:        "",
+		Clients:    make([]Client, 0),
+		NumClients: 0,
 	}
 }
 
@@ -54,10 +54,10 @@ func (node *QtvStream) MarshalJSON() ([]byte, error) {
 		return json.Marshal("")
 	} else {
 		return json.Marshal(QtvStream{
-			Title:          node.Title,
-			Url:            node.Url,
-			SpectatorNames: node.SpectatorNames,
-			NumSpectators:  node.NumSpectators,
+			Title:      node.Title,
+			Url:        node.Url,
+			Clients:    node.Clients,
+			NumClients: node.NumClients,
 		})
 	}
 }

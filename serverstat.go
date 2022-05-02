@@ -209,7 +209,7 @@ func stringToInt(value string) int {
 	return valueAsInt
 }
 
-func GetQtvUsers(address string) ([]string, error) {
+func GetQtvUsers(address string) ([]qserver.Client, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's'}
 	udpClient := udpclient.New()
@@ -223,21 +223,30 @@ func GetQtvUsers(address string) ([]string, error) {
 	return parseQtvusersResponseBody(responseBody), nil
 }
 
-func parseQtvusersResponseBody(responseBody []byte) []string {
+func parseQtvusersResponseBody(responseBody []byte) []qserver.Client {
 	// example response body: 12 "djevulsk" "serp" "player" "rst" "twitch.tv/vikpe"
 	fullText := string(responseBody)
 	const QuoteChar = "\""
 
 	if !strings.Contains(fullText, QuoteChar) {
-		return make([]string, 0)
+		return make([]qserver.Client, 0)
 	}
 
 	indexFirstQuote := strings.Index(fullText, QuoteChar)
 	indexLastQuote := strings.LastIndex(fullText, QuoteChar)
 	namesText := fullText[indexFirstQuote+1 : indexLastQuote]
-	namesText = qstring.ToPlainString(namesText)
 
-	return strings.Split(namesText, "\" \"")
+	clients := make([]qserver.Client, 0)
+	namesRaw := strings.Split(namesText, "\" \"")
+
+	for _, nameRaw := range namesRaw {
+		clients = append(clients, qserver.Client{
+			Name:    qstring.ToPlainString(nameRaw),
+			NameRaw: []rune(nameRaw),
+		})
+	}
+
+	return clients
 }
 
 func GetQtvStreamInfo(address string) (qserver.QtvStream, error) {
@@ -271,25 +280,25 @@ func GetQtvStreamInfo(address string) (qserver.QtvStream, error) {
 		return qserver.QtvStream{}, err
 	}
 
-	numberOfSpectators := stringToInt(record[IndexClientCount])
+	numberOfClients := stringToInt(record[IndexClientCount])
 
-	var spectatorNames []string
+	var clients []qserver.Client
 
-	if numberOfSpectators > 0 {
-		spectatorNames, err = GetQtvUsers(address)
+	if numberOfClients > 0 {
+		clients, err = GetQtvUsers(address)
 
 		if err != nil {
-			spectatorNames = make([]string, 0)
+			clients = make([]qserver.Client, 0)
 		}
 	} else {
-		spectatorNames = make([]string, 0)
+		clients = make([]qserver.Client, 0)
 	}
 
 	return qserver.QtvStream{
-		Title:          record[IndexTitle],
-		Url:            record[IndexAddress],
-		SpectatorNames: spectatorNames,
-		NumSpectators:  uint8(numberOfSpectators),
+		Title:      record[IndexTitle],
+		Url:        record[IndexAddress],
+		Clients:    clients,
+		NumClients: uint8(numberOfClients),
 	}, nil
 }
 
