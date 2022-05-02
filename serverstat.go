@@ -9,13 +9,12 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/vikpe/qw-serverstat/quakeserver"
-	"github.com/vikpe/qw-serverstat/quakeserver/qtvstream"
+	"github.com/vikpe/qw-serverstat/qserver"
 	"github.com/vikpe/qw-serverstat/quaketext/qstring"
 	"github.com/vikpe/udpclient"
 )
 
-func GetServerInfo(address string) (quakeserver.QuakeServer, error) {
+func GetServerInfo(address string) (qserver.GenericServer, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'}
 
@@ -23,49 +22,49 @@ func GetServerInfo(address string) (quakeserver.QuakeServer, error) {
 	response, err := udpClient.Request(address, statusPacket, expectedHeader)
 
 	if err != nil {
-		return quakeserver.QuakeServer{}, err
+		return qserver.GenericServer{}, err
 	}
 
 	responseBody := response[len(expectedHeader):]
 	scanner := bufio.NewScanner(strings.NewReader(string(responseBody)))
 	scanner.Scan()
 
-	qserver := quakeserver.New()
-	qserver.Settings = parseSettingsString(scanner.Text())
+	server := qserver.NewGenericServer()
+	server.Settings = parseSettingsString(scanner.Text())
 
-	if val, ok := qserver.Settings["hostname"]; ok {
-		qserver.Settings["hostname"] = qstring.ToPlainString(val)
+	/*if val, ok := server.Settings["hostname"]; ok {
+		server.Settings["hostname"] = qstring.ToPlainString(val)
 	}
-	if val, ok := qserver.Settings["map"]; ok {
-		qserver.Map = val
+	if val, ok := server.Settings["map"]; ok {
+		server.Map = val
 	}
-	if val, ok := qserver.Settings["maxclients"]; ok {
+	if val, ok := server.Settings["maxclients"]; ok {
 		value, _ := strconv.Atoi(val)
-		qserver.MaxPlayers = uint8(value)
+		server.MaxPlayers = uint8(value)
 	}
-	if val, ok := qserver.Settings["maxspectators"]; ok {
+	if val, ok := server.Settings["maxspectators"]; ok {
 		value, _ := strconv.Atoi(val)
-		qserver.MaxSpectators = uint8(value)
-	}
+		server.MaxSpectators = uint8(value)
+	}*/
 
 	var clientStrings []string
 	for scanner.Scan() {
 		clientStrings = append(clientStrings, scanner.Text())
 	}
 
-	players, spectators := parseClientsStrings(clientStrings)
-	qserver.Players = players
-	qserver.Spectators = spectators
+	server.Address = address
+	server.Clients = parseClientsStrings(clientStrings)
+	server.NumClients = uint8(len(server.Clients))
+	//server.Title = server.Settings["hostname"]
+	//server.NumPlayers = uint8(len(server.Players))
+	//server.NumSpectators = uint8(len(server.Spectators))
 
-	qserver.Address = address
-	qserver.Title = qserver.Settings["hostname"]
-	qserver.NumPlayers = uint8(len(qserver.Players))
-	qserver.NumSpectators = uint8(len(qserver.Spectators))
+	if qserver.IsGameServer(server) {
+		qtvServerStream, _ := GetQtvStreamInfo(address)
+		server.ExtraInfo.QtvStream = qtvServerStream
+	}
 
-	qtvServerStream, _ := GetQtvStreamInfo(address)
-	qserver.QtvStream = qtvServerStream
-
-	return qserver, nil
+	return server, nil
 }
 
 func parseSettingsString(settingsString string) map[string]string {
@@ -79,13 +78,13 @@ func parseSettingsString(settingsString string) map[string]string {
 	return settings
 }
 
-func parseClientRecord(clientRecord []string) (quakeserver.Client, error) {
+func parseClientRecord(clientRecord []string) (qserver.Client, error) {
 	columnCount := len(clientRecord)
 	const ExpectedColumnCount = 9
 
 	if columnCount != ExpectedColumnCount {
 		err := errors.New(fmt.Sprintf("invalid player column count %d.", columnCount))
-		return quakeserver.Client{}, err
+		return qserver.Client{}, err
 	}
 
 	const (
@@ -113,39 +112,50 @@ func parseClientRecord(clientRecord []string) (quakeserver.Client, error) {
 	colorBottom := stringToInt(clientRecord[IndexColorBottom])
 	ping := stringToInt(clientRecord[IndexPing])
 
-	return quakeserver.Client{
-		Player: quakeserver.Player{
-			Name:    name,
-			NameRaw: []byte(clientRecord[IndexName]),
-			Team:    team,
-			TeamRaw: []byte(clientRecord[IndexTeam]),
-			Skin:    clientRecord[IndexSkin],
-			Colors:  [2]uint8{uint8(colorTop), uint8(colorBottom)},
-			Frags:   uint16(stringToInt(clientRecord[IndexFrags])),
-			Ping:    uint16(ping),
-			Time:    uint8(stringToInt(clientRecord[IndexTime])),
-			IsBot:   isBotName(name) || isBotPing(ping),
+	return qserver.Client{
+		Player: qserver.Player{
+			Name:       name,
+			NameRaw:    []byte(nameQuakeStr),
+			NameRawStr: nameQuakeStr,
+			NameInts:   nameToIntArray(nameQuakeStr),
+			Team:       team,
+			TeamRaw:    []byte(clientRecord[IndexTeam]),
+			Skin:       clientRecord[IndexSkin],
+			Colors:     [2]uint8{uint8(colorTop), uint8(colorBottom)},
+			Frags:      uint16(stringToInt(clientRecord[IndexFrags])),
+			Ping:       uint16(ping),
+			Time:       uint8(stringToInt(clientRecord[IndexTime])),
+			IsBot:      isBotName(name) || isBotPing(ping),
 		},
 		IsSpec: isSpec,
 	}, nil
 
 }
 
-func parseClientString(clientStr string) (quakeserver.Client, error) {
+func nameToIntArray(name string) []uint16 {
+	result := make([]uint16, 0)
+
+	for i := range name {
+		result = append(result, uint16(name[i]))
+	}
+
+	return result
+}
+
+func parseClientString(clientStr string) (qserver.Client, error) {
 	reader := csv.NewReader(strings.NewReader(clientStr))
 	reader.Comma = ' '
 
 	clientRecord, err := reader.Read()
 	if err != nil {
-		return quakeserver.Client{}, nil
+		return qserver.Client{}, nil
 	}
 
 	return parseClientRecord(clientRecord)
 }
 
-func parseClientsStrings(clientStrings []string) ([]quakeserver.Player, []quakeserver.Spectator) {
-	players := make([]quakeserver.Player, 0)
-	spectators := make([]quakeserver.Spectator, 0)
+func parseClientsStrings(clientStrings []string) []qserver.Client {
+	clients := make([]qserver.Client, 0)
 
 	for _, clientStr := range clientStrings {
 		var client, err = parseClientString(clientStr)
@@ -154,18 +164,10 @@ func parseClientsStrings(clientStrings []string) ([]quakeserver.Player, []quakes
 			continue
 		}
 
-		if client.IsSpec {
-			spectators = append(spectators, quakeserver.Spectator{
-				Name:    client.Name,
-				NameRaw: client.NameRaw,
-				IsBot:   client.IsBot,
-			})
-		} else {
-			players = append(players, client.Player)
-		}
+		clients = append(clients, client)
 	}
 
-	return players, spectators
+	return clients
 }
 
 func isBotName(name string) bool {
@@ -223,14 +225,14 @@ func parseQtvusersResponseBody(responseBody []byte) []string {
 	return strings.Split(namesText, "\" \"")
 }
 
-func GetQtvStreamInfo(address string) (qtvstream.QtvStream, error) {
+func GetQtvStreamInfo(address string) (qserver.QtvStream, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
 	udpClient := udpclient.New()
 	response, err := udpClient.Request(address, statusPacket, expectedHeader)
 
 	if err != nil {
-		return qtvstream.QtvStream{}, err
+		return qserver.QtvStream{}, err
 	}
 
 	responseBody := response[5:]
@@ -239,7 +241,7 @@ func GetQtvStreamInfo(address string) (qtvstream.QtvStream, error) {
 
 	record, err := reader.Read()
 	if err != nil {
-		return qtvstream.QtvStream{}, err
+		return qserver.QtvStream{}, err
 	}
 
 	const (
@@ -251,7 +253,7 @@ func GetQtvStreamInfo(address string) (qtvstream.QtvStream, error) {
 	if record[IndexAddress] == "" {
 		// these are the servers that are not configured correctly,
 		// that means they are not reporting their qtv ip as they should.
-		return qtvstream.QtvStream{}, err
+		return qserver.QtvStream{}, err
 	}
 
 	numberOfSpectators := stringToInt(record[IndexClientCount])
@@ -268,7 +270,7 @@ func GetQtvStreamInfo(address string) (qtvstream.QtvStream, error) {
 		spectatorNames = make([]string, 0)
 	}
 
-	return qtvstream.QtvStream{
+	return qserver.QtvStream{
 		Title:          record[IndexTitle],
 		Url:            record[IndexAddress],
 		SpectatorNames: spectatorNames,
@@ -276,13 +278,13 @@ func GetQtvStreamInfo(address string) (qtvstream.QtvStream, error) {
 	}, nil
 }
 
-func GetServerInfoFromMany(addresses []string) []quakeserver.QuakeServer {
+func GetServerInfoFromMany(addresses []string) []qserver.GenericServer {
 	var (
 		wg    sync.WaitGroup
 		mutex sync.Mutex
 	)
 
-	servers := make([]quakeserver.QuakeServer, 0)
+	servers := make([]qserver.GenericServer, 0)
 
 	for _, address := range addresses {
 		wg.Add(1)
