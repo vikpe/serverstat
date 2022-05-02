@@ -1,6 +1,7 @@
 package qstring_test
 
 import (
+	"encoding/base64"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,7 +9,16 @@ import (
 )
 
 func TestToPlainString(t *testing.T) {
-	expect := "XantuM"
-	actual := qstring.ToPlainString("XantõM")
-	assert.Equal(t, expect, actual)
+	testCases := map[string]string{
+		"HCBtYXplcg==": "• mazer",
+		"EXNyEA==":     "]sr[",
+		"W1NlcnZlTWVd": "[ServeMe]",
+		"bHF3Yw==":     "lqwc",
+	}
+
+	for encodedString, expect := range testCases {
+		strBytes, _ := base64.StdEncoding.DecodeString(encodedString)
+		actual := qstring.ToPlainString(string(strBytes))
+		assert.Equal(t, expect, actual)
+	}
 }
