@@ -163,16 +163,16 @@ func parseClientRecord(clientRecord []string, expectedColumnCount uint8) (qserve
 	ping := stringToInt(clientRecord[IndexPing])
 
 	team := ""
-	teamRaw := make([]byte, 0)
+	teamRaw := make([]rune, 0)
 
 	if columnCount-1 >= IndexTeam {
 		team = qstring.ToPlainString(clientRecord[IndexTeam])
-		teamRaw = []byte(clientRecord[IndexTeam])
+		teamRaw = []rune(clientRecord[IndexTeam])
 	}
 
 	return qserver.Client{
 		Name:    name,
-		NameRaw: []byte(nameQuakeStr),
+		NameRaw: []rune(nameQuakeStr),
 		Team:    team,
 		TeamRaw: teamRaw,
 		Skin:    clientRecord[IndexSkin],

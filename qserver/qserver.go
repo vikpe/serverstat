@@ -64,9 +64,9 @@ func (node *QtvStream) MarshalJSON() ([]byte, error) {
 
 type Client struct {
 	Name    string
-	NameRaw []byte
+	NameRaw []rune
 	Team    string
-	TeamRaw []byte
+	TeamRaw []rune
 	Skin    string
 	Colors  [2]uint8
 	Frags   int
