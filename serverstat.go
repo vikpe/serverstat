@@ -192,13 +192,18 @@ func stringToInt(value string) int {
 	return valueAsInt
 }
 
-func GetQtvUsers(address string) []string {
+func GetQtvUsers(address string) ([]string, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's'}
 	udpClient := udpclient.New()
-	response, _ := udpClient.Request(address, statusPacket, expectedHeader)
+	response, err := udpClient.Request(address, statusPacket, expectedHeader)
+
+	if err != nil {
+		return nil, err
+	}
+
 	responseBody := response[len(expectedHeader):]
-	return parseQtvusersResponseBody(responseBody)
+	return parseQtvusersResponseBody(responseBody), nil
 }
 
 func parseQtvusersResponseBody(responseBody []byte) []string {
@@ -254,7 +259,11 @@ func GetQtvStreamInfo(address string) (qtvstream.QtvStream, error) {
 	var spectatorNames []string
 
 	if numberOfSpectators > 0 {
-		spectatorNames = GetQtvUsers(address)
+		spectatorNames, err = GetQtvUsers(address)
+
+		if err != nil {
+			spectatorNames = make([]string, 0)
+		}
 	} else {
 		spectatorNames = make([]string, 0)
 	}
