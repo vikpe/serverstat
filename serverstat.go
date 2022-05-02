@@ -15,6 +15,7 @@ import (
 )
 
 func GetServerInfo(address string) (qserver.GenericServer, error) {
+	// query
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'}
 
@@ -25,11 +26,13 @@ func GetServerInfo(address string) (qserver.GenericServer, error) {
 		return qserver.GenericServer{}, err
 	}
 
+	// resulting server
+	server := qserver.NewGenericServer()
+
+	// settings
 	responseBody := response[len(expectedHeader):]
 	scanner := bufio.NewScanner(strings.NewReader(string(responseBody)))
 	scanner.Scan()
-
-	server := qserver.NewGenericServer()
 	server.Settings = parseSettingsString(scanner.Text())
 
 	/*if val, ok := server.Settings["hostname"]; ok {
@@ -47,22 +50,28 @@ func GetServerInfo(address string) (qserver.GenericServer, error) {
 		server.MaxSpectators = uint8(value)
 	}*/
 
+	// clients
 	var clientStrings []string
 	for scanner.Scan() {
-		clientStrings = append(clientStrings, scanner.Text())
+		foobi := scanner.Text()
+		clientStrings = append(clientStrings, foobi)
 	}
 
-	server.Address = address
-	server.Clients = parseClientsStrings(clientStrings)
-	server.NumClients = uint8(len(server.Clients))
 	//server.Title = server.Settings["hostname"]
 	//server.NumPlayers = uint8(len(server.Players))
 	//server.NumSpectators = uint8(len(server.Spectators))
 
 	if qserver.IsGameServer(server) {
+		server.Clients = parseClientStrings(clientStrings, 9)
 		qtvServerStream, _ := GetQtvStreamInfo(address)
 		server.ExtraInfo.QtvStream = qtvServerStream
+	} else if qserver.IsQtvServer(server) {
+		server.Clients = parseClientStrings(clientStrings, 8)
 	}
+
+	// common
+	server.Address = address
+	server.NumClients = uint8(len(server.Clients))
 
 	return server, nil
 }
@@ -78,11 +87,44 @@ func parseSettingsString(settingsString string) map[string]string {
 	return settings
 }
 
-func parseClientRecord(clientRecord []string) (qserver.Client, error) {
-	columnCount := len(clientRecord)
-	const ExpectedColumnCount = 9
+func parseClientStrings(clientStrings []string, expectedColumnCount uint8) []qserver.Client {
+	clients := make([]qserver.Client, 0)
 
-	if columnCount != ExpectedColumnCount {
+	for _, clientStr := range clientStrings {
+		clientRecord, err := clientStringToRecord(clientStr)
+
+		if err != nil {
+			continue
+		}
+
+		client, err := parseClientRecord(clientRecord, expectedColumnCount)
+
+		if err != nil {
+			continue
+		}
+
+		clients = append(clients, client)
+	}
+
+	return clients
+}
+
+func clientStringToRecord(clientStr string) ([]string, error) {
+	reader := csv.NewReader(strings.NewReader(clientStr))
+	reader.Comma = ' '
+
+	clientRecord, err := reader.Read()
+	if err != nil {
+		return nil, err
+	}
+
+	return clientRecord, nil
+}
+
+func parseClientRecord(clientRecord []string, expectedColumnCount uint8) (qserver.Client, error) {
+	columnCount := uint8(len(clientRecord))
+
+	if columnCount != expectedColumnCount {
 		err := errors.New(fmt.Sprintf("invalid player column count %d.", columnCount))
 		return qserver.Client{}, err
 	}
@@ -100,74 +142,35 @@ func parseClientRecord(clientRecord []string) (qserver.Client, error) {
 	)
 
 	nameQuakeStr := clientRecord[IndexName]
-
-	isSpec := strings.HasPrefix(nameQuakeStr, SpectatorPrefix)
-	if isSpec {
-		nameQuakeStr = strings.TrimPrefix(nameQuakeStr, SpectatorPrefix)
-	}
+	nameQuakeStr = strings.TrimPrefix(nameQuakeStr, SpectatorPrefix)
 
 	name := qstring.ToPlainString(nameQuakeStr)
-	team := qstring.ToPlainString(clientRecord[IndexTeam])
+	frags := stringToInt(clientRecord[IndexFrags])
 	colorTop := stringToInt(clientRecord[IndexColorTop])
 	colorBottom := stringToInt(clientRecord[IndexColorBottom])
 	ping := stringToInt(clientRecord[IndexPing])
 
+	team := ""
+	teamRaw := make([]byte, 0)
+
+	if columnCount-1 >= IndexTeam {
+		team = qstring.ToPlainString(clientRecord[IndexTeam])
+		teamRaw = []byte(clientRecord[IndexTeam])
+	}
+
 	return qserver.Client{
-		Player: qserver.Player{
-			Name:       name,
-			NameRaw:    []byte(nameQuakeStr),
-			NameRawStr: nameQuakeStr,
-			NameInts:   nameToIntArray(nameQuakeStr),
-			Team:       team,
-			TeamRaw:    []byte(clientRecord[IndexTeam]),
-			Skin:       clientRecord[IndexSkin],
-			Colors:     [2]uint8{uint8(colorTop), uint8(colorBottom)},
-			Frags:      uint16(stringToInt(clientRecord[IndexFrags])),
-			Ping:       uint16(ping),
-			Time:       uint8(stringToInt(clientRecord[IndexTime])),
-			IsBot:      isBotName(name) || isBotPing(ping),
-		},
-		IsSpec: isSpec,
+		Name:    name,
+		NameRaw: []byte(nameQuakeStr),
+		Team:    team,
+		TeamRaw: teamRaw,
+		Skin:    clientRecord[IndexSkin],
+		Colors:  [2]uint8{uint8(colorTop), uint8(colorBottom)},
+		Frags:   frags,
+		Ping:    ping,
+		Time:    uint8(stringToInt(clientRecord[IndexTime])),
+		IsBot:   isBotName(name) || isBotPing(ping),
 	}, nil
 
-}
-
-func nameToIntArray(name string) []uint16 {
-	result := make([]uint16, 0)
-
-	for i := range name {
-		result = append(result, uint16(name[i]))
-	}
-
-	return result
-}
-
-func parseClientString(clientStr string) (qserver.Client, error) {
-	reader := csv.NewReader(strings.NewReader(clientStr))
-	reader.Comma = ' '
-
-	clientRecord, err := reader.Read()
-	if err != nil {
-		return qserver.Client{}, nil
-	}
-
-	return parseClientRecord(clientRecord)
-}
-
-func parseClientsStrings(clientStrings []string) []qserver.Client {
-	clients := make([]qserver.Client, 0)
-
-	for _, clientStr := range clientStrings {
-		var client, err = parseClientString(clientStr)
-
-		if err != nil {
-			continue
-		}
-
-		clients = append(clients, client)
-	}
-
-	return clients
 }
 
 func isBotName(name string) bool {

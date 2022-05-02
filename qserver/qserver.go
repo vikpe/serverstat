@@ -33,27 +33,6 @@ func NewGenericServer() GenericServer {
 	}
 }
 
-type ProxyServer GenericServer
-type QtvServer GenericServer
-
-type GameServer struct {
-	Address    string
-	QtvStream  QtvStream
-	Players    []Player
-	Spectators []Spectator
-	Settings   map[string]string
-}
-
-func NewGameServer() GameServer {
-	return GameServer{
-		Address:    "",
-		Settings:   make(map[string]string, 0),
-		Players:    make([]Player, 0),
-		Spectators: make([]Spectator, 0),
-		QtvStream:  NewQtvStream(),
-	}
-}
-
 type QtvStream struct {
 	Title          string
 	Url            string
@@ -83,29 +62,16 @@ func (node *QtvStream) MarshalJSON() ([]byte, error) {
 	}
 }
 
-type Player struct {
-	Name       string
-	NameRaw    []byte
-	NameRawStr string
-	NameInts   []uint16
-	Team       string
-	TeamRaw    []byte
-	Skin       string
-	Colors     [2]uint8
-	Frags      uint16
-	Ping       uint16
-	Time       uint8
-	IsBot      bool
-}
-
 type Client struct {
-	Player
-	IsSpec bool
-}
-
-type Spectator struct {
 	Name    string
 	NameRaw []byte
+	Team    string
+	TeamRaw []byte
+	Skin    string
+	Colors  [2]uint8
+	Frags   int
+	Ping    int
+	Time    uint8
 	IsBot   bool
 }
 
