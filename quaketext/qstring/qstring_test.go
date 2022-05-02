@@ -14,6 +14,7 @@ func TestToPlainString(t *testing.T) {
 		"EXNyEA==":     "]sr[",
 		"W1NlcnZlTWVd": "[ServeMe]",
 		"bHF3Yw==":     "lqwc",
+		"4uHz8w==":     "bass",
 	}
 
 	for encodedString, expect := range testCases {
