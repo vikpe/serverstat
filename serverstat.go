@@ -50,23 +50,35 @@ func GetServerInfo(address string) (qserver.GenericServer, error) {
 		server.MaxSpectators = uint8(value)
 	}*/
 
-	// clients
-	var clientStrings []string
-	for scanner.Scan() {
-		foobi := scanner.Text()
-		clientStrings = append(clientStrings, foobi)
-	}
-
 	//server.Title = server.Settings["hostname"]
 	//server.NumPlayers = uint8(len(server.Players))
 	//server.NumSpectators = uint8(len(server.Spectators))
 
+	// clients
+	var clientStrings []string
+	for scanner.Scan() {
+		clientStrings = append(clientStrings, scanner.Text())
+	}
+
+	if len(clientStrings) > 0 {
+		clientColumnCount := uint8(0)
+
+		if qserver.IsGameServer(server) {
+			clientColumnCount = 9
+
+		} else if qserver.IsQtvServer(server) || qserver.IsProxyServer(server) {
+			clientColumnCount = 8
+		}
+
+		if clientColumnCount > 0 {
+			server.Clients = parseClientStrings(clientStrings, clientColumnCount)
+		}
+	}
+
+	// extra
 	if qserver.IsGameServer(server) {
-		server.Clients = parseClientStrings(clientStrings, 9)
 		qtvServerStream, _ := GetQtvStreamInfo(address)
 		server.ExtraInfo.QtvStream = qtvServerStream
-	} else if qserver.IsQtvServer(server) {
-		server.Clients = parseClientStrings(clientStrings, 8)
 	}
 
 	// common
