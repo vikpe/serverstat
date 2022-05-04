@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/vikpe/serverstat/qserver"
+	"github.com/vikpe/serverstat/qserver/qsettings"
 	"github.com/vikpe/serverstat/quaketext/qstring"
 	"github.com/vikpe/udpclient"
 )
@@ -33,23 +34,8 @@ func GetServerInfo(address string) (qserver.GenericServer, error) {
 	responseBody := response[len(expectedHeader):]
 	scanner := bufio.NewScanner(strings.NewReader(string(responseBody)))
 	scanner.Scan()
-	server.Settings = parseSettingsString(scanner.Text())
+	server.Settings = qsettings.New(scanner.Text())
 	server.Version = qserver.Version(server.Settings["*version"])
-
-	/*if val, ok := server.Settings["hostname"]; ok {
-		server.Settings["hostname"] = qstring.ToPlainString(val)
-	}
-	if val, ok := server.Settings["map"]; ok {
-		server.Map = val
-	}
-	if val, ok := server.Settings["maxclients"]; ok {
-		value, _ := strconv.Atoi(val)
-		server.MaxPlayers = uint8(value)
-	}
-	if val, ok := server.Settings["maxspectators"]; ok {
-		value, _ := strconv.Atoi(val)
-		server.MaxSpectators = uint8(value)
-	}*/
 
 	//server.Title = server.Settings["hostname"]
 	//server.NumPlayers = uint8(len(server.Players))
@@ -87,17 +73,6 @@ func GetServerInfo(address string) (qserver.GenericServer, error) {
 	server.NumClients = uint8(len(server.Clients))
 
 	return server, nil
-}
-
-func parseSettingsString(settingsString string) map[string]string {
-	settingsLines := strings.FieldsFunc(settingsString, func(r rune) bool { return r == '\\' })
-	settings := make(map[string]string, len(settingsLines))
-
-	for i := 0; i < len(settingsLines)-1; i += 2 {
-		settings[settingsLines[i]] = settingsLines[i+1]
-	}
-
-	return settings
 }
 
 func parseClientStrings(clientStrings []string, expectedColumnCount uint8) []qserver.Client {
