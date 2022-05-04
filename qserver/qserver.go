@@ -5,6 +5,16 @@ import (
 	"strings"
 )
 
+type ServerType string
+
+const (
+	TypeFte     ServerType = "fte"
+	TypeMvdsv   ServerType = "mvdsv"
+	TypeProxy   ServerType = "qwfwd"
+	TypeQtv     ServerType = "qtv"
+	TypeUnknown ServerType = "unknown"
+)
+
 type GenericServer struct {
 	Address    string
 	Clients    []Client
@@ -76,13 +86,42 @@ type Client struct {
 }
 
 func IsGameServer(server GenericServer) bool {
-	return !(IsQtvServer(server) || IsProxyServer(server))
+	return IsMvdsvServer(server) || IsFteServer(server)
+}
+
+func IsMvdsvServer(server GenericServer) bool {
+	return IsServerType(server, TypeMvdsv)
+}
+
+func IsFteServer(server GenericServer) bool {
+	return IsServerType(server, TypeFte)
 }
 
 func IsProxyServer(server GenericServer) bool {
-	return strings.HasPrefix(server.Settings["*version"], "qwfwd")
+	return IsServerType(server, TypeProxy)
 }
 
 func IsQtvServer(server GenericServer) bool {
-	return strings.HasPrefix(server.Settings["*version"], "QTV")
+	return IsServerType(server, TypeQtv)
+}
+
+func IsServerType(server GenericServer, serverType ServerType) bool {
+	return strings.Contains(
+		strings.ToLower(server.Settings["*version"]),
+		strings.ToLower(string(serverType)),
+	)
+}
+
+func GetServerType(server GenericServer) ServerType {
+	if IsProxyServer(server) {
+		return TypeProxy
+	} else if IsMvdsvServer(server) {
+		return TypeMvdsv
+	} else if IsFteServer(server) {
+		return TypeFte
+	} else if IsQtvServer(server) {
+		return TypeQtv
+	} else {
+		return TypeUnknown
+	}
 }
