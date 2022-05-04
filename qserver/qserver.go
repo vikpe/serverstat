@@ -6,12 +6,12 @@ import (
 )
 
 type GenericServer struct {
-	Version    Version
+	Version    Version `json:"-"`
 	Address    string
 	Clients    []Client
 	NumClients uint8
 	Settings   map[string]string
-	ExtraInfo  extraInfo
+	ExtraInfo  extraInfo `json:"-"`
 }
 
 func NewGenericServer() GenericServer {
