@@ -3,20 +3,20 @@ package serverstat
 import (
 	"bufio"
 	"encoding/csv"
-	"errors"
-	"fmt"
-	"strconv"
 	"strings"
 	"sync"
 
 	"github.com/vikpe/serverstat/qserver"
+	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qsettings"
+	"github.com/vikpe/serverstat/qserver/qtvstream"
+	"github.com/vikpe/serverstat/qserver/qversion"
 	"github.com/vikpe/serverstat/quaketext/qstring"
 	"github.com/vikpe/udpclient"
 )
 
 func GetServerInfo(address string) (qserver.GenericServer, error) {
-	// query
+	// request
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'}
 
@@ -27,163 +27,43 @@ func GetServerInfo(address string) (qserver.GenericServer, error) {
 		return qserver.GenericServer{}, err
 	}
 
-	// resulting server
-	server := qserver.NewGenericServer()
-
 	// response
 	responseBody := response[len(expectedHeader):]
+	settingsString, clientStrings := parseServerInfoResponseBody(responseBody)
+
+	// resulting server
+	server := qserver.NewGenericServer()
+	server.Address = address
+	server.Settings = qsettings.New(settingsString)
+	server.Clients = qclient.FromStrings(clientStrings)
+	server.NumClients = uint8(len(server.Clients))
+
+	// extra info
+	version := qversion.New(server.Settings["*version"])
+
+	if version.IsMvdsv() {
+		qtvServerStream, _ := GetQtvStreamInfo(address)
+		server.ExtraInfo.QtvStream = qtvServerStream
+	}
+
+	return server, nil
+}
+
+func parseServerInfoResponseBody(responseBody []byte) (string, []string) {
 	scanner := bufio.NewScanner(strings.NewReader(string(responseBody)))
+
 	scanner.Scan()
+	settingsString := scanner.Text()
 
-	// settings
-	server.Settings = qsettings.New(scanner.Text())
-	server.Version = qserver.Version(server.Settings["*version"])
-
-	// clients
 	var clientStrings []string
 	for scanner.Scan() {
 		clientStrings = append(clientStrings, scanner.Text())
 	}
 
-	if len(clientStrings) > 0 {
-		clientColumnCount := uint8(0)
-
-		if server.Version.IsGameServer() {
-			clientColumnCount = 9
-
-		} else if server.Version.IsQtv() || server.Version.IsProxy() {
-			clientColumnCount = 8
-		}
-
-		if clientColumnCount > 0 {
-			server.Clients = parseClientStrings(clientStrings, clientColumnCount)
-		}
-	}
-
-	// extra info
-	if server.Version.IsGameServer() {
-		qtvServerStream, _ := GetQtvStreamInfo(address)
-		server.ExtraInfo.QtvStream = qtvServerStream
-	}
-
-	// common
-	server.Address = address
-	server.NumClients = uint8(len(server.Clients))
-
-	return server, nil
+	return settingsString, clientStrings
 }
 
-func parseClientStrings(clientStrings []string, expectedColumnCount uint8) []qserver.Client {
-	clients := make([]qserver.Client, 0)
-
-	for _, clientStr := range clientStrings {
-		clientRecord, err := clientStringToRecord(clientStr)
-
-		if err != nil {
-			continue
-		}
-
-		client, err := parseClientRecord(clientRecord, expectedColumnCount)
-
-		if err != nil {
-			continue
-		}
-
-		clients = append(clients, client)
-	}
-
-	return clients
-}
-
-func clientStringToRecord(clientStr string) ([]string, error) {
-	reader := csv.NewReader(strings.NewReader(clientStr))
-	reader.Comma = ' '
-
-	clientRecord, err := reader.Read()
-	if err != nil {
-		return nil, err
-	}
-
-	return clientRecord, nil
-}
-
-func parseClientRecord(clientRecord []string, expectedColumnCount uint8) (qserver.Client, error) {
-	columnCount := uint8(len(clientRecord))
-
-	if columnCount != expectedColumnCount {
-		err := errors.New(fmt.Sprintf("invalid player column count %d.", columnCount))
-		return qserver.Client{}, err
-	}
-
-	const (
-		IndexFrags              = 1
-		IndexTime               = 2
-		IndexPing               = 3
-		IndexName               = 4
-		IndexSkin               = 5
-		IndexColorTop           = 6
-		IndexColorBottom        = 7
-		IndexTeam               = 8
-		SpectatorPrefix  string = "\\s\\"
-	)
-
-	nameQuakeStr := clientRecord[IndexName]
-	nameQuakeStr = strings.TrimPrefix(nameQuakeStr, SpectatorPrefix)
-
-	name := qstring.ToPlainString(nameQuakeStr)
-	frags := stringToInt(clientRecord[IndexFrags])
-	colorTop := stringToInt(clientRecord[IndexColorTop])
-	colorBottom := stringToInt(clientRecord[IndexColorBottom])
-	ping := stringToInt(clientRecord[IndexPing])
-
-	team := ""
-	teamRaw := make([]rune, 0)
-
-	if columnCount-1 >= IndexTeam {
-		team = qstring.ToPlainString(clientRecord[IndexTeam])
-		teamRaw = []rune(clientRecord[IndexTeam])
-	}
-
-	return qserver.Client{
-		Name:    name,
-		NameRaw: []rune(nameQuakeStr),
-		Team:    team,
-		TeamRaw: teamRaw,
-		Skin:    clientRecord[IndexSkin],
-		Colors:  [2]uint8{uint8(colorTop), uint8(colorBottom)},
-		Frags:   frags,
-		Ping:    ping,
-		Time:    uint8(stringToInt(clientRecord[IndexTime])),
-		IsBot:   isBotName(name) || isBotPing(ping),
-	}, nil
-
-}
-
-func isBotName(name string) bool {
-	switch name {
-	case
-		"[ServeMe]",
-		"twitch.tv/vikpe":
-		return true
-	}
-	return false
-}
-
-func isBotPing(ping int) bool {
-	switch ping {
-	case
-		10:
-		return true
-	}
-	return false
-}
-
-func stringToInt(value string) int {
-	valueAsInt, _ := strconv.Atoi(value)
-	return valueAsInt
-}
-
-func GetQtvUsers(address string) ([]qserver.Client, error) {
+func GetQtvusers(address string) ([]qclient.Client, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's'}
 	udpClient := udpclient.New()
@@ -197,24 +77,24 @@ func GetQtvUsers(address string) ([]qserver.Client, error) {
 	return parseQtvusersResponseBody(responseBody), nil
 }
 
-func parseQtvusersResponseBody(responseBody []byte) []qserver.Client {
+func parseQtvusersResponseBody(responseBody []byte) []qclient.Client {
 	// example response body: 12 "djevulsk" "serp" "player" "rst" "twitch.tv/vikpe"
 	fullText := string(responseBody)
 	const QuoteChar = "\""
 
 	if !strings.Contains(fullText, QuoteChar) {
-		return make([]qserver.Client, 0)
+		return make([]qclient.Client, 0)
 	}
 
 	indexFirstQuote := strings.Index(fullText, QuoteChar)
 	indexLastQuote := strings.LastIndex(fullText, QuoteChar)
 	namesText := fullText[indexFirstQuote+1 : indexLastQuote]
 
-	clients := make([]qserver.Client, 0)
+	clients := make([]qclient.Client, 0)
 	namesRaw := strings.Split(namesText, "\" \"")
 
 	for _, nameRaw := range namesRaw {
-		clients = append(clients, qserver.Client{
+		clients = append(clients, qclient.Client{
 			Name:    qstring.ToPlainString(nameRaw),
 			NameRaw: []rune(nameRaw),
 		})
@@ -223,14 +103,14 @@ func parseQtvusersResponseBody(responseBody []byte) []qserver.Client {
 	return clients
 }
 
-func GetQtvStreamInfo(address string) (qserver.QtvStream, error) {
+func GetQtvStreamInfo(address string) (qtvstream.QtvStream, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
 	udpClient := udpclient.New()
 	response, err := udpClient.Request(address, statusPacket, expectedHeader)
 
 	if err != nil {
-		return qserver.QtvStream{}, err
+		return qtvstream.QtvStream{}, err
 	}
 
 	responseBody := response[5:]
@@ -239,7 +119,7 @@ func GetQtvStreamInfo(address string) (qserver.QtvStream, error) {
 
 	record, err := reader.Read()
 	if err != nil {
-		return qserver.QtvStream{}, err
+		return qtvstream.QtvStream{}, err
 	}
 
 	const (
@@ -251,24 +131,24 @@ func GetQtvStreamInfo(address string) (qserver.QtvStream, error) {
 	if record[IndexAddress] == "" {
 		// these are the servers that are not configured correctly,
 		// that means they are not reporting their qtv ip as they should.
-		return qserver.QtvStream{}, err
+		return qtvstream.QtvStream{}, err
 	}
 
-	numberOfClients := stringToInt(record[IndexClientCount])
+	numberOfClients := qclient.StringToInt(record[IndexClientCount])
 
-	var clients []qserver.Client
+	var clients []qclient.Client
 
 	if numberOfClients > 0 {
-		clients, err = GetQtvUsers(address)
+		clients, err = GetQtvusers(address)
 
 		if err != nil {
-			clients = make([]qserver.Client, 0)
+			clients = make([]qclient.Client, 0)
 		}
 	} else {
-		clients = make([]qserver.Client, 0)
+		clients = make([]qclient.Client, 0)
 	}
 
-	return qserver.QtvStream{
+	return qtvstream.QtvStream{
 		Title:      record[IndexTitle],
 		Url:        record[IndexAddress],
 		Clients:    clients,
