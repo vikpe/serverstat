@@ -1,4 +1,4 @@
-module github.com/vikpe/qw-serverstat
+module github.com/vikpe/serverstat
 
 go 1.18
 
