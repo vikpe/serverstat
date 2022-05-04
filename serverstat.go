@@ -34,6 +34,7 @@ func GetServerInfo(address string) (qserver.GenericServer, error) {
 	scanner := bufio.NewScanner(strings.NewReader(string(responseBody)))
 	scanner.Scan()
 	server.Settings = parseSettingsString(scanner.Text())
+	server.Version = qserver.Version(server.Settings["*version"])
 
 	/*if val, ok := server.Settings["hostname"]; ok {
 		server.Settings["hostname"] = qstring.ToPlainString(val)
