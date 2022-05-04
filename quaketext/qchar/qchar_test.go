@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vikpe/qw-serverstat/quaketext/qchar"
+	"github.com/vikpe/serverstat/quaketext/qchar"
 )
 
 func TestToPlainString(t *testing.T) {

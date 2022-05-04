@@ -1,7 +1,7 @@
 package qstring
 
 import (
-	"github.com/vikpe/qw-serverstat/quaketext/qchar"
+	"github.com/vikpe/serverstat/quaketext/qchar"
 )
 
 func ToPlainString(str string) string {

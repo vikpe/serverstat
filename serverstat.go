@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/vikpe/qw-serverstat/qserver"
-	"github.com/vikpe/qw-serverstat/quaketext/qstring"
+	"github.com/vikpe/serverstat/qserver"
+	"github.com/vikpe/serverstat/quaketext/qstring"
 	"github.com/vikpe/udpclient"
 )
 
