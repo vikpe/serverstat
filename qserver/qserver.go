@@ -5,16 +5,6 @@ import (
 	"strings"
 )
 
-type extraInfo struct {
-	QtvStream QtvStream
-}
-
-func newExtraInfo() extraInfo {
-	return extraInfo{
-		QtvStream: NewQtvStream(),
-	}
-}
-
 type GenericServer struct {
 	Address    string
 	Clients    []Client
@@ -30,6 +20,16 @@ func NewGenericServer() GenericServer {
 		NumClients: 0,
 		Settings:   make(map[string]string, 0),
 		ExtraInfo:  newExtraInfo(),
+	}
+}
+
+type extraInfo struct {
+	QtvStream QtvStream
+}
+
+func newExtraInfo() extraInfo {
+	return extraInfo{
+		QtvStream: NewQtvStream(),
 	}
 }
 
