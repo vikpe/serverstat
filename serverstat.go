@@ -316,14 +316,14 @@ func GetServerInfoFromMany(addresses []string) []qserver.GenericServer {
 		go func(address string) {
 			defer wg.Done()
 
-			qserver, err := GetServerInfo(address)
+			server, err := GetServerInfo(address)
 
 			if err != nil {
 				return
 			}
 
 			mutex.Lock()
-			servers = append(servers, qserver)
+			servers = append(servers, server)
 			mutex.Unlock()
 		}(address)
 	}
