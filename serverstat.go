@@ -63,10 +63,10 @@ func GetServerInfo(address string) (qserver.GenericServer, error) {
 	if len(clientStrings) > 0 {
 		clientColumnCount := uint8(0)
 
-		if qserver.IsGameServer(server) {
+		if server.Version.IsGameServer() {
 			clientColumnCount = 9
 
-		} else if qserver.IsQtvServer(server) || qserver.IsProxyServer(server) {
+		} else if server.Version.IsQtv() || server.Version.IsProxy() {
 			clientColumnCount = 8
 		}
 
@@ -76,7 +76,7 @@ func GetServerInfo(address string) (qserver.GenericServer, error) {
 	}
 
 	// extra
-	if qserver.IsGameServer(server) {
+	if server.Version.IsGameServer() {
 		qtvServerStream, _ := GetQtvStreamInfo(address)
 		server.ExtraInfo.QtvStream = qtvServerStream
 	}

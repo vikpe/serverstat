@@ -5,17 +5,8 @@ import (
 	"strings"
 )
 
-type ServerType string
-
-const (
-	TypeFte     ServerType = "fte"
-	TypeMvdsv   ServerType = "mvdsv"
-	TypeProxy   ServerType = "qwfwd"
-	TypeQtv     ServerType = "qtv"
-	TypeUnknown ServerType = "unknown"
-)
-
 type GenericServer struct {
+	Version    Version
 	Address    string
 	Clients    []Client
 	NumClients uint8
@@ -25,6 +16,7 @@ type GenericServer struct {
 
 func NewGenericServer() GenericServer {
 	return GenericServer{
+		Version:    "",
 		Address:    "",
 		Clients:    make([]Client, 0),
 		NumClients: 0,
@@ -85,41 +77,53 @@ type Client struct {
 	IsBot   bool
 }
 
-func IsGameServer(server GenericServer) bool {
-	return IsMvdsvServer(server) || IsFteServer(server)
+type ServerType string
+
+const (
+	TypeFte     ServerType = "fte"
+	TypeMvdsv   ServerType = "mvdsv"
+	TypeProxy   ServerType = "qwfwd"
+	TypeQtv     ServerType = "qtv"
+	TypeUnknown ServerType = "unknown"
+)
+
+type Version string
+
+func (sv Version) IsMvdsv() bool {
+	return sv.IsType(TypeMvdsv)
 }
 
-func IsMvdsvServer(server GenericServer) bool {
-	return IsServerType(server, TypeMvdsv)
+func (sv Version) IsFte() bool {
+	return sv.IsType(TypeFte)
 }
 
-func IsFteServer(server GenericServer) bool {
-	return IsServerType(server, TypeFte)
+func (sv Version) IsProxy() bool {
+	return sv.IsType(TypeProxy)
 }
 
-func IsProxyServer(server GenericServer) bool {
-	return IsServerType(server, TypeProxy)
+func (sv Version) IsQtv() bool {
+	return sv.IsType(TypeQtv)
 }
 
-func IsQtvServer(server GenericServer) bool {
-	return IsServerType(server, TypeQtv)
+func (sv Version) IsGameServer() bool {
+	return sv.IsMvdsv() || sv.IsFte()
 }
 
-func IsServerType(server GenericServer, serverType ServerType) bool {
+func (sv Version) IsType(serverType ServerType) bool {
 	return strings.Contains(
-		strings.ToLower(server.Settings["*version"]),
+		strings.ToLower(string(sv)),
 		strings.ToLower(string(serverType)),
 	)
 }
 
-func GetServerType(server GenericServer) ServerType {
-	if IsProxyServer(server) {
+func (sv Version) GetType() ServerType {
+	if sv.IsProxy() {
 		return TypeProxy
-	} else if IsMvdsvServer(server) {
+	} else if sv.IsMvdsv() {
 		return TypeMvdsv
-	} else if IsFteServer(server) {
+	} else if sv.IsFte() {
 		return TypeFte
-	} else if IsQtvServer(server) {
+	} else if sv.IsQtv() {
 		return TypeQtv
 	} else {
 		return TypeUnknown
