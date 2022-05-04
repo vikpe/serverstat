@@ -30,16 +30,14 @@ func GetServerInfo(address string) (qserver.GenericServer, error) {
 	// resulting server
 	server := qserver.NewGenericServer()
 
-	// settings
+	// response
 	responseBody := response[len(expectedHeader):]
 	scanner := bufio.NewScanner(strings.NewReader(string(responseBody)))
 	scanner.Scan()
+
+	// settings
 	server.Settings = qsettings.New(scanner.Text())
 	server.Version = qserver.Version(server.Settings["*version"])
-
-	//server.Title = server.Settings["hostname"]
-	//server.NumPlayers = uint8(len(server.Players))
-	//server.NumSpectators = uint8(len(server.Spectators))
 
 	// clients
 	var clientStrings []string
@@ -62,7 +60,7 @@ func GetServerInfo(address string) (qserver.GenericServer, error) {
 		}
 	}
 
-	// extra
+	// extra info
 	if server.Version.IsGameServer() {
 		qtvServerStream, _ := GetQtvStreamInfo(address)
 		server.ExtraInfo.QtvStream = qtvServerStream
