@@ -13,7 +13,7 @@ type QtvStream struct {
 	NumClients uint8
 }
 
-func NewQtvStream() QtvStream {
+func New() QtvStream {
 	return QtvStream{
 		Title:      "",
 		Url:        "",

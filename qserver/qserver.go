@@ -32,6 +32,6 @@ type extraInfo struct {
 
 func newExtraInfo() extraInfo {
 	return extraInfo{
-		QtvStream: qtvstream.NewQtvStream(),
+		QtvStream: qtvstream.New(),
 	}
 }
