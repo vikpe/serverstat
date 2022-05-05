@@ -110,16 +110,14 @@ func GetQtvStreamInfo(address string) (QtvStream, error) {
 
 	numberOfClients := qutil.StringToInt(record[IndexClientCount])
 
-	var clients []qclient.Client
+	clients := make([]qclient.Client, 0)
 
 	if numberOfClients > 0 {
-		clients, err = GetQtvusers(address)
+		qtvusers, err := GetQtvusers(address)
 
-		if err != nil {
-			clients = make([]qclient.Client, 0)
+		if err == nil {
+			clients = qtvusers
 		}
-	} else {
-		clients = make([]qclient.Client, 0)
 	}
 
 	return QtvStream{
