@@ -11,7 +11,7 @@ import (
 	"github.com/vikpe/udpclient"
 )
 
-func New(address string) (qserver.GenericServer, error) {
+func SendTo(address string) (qserver.GenericServer, error) {
 	// request
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'}

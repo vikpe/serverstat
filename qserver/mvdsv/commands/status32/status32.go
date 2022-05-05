@@ -9,7 +9,7 @@ import (
 	"github.com/vikpe/udpclient"
 )
 
-func New(address string) (qtvstream.QtvStream, error) {
+func SendTo(address string) (qtvstream.QtvStream, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
 	udpClient := udpclient.New()

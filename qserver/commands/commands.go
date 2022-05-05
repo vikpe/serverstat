@@ -7,7 +7,7 @@ import (
 )
 
 func GetInfo(address string) (qserver.GenericServer, error) {
-	server, err := status23.New(address)
+	server, err := status23.SendTo(address)
 
 	if server.Version.IsMvdsv() {
 		server.ExtraInfo.QtvStream, _ = mvdsv.GetQtvStream(address)

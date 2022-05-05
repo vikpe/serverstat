@@ -8,7 +8,7 @@ import (
 	"github.com/vikpe/udpclient"
 )
 
-func New(address string) ([]qclient.Client, error) {
+func SendTo(address string) ([]qclient.Client, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's'}
 	udpClient := udpclient.New()
