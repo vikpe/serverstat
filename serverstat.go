@@ -4,11 +4,18 @@ import (
 	"sync"
 
 	"github.com/vikpe/serverstat/qserver"
-	"github.com/vikpe/serverstat/qserver/commands"
+	"github.com/vikpe/serverstat/qserver/commands/status23"
+	"github.com/vikpe/serverstat/qserver/mvdsv"
 )
 
 func GetInfo(address string) (qserver.GenericServer, error) {
-	return commands.GetInfo(address)
+	server, err := status23.SendTo(address)
+
+	if server.Version.IsMvdsv() {
+		server.ExtraInfo.QtvStream, _ = mvdsv.GetQtvStream(address)
+	}
+
+	return server, err
 }
 
 func GetInfoFromMany(addresses []string) []qserver.GenericServer {
@@ -25,7 +32,7 @@ func GetInfoFromMany(addresses []string) []qserver.GenericServer {
 		go func(address string) {
 			defer wg.Done()
 
-			server, err := commands.GetInfo(address)
+			server, err := GetInfo(address)
 
 			if err != nil {
 				return
