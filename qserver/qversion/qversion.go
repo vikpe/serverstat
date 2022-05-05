@@ -35,7 +35,7 @@ func (v Version) IsQtv() bool {
 }
 
 func (v Version) IsGameServer() bool {
-	return v.IsMvdsv() || v.IsFte()
+	return IsGameServer(string(v))
 }
 
 func (v Version) IsType(t Type) bool {
@@ -66,22 +66,22 @@ func IsGameServer(version string) bool {
 	return IsMvdsv(version) || IsFte(version)
 }
 
-func IsType(version string, serverType string) bool {
+func IsType(version string, serverType Type) bool {
 	return strings.Contains(
 		strings.ToLower(version),
-		strings.ToLower(serverType),
+		strings.ToLower(string(serverType)),
 	)
 }
 
 func GetType(v string) Type {
-	if IsProxy(v) {
-		return TypeProxy
-	} else if IsMvdsv(v) {
+	if IsMvdsv(v) {
 		return TypeMvdsv
-	} else if IsFte(v) {
-		return TypeFte
+	} else if IsProxy(v) {
+		return TypeProxy
 	} else if IsQtv(v) {
 		return TypeQtv
+	} else if IsFte(v) {
+		return TypeFte
 	} else {
 		return TypeUnknown
 	}
