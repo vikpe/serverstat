@@ -23,7 +23,7 @@ type Client struct {
 	IsBot   bool
 }
 
-func FromStrings(clientStrings []string) []Client {
+func NewFromStrings(clientStrings []string) []Client {
 	clients := make([]Client, 0)
 
 	for _, clientStr := range clientStrings {
@@ -48,21 +48,11 @@ func NewFromString(clientString string) (Client, error) {
 		return Client{}, err
 	}
 
-	client, err := NewFromRecord(clientRecord)
-
-	if err != nil {
-		return Client{}, err
-	}
-
-	return client, nil
-}
-
-func NewFromRecord(clientRecord []string) (Client, error) {
 	minimumColumnCount := uint8(8)
 	columnCount := uint8(len(clientRecord))
 
 	if columnCount < minimumColumnCount {
-		err := errors.New(fmt.Sprintf("invalid player column count %d.", columnCount))
+		err := errors.New(fmt.Sprintf("invalid client column count %d, expects at least %d", columnCount, minimumColumnCount))
 		return Client{}, err
 	}
 
@@ -105,28 +95,26 @@ func NewFromRecord(clientRecord []string) (Client, error) {
 		Frags:   frags,
 		Ping:    ping,
 		Time:    uint8(StringToInt(clientRecord[IndexTime])),
-		IsBot:   isBotName(name) || isBotPing(ping),
+		IsBot:   IsBotName(name) || IsBotPing(ping),
 	}, nil
 
 }
 
-func isBotName(name string) bool {
-	switch name {
-	case
-		"[ServeMe]",
-		"twitch.tv/vikpe":
-		return true
+func IsBotName(name string) bool {
+	if 0 == len(name) {
+		return false
 	}
-	return false
+
+	knownBotNames := []string{
+		"[ServeMe]",
+		"twitch.tv/vikpe",
+	}
+
+	return strings.Contains(strings.Join(knownBotNames, "\""), name)
 }
 
-func isBotPing(ping int) bool {
-	switch ping {
-	case
-		10:
-		return true
-	}
-	return false
+func IsBotPing(ping int) bool {
+	return 10 == ping
 }
 
 func StringToInt(value string) int {

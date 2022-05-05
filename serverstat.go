@@ -35,7 +35,7 @@ func GetServerInfo(address string) (qserver.GenericServer, error) {
 	server := qserver.NewGenericServer()
 	server.Address = address
 	server.Settings = qsettings.New(settingsString)
-	server.Clients = qclient.FromStrings(clientStrings)
+	server.Clients = qclient.NewFromStrings(clientStrings)
 	server.NumClients = uint8(len(server.Clients))
 
 	// extra info
