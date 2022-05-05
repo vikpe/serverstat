@@ -1,4 +1,4 @@
-# serverstat [![Go Reference](https://pkg.go.dev/badge/github.com/vikpe/serverstat.svg)](https://pkg.go.dev/github.com/vikpe/serverstat)
+# serverstat [![Go Reference](https://pkg.go.dev/badge/github.com/vikpe/serverstat.svg)](https://pkg.go.dev/github.com/vikpe/serverstat) [![Test](https://github.com/vikpe/serverstat/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/vikpe/serverstat/actions/workflows/test.yml) [![codecov](https://codecov.io/gh/vikpe/serverstat/branch/main/graph/badge.svg?token=nW6fiGr7hJ)](https://codecov.io/gh/vikpe/serverstat)
 
 > Fetch info from QuakeWorld servers
 
