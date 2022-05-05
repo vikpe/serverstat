@@ -2,6 +2,20 @@
 
 > Fetch info from QuakeWorld servers
 
+## Development
+
+### Tools
+
+* **gow** (run go command on file change): `go install github.com/mitranim/gow@latest`
+
+### Tests
+
+Run tests on file change and write coverage data.
+
+```shell
+gow -c test ./... --cover -coverprofile .coverage
+```
+
 ## See also
 
 * [masterstat](https://github.com/vikpe/masterstat)
