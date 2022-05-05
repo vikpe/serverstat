@@ -12,23 +12,27 @@ import (
 )
 
 type QtvStream struct {
-	Title      string
-	Url        string
-	Clients    []qclient.Client
-	NumClients uint8
+	Title   string
+	Url     string
+	Clients []qclient.Client
 }
 
 func (q QtvStream) MarshalJSON() ([]byte, error) {
 	if "" == q.Url {
 		return json.Marshal("")
 	} else {
-		type QtvStreamJson QtvStream
+		type QtvStreamJson struct {
+			Title      string
+			Url        string
+			Clients    []qclient.Client
+			NumClients uint8
+		}
 
 		return json.Marshal(QtvStreamJson{
 			Title:      q.Title,
 			Url:        q.Url,
 			Clients:    q.Clients,
-			NumClients: q.NumClients,
+			NumClients: uint8(len(q.Clients)),
 		})
 	}
 }
@@ -119,9 +123,8 @@ func GetQtvStreamInfo(address string) (QtvStream, error) {
 	}
 
 	return QtvStream{
-		Title:      record[IndexTitle],
-		Url:        record[IndexAddress],
-		Clients:    clients,
-		NumClients: uint8(numberOfClients),
+		Title:   record[IndexTitle],
+		Url:     record[IndexAddress],
+		Clients: clients,
 	}, nil
 }
