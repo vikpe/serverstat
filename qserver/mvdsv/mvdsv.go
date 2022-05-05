@@ -7,6 +7,7 @@ import (
 
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qtext/qstring"
+	"github.com/vikpe/serverstat/qutil"
 	"github.com/vikpe/udpclient"
 )
 
@@ -103,7 +104,7 @@ func GetQtvStreamInfo(address string) (QtvStream, error) {
 		return QtvStream{}, err
 	}
 
-	numberOfClients := qclient.StringToInt(record[IndexClientCount])
+	numberOfClients := qutil.StringToInt(record[IndexClientCount])
 
 	var clients []qclient.Client
 

@@ -4,10 +4,10 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/vikpe/serverstat/qtext/qstring"
+	"github.com/vikpe/serverstat/qutil"
 )
 
 type Client struct {
@@ -72,10 +72,10 @@ func NewFromString(clientString string) (Client, error) {
 	nameQuakeStr = strings.TrimPrefix(nameQuakeStr, SpectatorPrefix)
 
 	name := qstring.ToPlainString(nameQuakeStr)
-	frags := StringToInt(clientRecord[IndexFrags])
-	colorTop := StringToInt(clientRecord[IndexColorTop])
-	colorBottom := StringToInt(clientRecord[IndexColorBottom])
-	ping := StringToInt(clientRecord[IndexPing])
+	frags := qutil.StringToInt(clientRecord[IndexFrags])
+	colorTop := qutil.StringToInt(clientRecord[IndexColorTop])
+	colorBottom := qutil.StringToInt(clientRecord[IndexColorBottom])
+	ping := qutil.StringToInt(clientRecord[IndexPing])
 
 	team := ""
 	teamRaw := make([]rune, 0)
@@ -94,7 +94,7 @@ func NewFromString(clientString string) (Client, error) {
 		Colors:  [2]uint8{uint8(colorTop), uint8(colorBottom)},
 		Frags:   frags,
 		Ping:    ping,
-		Time:    uint8(StringToInt(clientRecord[IndexTime])),
+		Time:    uint8(qutil.StringToInt(clientRecord[IndexTime])),
 		IsBot:   IsBotName(name) || IsBotPing(ping),
 	}, nil
 
@@ -115,9 +115,4 @@ func IsBotName(name string) bool {
 
 func IsBotPing(ping int) bool {
 	return 10 == ping
-}
-
-func StringToInt(value string) int {
-	valueAsInt, _ := strconv.Atoi(value)
-	return valueAsInt
 }
