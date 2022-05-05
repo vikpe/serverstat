@@ -22,15 +22,17 @@ func New() QtvStream {
 	}
 }
 
-func (node *QtvStream) MarshalJSON() ([]byte, error) {
-	if "" == node.Url {
+func (q QtvStream) MarshalJSON() ([]byte, error) {
+	if "" == q.Url {
 		return json.Marshal("")
 	} else {
-		return json.Marshal(QtvStream{
-			Title:      node.Title,
-			Url:        node.Url,
-			Clients:    node.Clients,
-			NumClients: node.NumClients,
+		type QtvStreamJson QtvStream
+
+		return json.Marshal(QtvStreamJson{
+			Title:      q.Title,
+			Url:        q.Url,
+			Clients:    q.Clients,
+			NumClients: q.NumClients,
 		})
 	}
 }
