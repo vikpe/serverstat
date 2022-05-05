@@ -4,13 +4,14 @@ import (
 	"sync"
 
 	"github.com/vikpe/serverstat/qserver"
+	"github.com/vikpe/serverstat/qserver/commands"
 )
 
-func GetServerInfo(address string) (qserver.GenericServer, error) {
-	return qserver.New(address)
+func GetInfo(address string) (qserver.GenericServer, error) {
+	return commands.GetInfo(address)
 }
 
-func GetServerInfoFromMany(addresses []string) []qserver.GenericServer {
+func GetInfoFromMany(addresses []string) []qserver.GenericServer {
 	var (
 		wg    sync.WaitGroup
 		mutex sync.Mutex
@@ -24,7 +25,7 @@ func GetServerInfoFromMany(addresses []string) []qserver.GenericServer {
 		go func(address string) {
 			defer wg.Done()
 
-			server, err := qserver.New(address)
+			server, err := commands.GetInfo(address)
 
 			if err != nil {
 				return
