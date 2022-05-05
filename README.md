@@ -13,7 +13,7 @@
 Run tests on file change and write coverage data.
 
 ```shell
-gow -c test ./... --cover -coverprofile .coverage
+gow -c test ./... --cover -coverprofile coverage.out
 ```
 
 ## See also
