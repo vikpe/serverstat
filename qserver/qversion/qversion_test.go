@@ -8,47 +8,82 @@ import (
 )
 
 func TestVersion_IsMvdsv(t *testing.T) {
-	assert.True(t, qversion.New("mvdsv").IsMvdsv())
-	assert.True(t, qversion.New("MVDSV 0.35-dev").IsMvdsv())
-	assert.False(t, qversion.New("").IsMvdsv())
-	assert.False(t, qversion.New("foo").IsMvdsv())
+	testCases := map[string]bool{
+		"mvdsv":     true,
+		"MVDSV 1.2": true,
+		"":          false,
+		"foo":       false,
+	}
+
+	for version, expect := range testCases {
+		assert.Equal(t, expect, qversion.New(version).IsMvdsv(), version)
+	}
 }
 
 func TestVersion_IsFte(t *testing.T) {
-	assert.True(t, qversion.New("fte").IsFte())
-	assert.True(t, qversion.New("fte 1.2").IsFte())
-	assert.False(t, qversion.New("").IsFte())
-	assert.False(t, qversion.New("foo").IsFte())
+	testCases := map[string]bool{
+		"fte":     true,
+		"FTE 1.2": true,
+		"":        false,
+		"foo":     false,
+	}
+
+	for version, expect := range testCases {
+		assert.Equal(t, expect, qversion.New(version).IsFte(), version)
+	}
 }
 
 func TestVersion_IsProxy(t *testing.T) {
-	assert.True(t, qversion.New("qwfwd").IsProxy())
-	assert.True(t, qversion.New("qwfwd 1.2").IsProxy())
-	assert.False(t, qversion.New("").IsProxy())
-	assert.False(t, qversion.New("foo").IsProxy())
+	testCases := map[string]bool{
+		"qwfwd":     true,
+		"QWFWD 1.2": true,
+		"":          false,
+		"foo":       false,
+	}
+
+	for version, expect := range testCases {
+		assert.Equal(t, expect, qversion.New(version).IsProxy(), version)
+	}
 }
 
 func TestVersion_IsQtv(t *testing.T) {
-	assert.True(t, qversion.New("qtv").IsQtv())
-	assert.True(t, qversion.New("qtv 1.2").IsQtv())
-	assert.False(t, qversion.New("").IsQtv())
-	assert.False(t, qversion.New("foo").IsQtv())
+	testCases := map[string]bool{
+		"qtv":     true,
+		"QTV 1.2": true,
+		"":        false,
+		"foo":     false,
+	}
+
+	for version, expect := range testCases {
+		assert.Equal(t, expect, qversion.New(version).IsQtv(), version)
+	}
 }
 
 func TestVersion_IsGameServer(t *testing.T) {
-	assert.True(t, qversion.New("fte").IsGameServer())
-	assert.True(t, qversion.New("fte 1.2").IsGameServer())
-	assert.True(t, qversion.New("mvdsv").IsGameServer())
-	assert.True(t, qversion.New("MVDSV 0.35-dev").IsGameServer())
+	testCases := map[string]bool{
+		"fte":   true,
+		"mvdsv": true,
+		"qtv":   false,
+		"qwfwd": false,
+		"":      false,
+		"foo":   false,
+	}
 
-	assert.False(t, qversion.New("").IsGameServer())
-	assert.False(t, qversion.New("foo").IsGameServer())
+	for version, expect := range testCases {
+		assert.Equal(t, expect, qversion.New(version).IsGameServer(), version)
+	}
 }
 
 func TestVersion_GetType(t *testing.T) {
-	assert.Equal(t, qversion.TypeMvdsv, qversion.New("mvdsv 1.0").GetType())
-	assert.Equal(t, qversion.TypeProxy, qversion.New("qwfwd 1.0").GetType())
-	assert.Equal(t, qversion.TypeQtv, qversion.New("qtv 1.0").GetType())
-	assert.Equal(t, qversion.TypeFte, qversion.New("fte 1.0").GetType())
-	assert.Equal(t, qversion.TypeUnknown, qversion.New("foobar").GetType())
+	testCases := map[string]qversion.Type{
+		"mvdsv":  qversion.TypeMvdsv,
+		"qwfwd":  qversion.TypeProxy,
+		"qtv":    qversion.TypeQtv,
+		"fte":    qversion.TypeFte,
+		"foobar": qversion.TypeUnknown,
+	}
+
+	for version, expect := range testCases {
+		assert.Equal(t, expect, qversion.New(version).GetType(), version)
+	}
 }
