@@ -11,7 +11,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/qsettings"
 	"github.com/vikpe/serverstat/qserver/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qversion"
-	"github.com/vikpe/serverstat/quaketext/qstring"
+	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udpclient"
 )
 

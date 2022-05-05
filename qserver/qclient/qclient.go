@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/vikpe/serverstat/quaketext/qstring"
+	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
 type Client struct {
