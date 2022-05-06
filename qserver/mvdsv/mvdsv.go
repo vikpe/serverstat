@@ -9,19 +9,22 @@ import (
 )
 
 func GetQtvUsers(address string) ([]qclient.Client, error) {
-	return qtvusers.Send(udpclient.New(), address)
+	return qtvusers.ParseResponse(
+		udpclient.New().SendCommand(address, qtvusers.Command),
+	)
 }
 
 func GetQtvStream(address string) (qtvstream.QtvStream, error) {
-	udpClient := udpclient.New()
-	stream, err := status32.Send(udpClient, address)
+	stream, err := status32.ParseResponse(
+		udpclient.New().SendCommand(address, status32.Command),
+	)
 
 	if err != nil && stream.NumClients > 0 {
-		clients, err := qtvusers.Send(udpClient, address)
+		clients, _ := qtvusers.ParseResponse(
+			udpclient.New().SendCommand(address, qtvusers.Command),
+		)
 
-		if err == nil {
-			stream.Clients = clients
-		}
+		stream.Clients = clients
 	}
 
 	return stream, err

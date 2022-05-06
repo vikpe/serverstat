@@ -4,31 +4,26 @@ import (
 	"bufio"
 	"strings"
 
-	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qsettings"
-	"github.com/vikpe/serverstat/qserver/qversion"
 	"github.com/vikpe/udpclient"
 )
 
-func Send(udpClient udpclient.UdpClient, address string) (qserver.GenericServer, error) {
-	// request
-	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a}
-	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'}
-	server, err := ParseResponse(udpClient.Request(address, statusPacket, expectedHeader))
-
-	if err != nil {
-		server.Address = address
-	}
-
-	return server, nil
+var Command = udpclient.Command{
+	RequestPacket:  []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a},
+	ResponseHeader: []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'},
 }
 
-func ParseResponse(responseBody []byte, err error) (qserver.GenericServer, error) {
+func ParseResponse(responseBody []byte, err error) (map[string]string, []qclient.Client, error) {
 	if err != nil {
-		return qserver.GenericServer{}, err
+		return nil, nil, err
+	} else {
+		settings, clients := ParseResponseBody(responseBody)
+		return settings, clients, nil
 	}
+}
 
+func ParseResponseBody(responseBody []byte) (map[string]string, []qclient.Client) {
 	scanner := bufio.NewScanner(strings.NewReader(string(responseBody)))
 	scanner.Scan()
 
@@ -39,10 +34,8 @@ func ParseResponse(responseBody []byte, err error) (qserver.GenericServer, error
 		clientStrings = append(clientStrings, scanner.Text())
 	}
 
-	server := qserver.GenericServer{
-		Version:  qversion.New(qsettings.New(settingsString)["*version"]),
-		Clients:  qclient.NewFromStrings(clientStrings),
-		Settings: qsettings.New(settingsString),
-	}
-	return server, nil
+	settings := qsettings.New(settingsString)
+	clients := qclient.NewFromStrings(clientStrings)
+
+	return settings, clients
 }

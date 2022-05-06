@@ -10,17 +10,20 @@ import (
 	"github.com/vikpe/udpclient"
 )
 
-func Send(udpClient udpclient.UdpClient, address string) (qtvstream.QtvStream, error) {
-	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a}
-	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'}
-	return ParseResponse(udpClient.Request(address, statusPacket, expectedHeader))
+var Command = udpclient.Command{
+	RequestPacket:  []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a},
+	ResponseHeader: []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'},
 }
 
 func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) {
 	if err != nil {
 		return qtvstream.QtvStream{}, err
+	} else {
+		return ParseResponseBody(responseBody)
 	}
+}
 
+func ParseResponseBody(responseBody []byte) (qtvstream.QtvStream, error) {
 	// example repsonse body
 	// ����nqtv 1 "qw.foppa.dk - qtv (3)" "3@qw.foppa.dk:28000" 0
 	reader := csv.NewReader(strings.NewReader(string(responseBody)))

@@ -1,9 +1,12 @@
 package qserver
 
 import (
+	"github.com/vikpe/serverstat/qserver/commands/status23"
+	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qversion"
+	"github.com/vikpe/udpclient"
 )
 
 type GenericServer struct {
@@ -14,4 +17,27 @@ type GenericServer struct {
 	ExtraInfo struct {
 		QtvStream qtvstream.QtvStream
 	} `json:"-"`
+}
+
+func GetInfo(address string) (GenericServer, error) {
+	settings, clients, err := status23.ParseResponse(
+		udpclient.New().SendCommand(address, status23.Command),
+	)
+
+	if err != nil {
+		return GenericServer{}, err
+	}
+
+	server := GenericServer{
+		Address:  address,
+		Version:  qversion.New(settings["*version"]),
+		Clients:  clients,
+		Settings: settings,
+	}
+
+	if server.Version.IsMvdsv() {
+		server.ExtraInfo.QtvStream, _ = mvdsv.GetQtvStream(address)
+	}
+
+	return server, nil
 }

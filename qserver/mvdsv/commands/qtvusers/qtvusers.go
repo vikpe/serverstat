@@ -9,17 +9,20 @@ import (
 	"github.com/vikpe/udpclient"
 )
 
-func Send(udpClient udpclient.UdpClient, address string) ([]qclient.Client, error) {
-	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x0a}
-	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's'}
-	return ParseResponse(udpClient.Request(address, statusPacket, expectedHeader))
+var Command = udpclient.Command{
+	RequestPacket:  []byte{0xff, 0xff, 0xff, 0xff, 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x0a},
+	ResponseHeader: []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's'},
 }
 
 func ParseResponse(responseBody []byte, err error) ([]qclient.Client, error) {
 	if err != nil {
 		return make([]qclient.Client, 0), err
+	} else {
+		return ParseResponseBody(responseBody)
 	}
+}
 
+func ParseResponseBody(responseBody []byte) ([]qclient.Client, error) {
 	// example response body: 12 "djevulsk" "serp" "player" "rst" "twitch.tv/vikpe"
 	fullText := string(responseBody)
 	const QuoteChar = "\""

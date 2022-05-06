@@ -4,19 +4,10 @@ import (
 	"sync"
 
 	"github.com/vikpe/serverstat/qserver"
-	"github.com/vikpe/serverstat/qserver/commands/status23"
-	"github.com/vikpe/serverstat/qserver/mvdsv"
-	"github.com/vikpe/udpclient"
 )
 
 func GetInfo(address string) (qserver.GenericServer, error) {
-	server, err := status23.Send(udpclient.New(), address)
-
-	if server.Version.IsMvdsv() {
-		server.ExtraInfo.QtvStream, _ = mvdsv.GetQtvStream(address)
-	}
-
-	return server, err
+	return qserver.GetInfo(address)
 }
 
 func GetInfoFromMany(addresses []string) []qserver.GenericServer {
