@@ -20,7 +20,7 @@ func TestParseResponseBody(t *testing.T) {
 	assert.Equal(t, errors.New("invalid QTV configuration"), err)
 	assert.Equal(t, qtvstream.QtvStream{}, result)
 
-	// non-empty response body
+	// valid response body
 	responseBody := []byte(`1 "qw.foppa.dk - qtv (3)" "3@qw.foppa.dk:28000" 4`)
 
 	result, err = status32.ParseResponseBody(responseBody)
