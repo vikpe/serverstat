@@ -12,7 +12,7 @@ import (
 
 var Command = udpclient.Command{
 	RequestPacket:  []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '3', '2', 0x0a},
-	ResponseHeader: []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v'},
+	ResponseHeader: []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', ' '},
 }
 
 func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) {

@@ -36,7 +36,11 @@ func GetInfo(address string) (GenericServer, error) {
 	}
 
 	if server.Version.IsMvdsv() {
-		server.ExtraInfo.QtvStream, _ = mvdsv.GetQtvStream(address)
+		stream, err := mvdsv.GetQtvStream(address)
+
+		if err != nil {
+			server.ExtraInfo.QtvStream = stream
+		}
 	}
 
 	return server, nil
