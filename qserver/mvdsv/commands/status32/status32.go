@@ -2,6 +2,7 @@ package status32
 
 import (
 	"encoding/csv"
+	"errors"
 	"strings"
 
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
@@ -19,29 +20,31 @@ func SendTo(address string) (qtvstream.QtvStream, error) {
 		return qtvstream.QtvStream{}, err
 	}
 
-	responseBody := response[5:]
-	return ParseResponseBody(responseBody, err)
+	responseBody := response[len(expectedHeader):]
+	return ParseResponseBody(responseBody)
 }
 
-func ParseResponseBody(responseBody []byte, err error) (qtvstream.QtvStream, error) {
+func ParseResponseBody(responseBody []byte) (qtvstream.QtvStream, error) {
+	// example repsonse body
+	// ����nqtv 1 "qw.foppa.dk - qtv (3)" "3@qw.foppa.dk:28000" 0
 	reader := csv.NewReader(strings.NewReader(string(responseBody)))
 	reader.Comma = ' '
+	reader.FieldsPerRecord = 4
 
 	record, err := reader.Read()
 	if err != nil {
-		return qtvstream.QtvStream{}, err
+		return qtvstream.QtvStream{}, errors.New("unable to parse response")
 	}
 
 	const (
-		IndexTitle       = 2
-		IndexAddress     = 3
-		IndexClientCount = 4
+		IndexTitle       = 1
+		IndexAddress     = 2
+		IndexClientCount = 3
 	)
 
 	if record[IndexAddress] == "" {
-		// these are the servers that are not configured correctly,
-		// that means they are not reporting their qtv ip as they should.
-		return qtvstream.QtvStream{}, err
+		// invalid configuration (not reporting qtv ip as they should)
+		return qtvstream.QtvStream{}, errors.New("invalid QTV configuration")
 	}
 
 	stream := qtvstream.QtvStream{
