@@ -33,8 +33,8 @@ func SendTo(address string) (qserver.GenericServer, error) {
 
 func ParseResponseBody(responseBody []byte) qserver.GenericServer {
 	scanner := bufio.NewScanner(strings.NewReader(string(responseBody)))
-
 	scanner.Scan()
+
 	settingsString := scanner.Text()
 
 	var clientStrings []string
