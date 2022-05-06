@@ -50,6 +50,6 @@ func TestParseResponseBody(t *testing.T) {
 		},
 	}
 
-	result := status23.ParseResponseBody(responseBody)
+	result, _ := status23.ParseResponse(responseBody, nil)
 	assert.Equal(t, expect, result)
 }

@@ -1,6 +1,7 @@
 package qtvusers
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/vikpe/serverstat/qserver/qclient"
@@ -8,27 +9,23 @@ import (
 	"github.com/vikpe/udpclient"
 )
 
-func SendTo(address string) ([]qclient.Client, error) {
+func Send(udpClient udpclient.UdpClient, address string) ([]qclient.Client, error) {
 	statusPacket := []byte{0xff, 0xff, 0xff, 0xff, 'q', 't', 'v', 'u', 's', 'e', 'r', 's', 0x0a}
 	expectedHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's'}
-	udpClient := udpclient.New()
-	response, err := udpClient.Request(address, statusPacket, expectedHeader)
-
-	if err != nil {
-		return nil, err
-	}
-
-	responseBody := response[len(expectedHeader):]
-	return ParseResponseBody(responseBody), nil
+	return ParseResponse(udpClient.Request(address, statusPacket, expectedHeader))
 }
 
-func ParseResponseBody(responseBody []byte) []qclient.Client {
+func ParseResponse(responseBody []byte, err error) ([]qclient.Client, error) {
+	if err != nil {
+		return make([]qclient.Client, 0), err
+	}
+
 	// example response body: 12 "djevulsk" "serp" "player" "rst" "twitch.tv/vikpe"
 	fullText := string(responseBody)
 	const QuoteChar = "\""
 
 	if !strings.Contains(fullText, QuoteChar) {
-		return make([]qclient.Client, 0)
+		return make([]qclient.Client, 0), errors.New("invalid response body")
 	}
 
 	indexFirstQuote := strings.Index(fullText, QuoteChar)
@@ -45,5 +42,5 @@ func ParseResponseBody(responseBody []byte) []qclient.Client {
 		})
 	}
 
-	return clients
+	return clients, nil
 }

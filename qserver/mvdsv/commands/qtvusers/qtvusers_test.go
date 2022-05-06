@@ -11,13 +11,13 @@ import (
 func TestParseResponseBody(t *testing.T) {
 	// empty response body
 	expect := make([]qclient.Client, 0)
-	result := qtvusers.ParseResponseBody([]byte("\n"))
+	result, _ := qtvusers.ParseResponse([]byte("\n"), nil)
 	assert.Equal(t, expect, result)
 
 	// non-empty response body
 	responseBody := []byte(`12 "djevulsk" "serp"`)
 
-	result = qtvusers.ParseResponseBody(responseBody)
+	result, _ = qtvusers.ParseResponse(responseBody, nil)
 	expect = []qclient.Client{
 		{
 			Name:    "djevulsk",
