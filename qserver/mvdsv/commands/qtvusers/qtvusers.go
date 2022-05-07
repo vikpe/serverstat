@@ -17,12 +17,8 @@ var Command = udpclient.Command{
 func ParseResponse(responseBody []byte, err error) ([]qclient.Client, error) {
 	if err != nil {
 		return []qclient.Client{}, err
-	} else {
-		return ParseResponseBody(responseBody)
 	}
-}
 
-func ParseResponseBody(responseBody []byte) ([]qclient.Client, error) {
 	// example response body: 12 "djevulsk" "serp" "player" "rst" "twitch.tv/vikpe"
 	fullText := string(responseBody)
 	const QuoteChar = "\""
