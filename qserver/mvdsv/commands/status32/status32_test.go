@@ -9,26 +9,35 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 )
 
-func TestParseResponseBody(t *testing.T) {
-	// empty response body
-	result, err := status32.ParseResponseBody([]byte(""))
-	assert.Equal(t, errors.New("unable to parse response"), err)
-	assert.Equal(t, qtvstream.QtvStream{}, result)
+func TestParseResponse(t *testing.T) {
+	t.Run("error", func(t *testing.T) {
+		result, err := status32.ParseResponse([]byte(""), errors.New("some error"))
+		assert.Equal(t, qtvstream.QtvStream{}, result)
+		assert.ErrorContains(t, err, "some error")
+	})
 
-	// invalid qtv configuration
-	result, err = status32.ParseResponseBody([]byte(`1 "qw.foppa.dk - qtv (3)" "" 2`))
-	assert.Equal(t, errors.New("invalid QTV configuration"), err)
-	assert.Equal(t, qtvstream.QtvStream{}, result)
+	t.Run("empty response body", func(t *testing.T) {
+		result, err := status32.ParseResponse([]byte(""), nil)
+		assert.Equal(t, qtvstream.QtvStream{}, result)
+		assert.ErrorContains(t, err, "unable to parse response")
+	})
 
-	// valid response body
-	responseBody := []byte(`1 "qw.foppa.dk - qtv (3)" "3@qw.foppa.dk:28000" 4`)
+	t.Run("invalid qtv configuration", func(t *testing.T) {
+		result, err := status32.ParseResponse([]byte(`1 "qw.foppa.dk - qtv (3)" "" 2`), nil)
+		assert.Equal(t, qtvstream.QtvStream{}, result)
+		assert.ErrorContains(t, err, "invalid QTV configuration")
+	})
 
-	result, err = status32.ParseResponseBody(responseBody)
-	expect := qtvstream.QtvStream{
-		Title:      "qw.foppa.dk - qtv (3)",
-		Url:        "3@qw.foppa.dk:28000",
-		NumClients: 4,
-	}
-	assert.Equal(t, nil, err)
-	assert.Equal(t, expect, result)
+	t.Run("valid response body", func(t *testing.T) {
+		responseBody := []byte(`1 "qw.foppa.dk - qtv (3)" "3@qw.foppa.dk:28000" 4`)
+
+		result, err := status32.ParseResponse(responseBody, nil)
+		expect := qtvstream.QtvStream{
+			Title:      "qw.foppa.dk - qtv (3)",
+			Url:        "3@qw.foppa.dk:28000",
+			NumClients: 4,
+		}
+		assert.Equal(t, expect, result)
+		assert.Equal(t, nil, err)
+	})
 }

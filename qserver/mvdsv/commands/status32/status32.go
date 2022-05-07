@@ -18,12 +18,8 @@ var Command = udpclient.Command{
 func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) {
 	if err != nil {
 		return qtvstream.QtvStream{}, err
-	} else {
-		return ParseResponseBody(responseBody)
 	}
-}
 
-func ParseResponseBody(responseBody []byte) (qtvstream.QtvStream, error) {
 	// example repsonse body
 	// ����nqtv 1 "qw.foppa.dk - qtv (3)" "3@qw.foppa.dk:28000" 0
 	reader := csv.NewReader(strings.NewReader(string(responseBody)))
