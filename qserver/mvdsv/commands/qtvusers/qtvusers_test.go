@@ -30,17 +30,21 @@ func TestParseResponse(t *testing.T) {
 }
 
 func TestParseResponseBody(t *testing.T) {
-	t.Run("empty response body", func(t *testing.T) {
-		result, _ := qtvusers.ParseResponseBody([]byte("\n"))
-		assert.Equal(t, []qclient.Client{}, result)
-	})
-
 	t.Run("invalid response body", func(t *testing.T) {
-		result, _ := qtvusers.ParseResponseBody([]byte("fooooo"))
-		assert.Equal(t, []qclient.Client{}, result)
+		t.Run("empty", func(t *testing.T) {
+			result, err := qtvusers.ParseResponseBody([]byte("\n"))
+			assert.Equal(t, []qclient.Client{}, result)
+			assert.ErrorContains(t, err, "invalid response body")
+		})
+
+		t.Run("not containing quotes", func(t *testing.T) {
+			result, err := qtvusers.ParseResponseBody([]byte("fooooo"))
+			assert.Equal(t, []qclient.Client{}, result)
+			assert.ErrorContains(t, err, "invalid response body")
+		})
 	})
 
-	t.Run("non-empty response body", func(t *testing.T) {
+	t.Run("valid response body", func(t *testing.T) {
 		responseBody := []byte(`12 "XantoM" "player"`)
 
 		result, _ := qtvusers.ParseResponseBody(responseBody)
