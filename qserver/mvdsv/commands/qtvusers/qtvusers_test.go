@@ -9,16 +9,6 @@ import (
 	"github.com/vikpe/serverstat/qserver/qclient"
 )
 
-/*
-func ParseResponse(responseBody []byte, err error) ([]qclient.Client, error) {
-	if err != nil {
-		return make([]qclient.Client, 0), err
-	} else {
-		return ParseResponseBody(responseBody)
-	}
-}
-*/
-
 func TestParseResponse(t *testing.T) {
 	t.Run("error", func(t *testing.T) {
 		result, err := qtvusers.ParseResponse([]byte{}, errors.New("some error"))
