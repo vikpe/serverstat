@@ -16,14 +16,9 @@ var Command = udpclient.Command{
 
 func ParseResponse(responseBody []byte, err error) (map[string]string, []qclient.Client, error) {
 	if err != nil {
-		return nil, nil, err
-	} else {
-		settings, clients := ParseResponseBody(responseBody)
-		return settings, clients, nil
+		return map[string]string{}, []qclient.Client{}, err
 	}
-}
 
-func ParseResponseBody(responseBody []byte) (map[string]string, []qclient.Client) {
 	scanner := bufio.NewScanner(strings.NewReader(string(responseBody)))
 	scanner.Scan()
 
@@ -37,5 +32,5 @@ func ParseResponseBody(responseBody []byte) (map[string]string, []qclient.Client
 	settings := qsettings.New(settingsString)
 	clients := qclient.NewFromStrings(clientStrings)
 
-	return settings, clients
+	return settings, clients, nil
 }
