@@ -16,7 +16,7 @@ var Command = udpclient.Command{
 
 func ParseResponse(responseBody []byte, err error) ([]qclient.Client, error) {
 	if err != nil {
-		return make([]qclient.Client, 0), err
+		return []qclient.Client{}, err
 	} else {
 		return ParseResponseBody(responseBody)
 	}
@@ -28,7 +28,7 @@ func ParseResponseBody(responseBody []byte) ([]qclient.Client, error) {
 	const QuoteChar = "\""
 
 	if !strings.Contains(fullText, QuoteChar) {
-		return make([]qclient.Client, 0), errors.New("invalid response body")
+		return []qclient.Client{}, errors.New("invalid response body")
 	}
 
 	indexFirstQuote := strings.Index(fullText, QuoteChar)
