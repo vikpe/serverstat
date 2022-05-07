@@ -20,10 +20,7 @@ func GetQtvStream(address string) (qtvstream.QtvStream, error) {
 	)
 
 	if err != nil && stream.NumClients > 0 {
-		clients, _ := qtvusers.ParseResponse(
-			udpclient.New().SendCommand(address, qtvusers.Command),
-		)
-
+		clients, _ := GetQtvUsers(address)
 		stream.Clients = clients
 	}
 
