@@ -57,6 +57,6 @@ func TestParseResponse(t *testing.T) {
 		settings, clients, err := status23.ParseResponse(responseBody, nil)
 		assert.Equal(t, expectSettings, settings)
 		assert.Equal(t, expectClients, clients)
-		assert.Equal(t, nil, err)
+		assert.Nil(t, err)
 	})
 }

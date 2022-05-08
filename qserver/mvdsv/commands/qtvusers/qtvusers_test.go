@@ -34,7 +34,7 @@ func TestParseResponse(t *testing.T) {
 		t.Run("valid response body", func(t *testing.T) {
 			responseBody := []byte(`12 "XantoM" "player"`)
 
-			result, _ := qtvusers.ParseResponse(responseBody, nil)
+			result, err := qtvusers.ParseResponse(responseBody, nil)
 			expect := []qclient.Client{
 				{
 					Name:    "XantoM",
@@ -47,6 +47,7 @@ func TestParseResponse(t *testing.T) {
 			}
 
 			assert.Equal(t, expect, result)
+			assert.Nil(t, err)
 		})
 	})
 }

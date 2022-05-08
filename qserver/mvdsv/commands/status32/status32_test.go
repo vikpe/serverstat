@@ -38,6 +38,6 @@ func TestParseResponse(t *testing.T) {
 			NumClients: 4,
 		}
 		assert.Equal(t, expect, result)
-		assert.Equal(t, nil, err)
+		assert.Nil(t, err)
 	})
 }
