@@ -38,7 +38,7 @@ func TestParseResponse(t *testing.T) {
 				Frags:   2,
 				Ping:    38,
 				Time:    4,
-				Flag:    "SE",
+				CC:      "SE",
 				IsBot:   false,
 			},
 			{
@@ -51,7 +51,7 @@ func TestParseResponse(t *testing.T) {
 				Frags:   -9999,
 				Ping:    -666,
 				Time:    16,
-				Flag:    "",
+				CC:      "",
 				IsBot:   true,
 			},
 		}

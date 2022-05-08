@@ -31,7 +31,7 @@ func TestNewFromString(t *testing.T) {
 			Frags:   17,
 			Ping:    12,
 			Time:    25,
-			Flag:    "SE",
+			CC:      "SE",
 			IsBot:   false,
 		}
 		clientString := `585 17 25 12 "XantoM" "xantom" 4 2 "f0m" "SE"`

@@ -20,7 +20,7 @@ type Client struct {
 	Frags   int
 	Ping    int
 	Time    uint8
-	Flag    string
+	CC      string
 	IsBot   bool
 }
 
@@ -105,7 +105,7 @@ func NewFromString(clientString string) (Client, error) {
 		Frags:   frags,
 		Ping:    ping,
 		Time:    uint8(qutil.StringToInt(clientRecord[IndexTime])),
-		Flag:    flag,
+		CC:      flag,
 		IsBot:   IsBotName(name) || IsBotPing(ping),
 	}, nil
 
