@@ -1,4 +1,4 @@
-package status23
+package status87
 
 import (
 	"bufio"
@@ -10,7 +10,7 @@ import (
 )
 
 var Command = udpclient.Command{
-	RequestPacket:  []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '2', '3', 0x0a},
+	RequestPacket:  []byte{0xff, 0xff, 0xff, 0xff, 's', 't', 'a', 't', 'u', 's', ' ', '8', '7', 0x0a},
 	ResponseHeader: []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'},
 }
 

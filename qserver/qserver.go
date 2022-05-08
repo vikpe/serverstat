@@ -1,7 +1,7 @@
 package qserver
 
 import (
-	"github.com/vikpe/serverstat/qserver/commands/status23"
+	"github.com/vikpe/serverstat/qserver/commands/status87"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
@@ -20,8 +20,8 @@ type GenericServer struct {
 }
 
 func GetInfo(address string) (GenericServer, error) {
-	settings, clients, err := status23.ParseResponse(
-		udpclient.New().SendCommand(address, status23.Command),
+	settings, clients, err := status87.ParseResponse(
+		udpclient.New().SendCommand(address, status87.Command),
 	)
 
 	if err != nil {

@@ -1,17 +1,17 @@
-package status23_test
+package status87_test
 
 import (
 	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vikpe/serverstat/qserver/commands/status23"
+	"github.com/vikpe/serverstat/qserver/commands/status87"
 	"github.com/vikpe/serverstat/qserver/qclient"
 )
 
 func TestParseResponse(t *testing.T) {
 	t.Run("error", func(t *testing.T) {
-		settings, clients, err := status23.ParseResponse([]byte{}, errors.New("some error"))
+		settings, clients, err := status87.ParseResponse([]byte{}, errors.New("some error"))
 		assert.Equal(t, map[string]string{}, settings)
 		assert.Equal(t, []qclient.Client{}, clients)
 		assert.ErrorContains(t, err, "some error")
@@ -19,8 +19,8 @@ func TestParseResponse(t *testing.T) {
 
 	t.Run("no error", func(t *testing.T) {
 		responseBody := []byte(`maxfps\77\pm_ktjump\1\*version\MVDSV 0.35-dev
-66 2 4 38 "NL" "" 13 13 "red"
-65 -9999 16 -666 "\s\[ServeMe]" "" 12 11 "lqwc"
+66 2 4 38 "NL" "" 13 13 "red" "SE"
+65 -9999 16 -666 "\s\[ServeMe]" "" 12 11 "lqwc" ""
 `)
 		expectSettings := map[string]string{
 			"*version":  "MVDSV 0.35-dev",
@@ -38,6 +38,7 @@ func TestParseResponse(t *testing.T) {
 				Frags:   2,
 				Ping:    38,
 				Time:    4,
+				Flag:    "SE",
 				IsBot:   false,
 			},
 			{
@@ -50,11 +51,12 @@ func TestParseResponse(t *testing.T) {
 				Frags:   -9999,
 				Ping:    -666,
 				Time:    16,
+				Flag:    "",
 				IsBot:   true,
 			},
 		}
 
-		settings, clients, err := status23.ParseResponse(responseBody, nil)
+		settings, clients, err := status87.ParseResponse(responseBody, nil)
 		assert.Equal(t, expectSettings, settings)
 		assert.Equal(t, expectClients, clients)
 		assert.Nil(t, err)
