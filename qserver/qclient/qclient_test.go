@@ -1,7 +1,6 @@
 package qclient_test
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,32 +8,37 @@ import (
 )
 
 func TestNewFromString(t *testing.T) {
-	// valid
-	expect := qclient.Client{
-		Name:    "XantoM",
-		NameRaw: []rune("XantoM"),
-		Team:    "f0m",
-		TeamRaw: []rune("f0m"),
-		Skin:    "xantom",
-		Colors:  [2]uint8{4, 2},
-		Frags:   17,
-		Ping:    12,
-		Time:    25,
-		IsBot:   false,
-	}
-	clientString := `585 17 25 12 "XantoM" "xantom" 4 2 "f0m"`
-	client, _ := qclient.NewFromString(clientString)
-	assert.Equal(t, expect, client)
+	t.Run("invalid", func(t *testing.T) {
+		client, err := qclient.NewFromString("")
+		assert.ErrorContains(t, err, "EOF")
+		assert.Equal(t, client, qclient.Client{})
+	})
 
-	// missing fields
-	client, err := qclient.NewFromString("585 17 25")
-	assert.Equal(t, err, errors.New("invalid client column count 3, expects at least 8"))
-	assert.Equal(t, client, qclient.Client{})
+	t.Run("missing fields", func(t *testing.T) {
+		client, err := qclient.NewFromString("585 17 25")
+		assert.ErrorContains(t, err, "invalid client column count 3, expects at least 8")
+		assert.Equal(t, client, qclient.Client{})
+	})
 
-	// invalid
-	client, err = qclient.NewFromString("")
-	assert.Equal(t, err, errors.New("EOF"))
-	assert.Equal(t, client, qclient.Client{})
+	t.Run("valid", func(t *testing.T) {
+		expect := qclient.Client{
+			Name:    "XantoM",
+			NameRaw: []rune("XantoM"),
+			Team:    "f0m",
+			TeamRaw: []rune("f0m"),
+			Skin:    "xantom",
+			Colors:  [2]uint8{4, 2},
+			Frags:   17,
+			Ping:    12,
+			Time:    25,
+			Flag:    "SE",
+			IsBot:   false,
+		}
+		clientString := `585 17 25 12 "XantoM" "xantom" 4 2 "f0m" "SE"`
+		client, err := qclient.NewFromString(clientString)
+		assert.Equal(t, expect, client)
+		assert.Nil(t, err)
+	})
 }
 
 func TestFromStrings(t *testing.T) {

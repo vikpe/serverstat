@@ -20,6 +20,7 @@ type Client struct {
 	Frags   int
 	Ping    int
 	Time    uint8
+	Flag    string
 	IsBot   bool
 }
 
@@ -65,6 +66,7 @@ func NewFromString(clientString string) (Client, error) {
 		IndexColorTop           = 6
 		IndexColorBottom        = 7
 		IndexTeam               = 8
+		IndexFlag               = 9
 		SpectatorPrefix  string = "\\s\\"
 	)
 
@@ -80,9 +82,17 @@ func NewFromString(clientString string) (Client, error) {
 	team := ""
 	teamRaw := make([]rune, 0)
 
-	if columnCount-1 >= IndexTeam {
+	var lastIndex = columnCount - 1
+
+	if lastIndex >= IndexTeam {
 		team = qstring.ToPlainString(clientRecord[IndexTeam])
 		teamRaw = []rune(clientRecord[IndexTeam])
+	}
+
+	flag := ""
+
+	if lastIndex >= IndexFlag {
+		flag = clientRecord[IndexFlag]
 	}
 
 	return Client{
@@ -95,6 +105,7 @@ func NewFromString(clientString string) (Client, error) {
 		Frags:   frags,
 		Ping:    ping,
 		Time:    uint8(qutil.StringToInt(clientRecord[IndexTime])),
+		Flag:    flag,
 		IsBot:   IsBotName(name) || IsBotPing(ping),
 	}, nil
 
