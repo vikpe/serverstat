@@ -40,7 +40,7 @@ func ToColorCode(qchar byte) string {
 	}
 
 	goldBytes := []byte{
-		16, 16 + 128, 17 + 128, // braces
+		16, 16 + 128, 17, 17 + 128, // braces
 		5 + 128, 14 + 128, 15 + 128, 28 + 128, // dots
 	}
 
