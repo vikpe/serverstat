@@ -8,7 +8,7 @@ import (
 	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
-func TestToPlainString(t *testing.T) {
+func TestQuakeString_ToPlainString(t *testing.T) {
 	testCases := map[string]string{
 		"HCBtYXplcg==": "• mazer",
 		"EXNyEA==":     "]sr[",
@@ -19,7 +19,21 @@ func TestToPlainString(t *testing.T) {
 
 	for encodedString, expect := range testCases {
 		strBytes, _ := base64.StdEncoding.DecodeString(encodedString)
-		actual := qstring.ToPlainString(string(strBytes))
+		actual := qstring.New(string(strBytes)).ToPlainString()
+		assert.Equal(t, expect, actual)
+	}
+}
+
+func TestQuakeString_ToColorCodes(t *testing.T) {
+	testCases := map[string]string{
+		"HCBtYXplcg==": "wwwwwww", // • mazer
+		"EXNyEA==":     "gwwg",    // ]sr[
+		"4uHz8w==":     "bbbb",    // bass
+	}
+
+	for encodedString, expect := range testCases {
+		strBytes, _ := base64.StdEncoding.DecodeString(encodedString)
+		actual := qstring.New(string(strBytes)).ToColorCodes()
 		assert.Equal(t, expect, actual)
 	}
 }
