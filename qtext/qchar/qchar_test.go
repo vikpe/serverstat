@@ -75,6 +75,52 @@ func TestToPlainString(t *testing.T) {
 	}
 }
 
+func TestToColorCode(t *testing.T) {
+	// brown
+	brownRowStart := 10
+	brownRowStop := 15
+
+	for b := brownRowStart * 16; b <= brownRowStop*16; b++ {
+		assert.Equal(t, "b", qchar.ToColorCode(byte(b)), b)
+	}
+
+	// gold
+	goldBytes := []byte{
+		16, 16 + 128, 17 + 128, // braces
+		5 + 128, 14 + 128, 15 + 128, 28 + 128, // dots
+	}
+
+	for _, b := range goldBytes {
+		assert.Equal(t, "g", qchar.ToColorCode(b), b)
+	}
+
+	// green numbers
+	for b := byte(18); b <= 27; b++ {
+		assert.Equal(t, "b", qchar.ToColorCode(b), b)
+	}
+	for b := byte(18) + 128; b <= 27+128; b++ {
+		assert.Equal(t, "b", qchar.ToColorCode(b), b)
+	}
+
+	// white
+	whiteRowStart := 2
+	whiteRowStop := 7
+
+	for b := whiteRowStart * 16; b <= whiteRowStop*16; b++ {
+		assert.Equal(t, "w", qchar.ToColorCode(byte(b)), b)
+	}
+
+	// white dots
+	whiteDots := []byte{5, 14, 15, 28}
+
+	for _, b := range whiteDots {
+		assert.Equal(t, "w", qchar.ToColorCode(b), b)
+	}
+
+	// misc non-printable chars
+	assert.Equal(t, "w", qchar.ToColorCode(1), 1)
+}
+
 func TestRemoveColor(t *testing.T) {
 	assert.Equal(t, byte(100), qchar.RemoveColor(228))
 	assert.Equal(t, byte(100), qchar.RemoveColor(100))

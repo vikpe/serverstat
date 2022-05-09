@@ -1,5 +1,13 @@
 package qchar
 
+import "bytes"
+
+const (
+	ColorWhite = "w"
+	ColorBrown = "b"
+	ColorGold  = "g"
+)
+
 func RemoveColor(qchar byte) byte {
 	return qchar & 0x7f
 }
@@ -22,4 +30,33 @@ func ToPlainString(qchar byte) string {
 	} else {
 		return string(plainByte)
 	}
+}
+
+func ToColorCode(qchar byte) string {
+	rowInCharset := qchar / 16
+
+	if rowInCharset > 9 {
+		return ColorBrown
+	}
+
+	goldBytes := []byte{
+		16, 16 + 128, 17 + 128, // braces
+		5 + 128, 14 + 128, 15 + 128, 28 + 128, // dots
+	}
+
+	if hasChar(goldBytes, qchar) {
+		return ColorGold
+	}
+
+	plainChar := RemoveColor(qchar)
+
+	if plainChar >= 18 && plainChar <= 27 { // brown numbers
+		return ColorBrown
+	}
+
+	return ColorWhite
+}
+
+func hasChar(haystack []byte, needle byte) bool {
+	return bytes.IndexByte(haystack, needle) != -1
 }
