@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/commands/status87"
 	"github.com/vikpe/serverstat/qserver/qclient"
+	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
 func TestParseResponse(t *testing.T) {
@@ -29,30 +30,26 @@ func TestParseResponse(t *testing.T) {
 		}
 		expectClients := []qclient.Client{
 			{
-				Name:    "NL",
-				NameRaw: []rune("NL"),
-				Team:    "red",
-				TeamRaw: []rune("red"),
-				Skin:    "",
-				Colors:  [2]uint8{13, 13},
-				Frags:   2,
-				Ping:    38,
-				Time:    4,
-				CC:      "SE",
-				IsBot:   false,
+				Name:   qstring.New("NL"),
+				Team:   qstring.New("red"),
+				Skin:   "",
+				Colors: [2]uint8{13, 13},
+				Frags:  2,
+				Ping:   38,
+				Time:   4,
+				CC:     "SE",
+				IsBot:  false,
 			},
 			{
-				Name:    "[ServeMe]",
-				NameRaw: []rune("[ServeMe]"),
-				Team:    "lqwc",
-				TeamRaw: []rune("lqwc"),
-				Skin:    "",
-				Colors:  [2]uint8{12, 11},
-				Frags:   -9999,
-				Ping:    -666,
-				Time:    16,
-				CC:      "",
-				IsBot:   true,
+				Name:   qstring.New("[ServeMe]"),
+				Team:   qstring.New("lqwc"),
+				Skin:   "",
+				Colors: [2]uint8{12, 11},
+				Frags:  -9999,
+				Ping:   -666,
+				Time:   16,
+				CC:     "",
+				IsBot:  true,
 			},
 		}
 

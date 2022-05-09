@@ -32,12 +32,11 @@ func ParseResponse(responseBody []byte, err error) ([]qclient.Client, error) {
 	namesText := fullText[indexFirstQuote+1 : indexLastQuote]
 
 	clients := make([]qclient.Client, 0)
-	namesRaw := strings.Split(namesText, "\" \"")
+	names := strings.Split(namesText, "\" \"")
 
-	for _, nameRaw := range namesRaw {
+	for _, name := range names {
 		clients = append(clients, qclient.Client{
-			Name:    qstring.ToPlainString(nameRaw),
-			NameRaw: []rune(nameRaw),
+			Name: qstring.New(name),
 		})
 	}
 

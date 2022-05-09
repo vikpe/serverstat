@@ -9,6 +9,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qversion"
+	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udphelper"
 )
 
@@ -35,28 +36,24 @@ func TestGetInfo(t *testing.T) {
 			Address: ":8001",
 			Clients: []qclient.Client{
 				{
-					Name:    "NL",
-					NameRaw: []rune("NL"),
-					Team:    "red",
-					TeamRaw: []rune("red"),
-					Skin:    "",
-					Colors:  [2]uint8{13, 13},
-					Frags:   2,
-					Ping:    38,
-					Time:    4,
-					IsBot:   false,
+					Name:   qstring.New("NL"),
+					Team:   qstring.New("red"),
+					Skin:   "",
+					Colors: [2]uint8{13, 13},
+					Frags:  2,
+					Ping:   38,
+					Time:   4,
+					IsBot:  false,
 				},
 				{
-					Name:    "[ServeMe]",
-					NameRaw: []rune("[ServeMe]"),
-					Team:    "lqwc",
-					TeamRaw: []rune("lqwc"),
-					Skin:    "",
-					Colors:  [2]uint8{12, 11},
-					Frags:   -9999,
-					Ping:    -666,
-					Time:    16,
-					IsBot:   true,
+					Name:   qstring.New("[ServeMe]"),
+					Team:   qstring.New("lqwc"),
+					Skin:   "",
+					Colors: [2]uint8{12, 11},
+					Frags:  -9999,
+					Ping:   -666,
+					Time:   16,
+					IsBot:  true,
 				},
 			},
 			Settings: map[string]string{

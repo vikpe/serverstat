@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/qclient"
+	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
 func TestNewFromString(t *testing.T) {
@@ -22,17 +23,15 @@ func TestNewFromString(t *testing.T) {
 
 	t.Run("valid", func(t *testing.T) {
 		expect := qclient.Client{
-			Name:    "XantoM",
-			NameRaw: []rune("XantoM"),
-			Team:    "f0m",
-			TeamRaw: []rune("f0m"),
-			Skin:    "xantom",
-			Colors:  [2]uint8{4, 2},
-			Frags:   17,
-			Ping:    12,
-			Time:    25,
-			CC:      "SE",
-			IsBot:   false,
+			Name:   qstring.New("XantoM"),
+			Team:   qstring.New("f0m"),
+			Skin:   "xantom",
+			Colors: [2]uint8{4, 2},
+			Frags:  17,
+			Ping:   12,
+			Time:   25,
+			CC:     "SE",
+			IsBot:  false,
 		}
 		clientString := `585 17 25 12 "XantoM" "xantom" 4 2 "f0m" "SE"`
 		client, err := qclient.NewFromString(clientString)
@@ -52,52 +51,44 @@ func TestFromStrings(t *testing.T) {
 
 	expect := []qclient.Client{
 		{
-			Name:    "Pitbull",
-			NameRaw: []rune("Pitbull"),
-			Team:    "red",
-			TeamRaw: []rune("red"),
-			Skin:    "",
-			Colors:  [2]uint8{4, 4},
-			Frags:   5,
-			Ping:    25,
-			Time:    4,
-			IsBot:   false,
+			Name:   qstring.New("Pitbull"),
+			Team:   qstring.New("red"),
+			Skin:   "",
+			Colors: [2]uint8{4, 4},
+			Frags:  5,
+			Ping:   25,
+			Time:   4,
+			IsBot:  false,
 		},
 		{
-			Name:    "NL",
-			NameRaw: []rune("NL"),
-			Team:    "red",
-			TeamRaw: []rune("red"),
-			Skin:    "",
-			Colors:  [2]uint8{13, 13},
-			Frags:   2,
-			Ping:    38,
-			Time:    4,
-			IsBot:   false,
+			Name:   qstring.New("NL"),
+			Team:   qstring.New("red"),
+			Skin:   "",
+			Colors: [2]uint8{13, 13},
+			Frags:  2,
+			Ping:   38,
+			Time:   4,
+			IsBot:  false,
 		},
 		{
-			Name:    "[ServeMe]",
-			NameRaw: []rune("[ServeMe]"),
-			Team:    "lqwc",
-			TeamRaw: []rune("lqwc"),
-			Skin:    "",
-			Colors:  [2]uint8{12, 11},
-			Frags:   -9999,
-			Ping:    -666,
-			Time:    16,
-			IsBot:   true,
+			Name:   qstring.New("[ServeMe]"),
+			Team:   qstring.New("lqwc"),
+			Skin:   "",
+			Colors: [2]uint8{12, 11},
+			Frags:  -9999,
+			Ping:   -666,
+			Time:   16,
+			IsBot:  true,
 		},
 		{
-			Name:    "Final",
-			NameRaw: []rune("Final"),
-			Team:    "red",
-			TeamRaw: []rune("red"),
-			Skin:    "",
-			Colors:  [2]uint8{2, 3},
-			Frags:   -9999,
-			Ping:    -68,
-			Time:    122,
-			IsBot:   false,
+			Name:   qstring.New("Final"),
+			Team:   qstring.New("red"),
+			Skin:   "",
+			Colors: [2]uint8{2, 3},
+			Frags:  -9999,
+			Ping:   -68,
+			Time:   122,
+			IsBot:  false,
 		},
 	}
 

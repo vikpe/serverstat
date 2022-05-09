@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/qtvusers"
 	"github.com/vikpe/serverstat/qserver/qclient"
+	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
 func TestParseResponse(t *testing.T) {
@@ -36,14 +37,8 @@ func TestParseResponse(t *testing.T) {
 
 			result, err := qtvusers.ParseResponse(responseBody, nil)
 			expect := []qclient.Client{
-				{
-					Name:    "XantoM",
-					NameRaw: []int32{88, 97, 110, 116, 111, 77},
-				},
-				{
-					Name:    "player",
-					NameRaw: []int32{112, 108, 97, 121, 101, 114},
-				},
+				{Name: qstring.New("XantoM")},
+				{Name: qstring.New("player")},
 			}
 
 			assert.Equal(t, expect, result)

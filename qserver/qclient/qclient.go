@@ -11,17 +11,15 @@ import (
 )
 
 type Client struct {
-	Name    string
-	NameRaw []rune
-	Team    string
-	TeamRaw []rune
-	Skin    string
-	Colors  [2]uint8
-	Frags   int
-	Ping    int
-	Time    uint8
-	CC      string
-	IsBot   bool
+	Name   qstring.QuakeString
+	Team   qstring.QuakeString
+	Skin   string
+	Colors [2]uint8
+	Frags  int
+	Ping   int
+	Time   uint8
+	CC     string
+	IsBot  bool
 }
 
 func NewFromStrings(clientStrings []string) []Client {
@@ -73,20 +71,18 @@ func NewFromString(clientString string) (Client, error) {
 	nameQuakeStr := clientRecord[IndexName]
 	nameQuakeStr = strings.TrimPrefix(nameQuakeStr, SpectatorPrefix)
 
-	name := qstring.ToPlainString(nameQuakeStr)
+	name := qstring.New(nameQuakeStr)
 	frags := qutil.StringToInt(clientRecord[IndexFrags])
 	colorTop := qutil.StringToInt(clientRecord[IndexColorTop])
 	colorBottom := qutil.StringToInt(clientRecord[IndexColorBottom])
 	ping := qutil.StringToInt(clientRecord[IndexPing])
 
-	team := ""
-	teamRaw := make([]rune, 0)
-
 	var lastIndex = columnCount - 1
 
+	team := qstring.New("")
+
 	if lastIndex >= IndexTeam {
-		team = qstring.ToPlainString(clientRecord[IndexTeam])
-		teamRaw = []rune(clientRecord[IndexTeam])
+		team = qstring.New(clientRecord[IndexTeam])
 	}
 
 	flag := ""
@@ -96,17 +92,15 @@ func NewFromString(clientString string) (Client, error) {
 	}
 
 	return Client{
-		Name:    name,
-		NameRaw: []rune(nameQuakeStr),
-		Team:    team,
-		TeamRaw: teamRaw,
-		Skin:    clientRecord[IndexSkin],
-		Colors:  [2]uint8{uint8(colorTop), uint8(colorBottom)},
-		Frags:   frags,
-		Ping:    ping,
-		Time:    uint8(qutil.StringToInt(clientRecord[IndexTime])),
-		CC:      flag,
-		IsBot:   IsBotName(name) || IsBotPing(ping),
+		Name:   name,
+		Team:   team,
+		Skin:   clientRecord[IndexSkin],
+		Colors: [2]uint8{uint8(colorTop), uint8(colorBottom)},
+		Frags:  frags,
+		Ping:   ping,
+		Time:   uint8(qutil.StringToInt(clientRecord[IndexTime])),
+		CC:     flag,
+		IsBot:  IsBotName(name.ToPlainString()) || IsBotPing(ping),
 	}, nil
 
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qversion"
+	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udphelper"
 )
 
@@ -36,16 +37,14 @@ func TestGetInfoFromMany(t *testing.T) {
 			Address: ":7001",
 			Clients: []qclient.Client{
 				{
-					Name:    "[ServeMe]",
-					NameRaw: []rune("[ServeMe]"),
-					Team:    "lqwc",
-					TeamRaw: []rune("lqwc"),
-					Skin:    "",
-					Colors:  [2]uint8{12, 11},
-					Frags:   -9999,
-					Ping:    -666,
-					Time:    16,
-					IsBot:   true,
+					Name:   qstring.New("[ServeMe]"),
+					Team:   qstring.New("lqwc"),
+					Skin:   "",
+					Colors: [2]uint8{12, 11},
+					Frags:  -9999,
+					Ping:   -666,
+					Time:   16,
+					IsBot:  true,
 				},
 			},
 			Settings: map[string]string{

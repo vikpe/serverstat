@@ -8,6 +8,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
+	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udphelper"
 )
 
@@ -58,8 +59,8 @@ func TestGetQtvStream(t *testing.T) {
 			Url:        "3@qw.foppa.dk:28000",
 			NumClients: 2,
 			Clients: []qclient.Client{
-				{Name: "XantoM", NameRaw: []int32{88, 97, 110, 116, 111, 77}},
-				{Name: "valla", NameRaw: []int32{118, 97, 108, 108, 97}},
+				{Name: qstring.New("XantoM")},
+				{Name: qstring.New("valla")},
 			},
 		}
 
