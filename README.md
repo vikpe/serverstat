@@ -4,5 +4,6 @@
 
 ## See also
 
+* [serverstat-cli](https://github.com/vikpe/serverstat-cli)
 * [masterstat](https://github.com/vikpe/masterstat)
 * [masterstat-cli](https://github.com/vikpe/masterstat-cli)
