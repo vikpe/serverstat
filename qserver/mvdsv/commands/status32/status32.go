@@ -43,9 +43,9 @@ func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) 
 	}
 
 	stream := qtvstream.QtvStream{
-		Title:      record[IndexTitle],
-		Url:        record[IndexAddress],
-		NumClients: uint8(qutil.StringToInt(record[IndexClientCount])),
+		Title:         record[IndexTitle],
+		Url:           record[IndexAddress],
+		NumSpectators: uint8(qutil.StringToInt(record[IndexClientCount])),
 	}
 	return stream, nil
 }

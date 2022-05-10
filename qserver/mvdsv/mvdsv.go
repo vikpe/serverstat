@@ -40,7 +40,7 @@ func Parse(genericServer qserver.GenericServer) Server {
 	}
 }
 
-func GetQtvUsers(address string) ([]qclient.Client, error) {
+func GetQtvUsers(address string) ([]qstring.QuakeString, error) {
 	return qtvusers.ParseResponse(
 		udpclient.New().SendCommand(address, qtvusers.Command),
 	)
@@ -51,9 +51,9 @@ func GetQtvStream(address string) (qtvstream.QtvStream, error) {
 		udpclient.New().SendCommand(address, status32.Command),
 	)
 
-	if err == nil && stream.NumClients > 0 {
-		clients, _ := GetQtvUsers(address)
-		stream.Clients = clients
+	if err == nil && stream.NumSpectators > 0 {
+		names, _ := GetQtvUsers(address)
+		stream.SpectatorNames = names
 	}
 
 	return stream, err

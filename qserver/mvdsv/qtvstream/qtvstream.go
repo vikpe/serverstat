@@ -3,14 +3,14 @@ package qtvstream
 import (
 	"encoding/json"
 
-	"github.com/vikpe/serverstat/qserver/qclient"
+	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
 type QtvStream struct {
-	Title      string
-	Url        string
-	Clients    []qclient.Client
-	NumClients uint8
+	Title          string
+	Url            string
+	SpectatorNames []qstring.QuakeString
+	NumSpectators  uint8
 }
 
 func (q QtvStream) MarshalJSON() ([]byte, error) {
@@ -20,10 +20,10 @@ func (q QtvStream) MarshalJSON() ([]byte, error) {
 		type QtvStreamJson QtvStream
 
 		return json.Marshal(QtvStreamJson{
-			Title:      q.Title,
-			Url:        q.Url,
-			Clients:    q.Clients,
-			NumClients: q.NumClients,
+			Title:          q.Title,
+			Url:            q.Url,
+			SpectatorNames: q.SpectatorNames,
+			NumSpectators:  q.NumSpectators,
 		})
 	}
 }

@@ -33,9 +33,9 @@ func TestParseResponse(t *testing.T) {
 
 		result, err := status32.ParseResponse(responseBody, nil)
 		expect := qtvstream.QtvStream{
-			Title:      "qw.foppa.dk - qtv (3)",
-			Url:        "3@qw.foppa.dk:28000",
-			NumClients: 4,
+			Title:         "qw.foppa.dk - qtv (3)",
+			Url:           "3@qw.foppa.dk:28000",
+			NumSpectators: 4,
 		}
 		assert.Equal(t, expect, result)
 		assert.Nil(t, err)

@@ -34,9 +34,9 @@ func TestGetQtvStream(t *testing.T) {
 
 		stream, err := mvdsv.GetQtvStream(":5001")
 		expectStream := qtvstream.QtvStream{
-			Title:      "qw.foppa.dk - qtv (3)",
-			Url:        "3@qw.foppa.dk:28000",
-			NumClients: 0,
+			Title:         "qw.foppa.dk - qtv (3)",
+			Url:           "3@qw.foppa.dk:28000",
+			NumSpectators: 0,
 		}
 		assert.Equal(t, expectStream, stream)
 		assert.Nil(t, err)
@@ -58,12 +58,12 @@ func TestGetQtvStream(t *testing.T) {
 
 		stream, err := mvdsv.GetQtvStream(":5002")
 		expectStream := qtvstream.QtvStream{
-			Title:      "qw.foppa.dk - qtv (3)",
-			Url:        "3@qw.foppa.dk:28000",
-			NumClients: 2,
-			Clients: []qclient.Client{
-				{Name: qstring.New("XantoM")},
-				{Name: qstring.New("valla")},
+			Title:         "qw.foppa.dk - qtv (3)",
+			Url:           "3@qw.foppa.dk:28000",
+			NumSpectators: 2,
+			SpectatorNames: []qstring.QuakeString{
+				qstring.New("XantoM"),
+				qstring.New("valla"),
 			},
 		}
 

@@ -17,7 +17,7 @@ func TestQtvStream_MarshalJSON(t *testing.T) {
 
 	// non-empty URL
 	stream := qtvstream.QtvStream{Url: "1@qw.foppa.dk:28000"}
-	expect = `{"Title":"","Url":"1@qw.foppa.dk:28000","Clients":null,"NumClients":0}`
+	expect = `{"Title":"","Url":"1@qw.foppa.dk:28000","SpectatorNames":null,"NumSpectators":0}`
 	result, _ = json.Marshal(stream)
 	assert.Equal(t, expect, string(result))
 }
