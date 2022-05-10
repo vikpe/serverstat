@@ -108,7 +108,7 @@ func TestParse(t *testing.T) {
 		Players:        []qclient.Client{playerClient},
 		SpectatorNames: []qstring.QuakeString{spectatorClient.Name},
 		Settings:       genericServer.Settings,
-		QtvStream:      qtvstream.QtvStream{},
+		QtvStream:      genericServer.ExtraInfo.QtvStream,
 	}
 
 	assert.Equal(t, expect, mvdsv.Parse(genericServer))
