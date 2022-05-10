@@ -29,7 +29,7 @@ func ParseResponse(responseBody []byte, err error) (map[string]string, []qclient
 		clientStrings = append(clientStrings, scanner.Text())
 	}
 
-	settings := qsettings.New(settingsString)
+	settings := qsettings.ParseString(settingsString)
 	clients := qclient.NewFromStrings(clientStrings)
 
 	return settings, clients, nil

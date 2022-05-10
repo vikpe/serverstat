@@ -7,18 +7,19 @@ import (
 	"github.com/vikpe/serverstat/qserver/qsettings"
 )
 
-func TestNew(t *testing.T) {
-	// empty
-	assert.Equal(t, make(map[string]string, 0), qsettings.New(""))
+func TestParseString(t *testing.T) {
+	t.Run("empty", func(t *testing.T) {
+		assert.Equal(t, make(qsettings.Settings, 0), qsettings.ParseString(""))
+	})
+	t.Run("non-empty", func(t *testing.T) {
+		expect := qsettings.Settings{
+			"*version":  "MVDSV 0.35-dev",
+			"maxfps":    "77",
+			"pm_ktjump": "1",
+		}
+		settingsString := `maxfps\77\pm_ktjump\1\*version\MVDSV 0.35-dev`
+		actual := qsettings.ParseString(settingsString)
 
-	// non-empty
-	expect := map[string]string{
-		"*version":  "MVDSV 0.35-dev",
-		"maxfps":    "77",
-		"pm_ktjump": "1",
-	}
-	settingsString := `maxfps\77\pm_ktjump\1\*version\MVDSV 0.35-dev`
-	actual := qsettings.New(settingsString)
-
-	assert.Equal(t, expect, actual)
+		assert.Equal(t, expect, actual)
+	})
 }
