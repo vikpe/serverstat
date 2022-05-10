@@ -5,6 +5,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
+	"github.com/vikpe/serverstat/qserver/qsettings"
 	"github.com/vikpe/serverstat/qserver/qversion"
 	"github.com/vikpe/udpclient"
 )
@@ -13,7 +14,7 @@ type GenericServer struct {
 	Version   qversion.Version `json:"-"`
 	Address   string
 	Clients   []qclient.Client
-	Settings  map[string]string
+	Settings  qsettings.Settings
 	ExtraInfo struct {
 		QtvStream qtvstream.QtvStream
 	} `json:"-"`
