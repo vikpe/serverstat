@@ -7,38 +7,36 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qsettings"
+	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udpclient"
 )
 
 type Server struct {
-	Address    string
-	Players    []qclient.Client
-	Spectators []qclient.Spectator
-	Settings   qsettings.Settings
-	QtvStream  qtvstream.QtvStream
+	Address        string
+	Players        []qclient.Client
+	SpectatorNames []qstring.QuakeString
+	Settings       qsettings.Settings
+	QtvStream      qtvstream.QtvStream
 }
 
 func Parse(genericServer qserver.GenericServer) Server {
-	spectators := make([]qclient.Spectator, 0)
+	spectatorNames := make([]qstring.QuakeString, 0)
 	players := make([]qclient.Client, 0)
 
 	for _, client := range genericServer.Clients {
 		if client.IsSpectator() {
-			spectators = append(spectators, qclient.Spectator{
-				Name:  client.Name,
-				IsBot: client.IsBot(),
-			})
+			spectatorNames = append(spectatorNames, client.Name)
 		} else {
 			players = append(players, client)
 		}
 	}
 
 	return Server{
-		Address:    genericServer.Address,
-		Players:    players,
-		Spectators: spectators,
-		Settings:   genericServer.Settings,
-		QtvStream:  genericServer.ExtraInfo.QtvStream,
+		Address:        genericServer.Address,
+		Players:        players,
+		SpectatorNames: spectatorNames,
+		Settings:       genericServer.Settings,
+		QtvStream:      genericServer.ExtraInfo.QtvStream,
 	}
 }
 

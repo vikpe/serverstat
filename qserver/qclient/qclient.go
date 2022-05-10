@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/vikpe/serverstat/qserver/qclient/bot"
 	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/serverstat/qutil"
 )
@@ -22,16 +23,11 @@ type Client struct {
 }
 
 func (client Client) IsBot() bool {
-	return IsBot(client)
+	return bot.IsBotPing(client.Ping) || bot.IsBotName(client.Name.ToPlainString())
 }
 
 func (client Client) IsSpectator() bool {
-	return isSpectatorPing(client.Ping)
-}
-
-type Spectator struct {
-	Name  qstring.QuakeString
-	IsBot bool
+	return client.Ping < 0
 }
 
 func NewFromStrings(clientStrings []string) []Client {
@@ -113,29 +109,4 @@ func NewFromString(clientString string) (Client, error) {
 		Time:   uint8(qutil.StringToInt(clientRecord[IndexTime])),
 		CC:     flag,
 	}, nil
-}
-
-func isSpectatorPing(ping int) bool {
-	return ping < 0
-}
-
-func IsBot(client Client) bool {
-	return isBotName(client.Name.ToPlainString()) || isBotPing(client.Ping)
-}
-
-func isBotName(name string) bool {
-	if 0 == len(name) {
-		return false
-	}
-
-	knownBotNames := []string{
-		"[ServeMe]",
-		"twitch.tv/vikpe",
-	}
-
-	return strings.Contains(strings.Join(knownBotNames, "\""), name)
-}
-
-func isBotPing(ping int) bool {
-	return 10 == ping
 }
