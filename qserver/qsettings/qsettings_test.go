@@ -23,3 +23,15 @@ func TestParseString(t *testing.T) {
 		assert.Equal(t, expect, actual)
 	})
 }
+
+func TestSettings_Get(t *testing.T) {
+	settings := qsettings.Settings{"foo": "bar"}
+	assert.Equal(t, "bar", settings.Get("foo", ""))
+	assert.Equal(t, "", settings.Get("alpha", ""))
+}
+
+func TestSettings_Has(t *testing.T) {
+	settings := qsettings.Settings{"foo": "bar"}
+	assert.True(t, settings.Has("foo"))
+	assert.False(t, settings.Has("alpha"))
+}

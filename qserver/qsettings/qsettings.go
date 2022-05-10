@@ -4,12 +4,12 @@ import "strings"
 
 type Settings map[string]string
 
-func (settings Settings) has(key string) bool {
+func (settings Settings) Has(key string) bool {
 	_, hasKey := settings[key]
 	return hasKey
 }
 
-func (settings Settings) get(key string, default_ string) string {
+func (settings Settings) Get(key string, default_ string) string {
 	if value, ok := settings[key]; ok {
 		return value
 	} else {
