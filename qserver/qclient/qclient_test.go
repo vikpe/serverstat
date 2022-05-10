@@ -92,28 +92,15 @@ func TestFromStrings(t *testing.T) {
 	assert.Equal(t, expect, actual)
 }
 
-func TestIsBotName(t *testing.T) {
-	knownBotNames := []string{
-		"[ServeMe]",
-		"twitch.tv/vikpe",
-	}
-
-	for _, name := range knownBotNames {
-		assert.True(t, qclient.IsBotName(name), name)
-	}
-
-	assert.False(t, qclient.IsBotName(""))
-	assert.False(t, qclient.IsBotName("XantoM"))
+func TestClient_IsSpectator(t *testing.T) {
+	assert.True(t, qclient.Client{Ping: -10}.IsSpectator())
+	assert.False(t, qclient.Client{Ping: 10}.IsSpectator())
 }
 
-func TestIsBotPing(t *testing.T) {
-	assert.True(t, qclient.IsBotPing(10))
-	assert.False(t, qclient.IsBotPing(0))
-	assert.False(t, qclient.IsBotPing(38))
-}
+func TestClient_IsBot(t *testing.T) {
+	assert.True(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 10}.IsBot())
+	assert.True(t, qclient.Client{Name: qstring.New("[ServeMe]"), Ping: 12}.IsBot())
 
-func TestIsSpectatorPing(t *testing.T) {
-	assert.True(t, qclient.IsSpectatorPing(-10))
-	assert.False(t, qclient.IsSpectatorPing(0))
-	assert.False(t, qclient.IsSpectatorPing(10))
+	assert.False(t, qclient.Client{Name: qstring.New(""), Ping: 12}.IsBot())
+	assert.False(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 12}.IsBot())
 }

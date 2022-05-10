@@ -26,7 +26,7 @@ func (client Client) IsBot() bool {
 }
 
 func (client Client) IsSpectator() bool {
-	return IsSpectatorPing(client.Ping)
+	return isSpectatorPing(client.Ping)
 }
 
 type Spectator struct {
@@ -115,15 +115,15 @@ func NewFromString(clientString string) (Client, error) {
 	}, nil
 }
 
-func IsSpectatorPing(ping int) bool {
+func isSpectatorPing(ping int) bool {
 	return ping < 0
 }
 
 func IsBot(client Client) bool {
-	return IsBotName(client.Name.ToPlainString()) || IsBotPing(client.Ping)
+	return isBotName(client.Name.ToPlainString()) || isBotPing(client.Ping)
 }
 
-func IsBotName(name string) bool {
+func isBotName(name string) bool {
 	if 0 == len(name) {
 		return false
 	}
@@ -136,6 +136,6 @@ func IsBotName(name string) bool {
 	return strings.Contains(strings.Join(knownBotNames, "\""), name)
 }
 
-func IsBotPing(ping int) bool {
+func isBotPing(ping int) bool {
 	return 10 == ping
 }
