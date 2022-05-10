@@ -2,6 +2,7 @@ package qstring_test
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -36,4 +37,9 @@ func TestQuakeString_ToColorCodes(t *testing.T) {
 		actual := qstring.New(string(strBytes)).ToColorCodes()
 		assert.Equal(t, expect, actual)
 	}
+}
+
+func TestQuakeString_MarshalJSON(t *testing.T) {
+	result, _ := json.Marshal(qstring.New("XantoM"))
+	assert.Equal(t, []byte("XantoM"), result)
 }

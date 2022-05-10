@@ -1,6 +1,8 @@
 package qstring
 
 import (
+	"encoding/json"
+
 	"github.com/vikpe/serverstat/qtext/qchar"
 )
 
@@ -18,6 +20,10 @@ func (qs QuakeString) ToPlainString() string {
 
 func (qs QuakeString) ToColorCodes() string {
 	return ToColorCodes(string(qs.bytes))
+}
+
+func (qs QuakeString) MarshalJSON() ([]byte, error) {
+	return json.Marshal(qs.ToPlainString())
 }
 
 func ToPlainString(str string) string {
