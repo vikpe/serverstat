@@ -30,7 +30,7 @@ func GetInfo(address string) (GenericServer, error) {
 
 	server := GenericServer{
 		Address:  address,
-		Version:  qversion.New(settings["*version"]),
+		Version:  qversion.New(settings.Get("*version", "")),
 		Clients:  clients,
 		Settings: settings,
 	}

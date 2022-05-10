@@ -14,7 +14,7 @@ var Command = udpclient.Command{
 	ResponseHeader: []byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'},
 }
 
-func ParseResponse(responseBody []byte, err error) (map[string]string, []qclient.Client, error) {
+func ParseResponse(responseBody []byte, err error) (qsettings.Settings, []qclient.Client, error) {
 	if err != nil {
 		return map[string]string{}, []qclient.Client{}, err
 	}
