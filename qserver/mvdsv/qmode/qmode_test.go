@@ -1,6 +1,7 @@
 package qmode_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -48,6 +49,7 @@ func TestModeValidators(t *testing.T) {
 
 			if modeName == currentModeName {
 				assert.True(t, currentValidator(mode))
+				assert.True(t, currentValidator(qmode.Mode(strings.ToUpper(currentModeName))))
 			} else {
 				assert.False(t, otherValidator(mode))
 			}

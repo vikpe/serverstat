@@ -10,7 +10,7 @@ import (
 type Mode string
 
 func (m Mode) Is(name string) bool {
-	return strings.ToLower(name) == string(m)
+	return strings.ToLower(name) == strings.ToLower(string(m))
 }
 func (m Mode) Is1on1() bool     { return m.Is("1on1") }
 func (m Mode) Is2on2() bool     { return m.Is("2on2") }
