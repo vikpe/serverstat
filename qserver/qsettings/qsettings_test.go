@@ -9,8 +9,9 @@ import (
 
 func TestParseString(t *testing.T) {
 	t.Run("empty", func(t *testing.T) {
-		assert.Equal(t, make(qsettings.Settings, 0), qsettings.ParseString(""))
+		assert.Equal(t, qsettings.Settings{}, qsettings.ParseString(""))
 	})
+
 	t.Run("non-empty", func(t *testing.T) {
 		expect := qsettings.Settings{
 			"*version":  "MVDSV 0.35-dev",
