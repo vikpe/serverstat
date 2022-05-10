@@ -1,6 +1,9 @@
 package qsettings
 
-import "strings"
+import (
+	"strconv"
+	"strings"
+)
 
 type Settings map[string]string
 
@@ -15,6 +18,12 @@ func (settings Settings) Get(key string, default_ string) string {
 	} else {
 		return default_
 	}
+}
+
+func (settings Settings) GetInt(key string, default_ int) int {
+	stringVal := settings.Get(key, "")
+	intVal, _ := strconv.Atoi(stringVal)
+	return intVal
 }
 
 func ParseString(settingsString string) Settings {

@@ -24,14 +24,20 @@ func TestParseString(t *testing.T) {
 	})
 }
 
+func TestSettings_Has(t *testing.T) {
+	settings := qsettings.Settings{"foo": "bar"}
+	assert.True(t, settings.Has("foo"))
+	assert.False(t, settings.Has("alpha"))
+}
+
 func TestSettings_Get(t *testing.T) {
 	settings := qsettings.Settings{"foo": "bar"}
 	assert.Equal(t, "bar", settings.Get("foo", ""))
 	assert.Equal(t, "", settings.Get("alpha", ""))
 }
 
-func TestSettings_Has(t *testing.T) {
-	settings := qsettings.Settings{"foo": "bar"}
-	assert.True(t, settings.Has("foo"))
-	assert.False(t, settings.Has("alpha"))
+func TestSettings_GetInt(t *testing.T) {
+	settings := qsettings.Settings{"foo": "2"}
+	assert.Equal(t, 2, settings.GetInt("foo", 0))
+	assert.Equal(t, 0, settings.GetInt("alpha", 0))
 }
