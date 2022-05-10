@@ -31,7 +31,6 @@ func TestNewFromString(t *testing.T) {
 			Ping:   12,
 			Time:   25,
 			CC:     "SE",
-			IsBot:  false,
 		}
 		clientString := `585 17 25 12 "XantoM" "xantom" 4 2 "f0m" "SE"`
 		client, err := qclient.NewFromString(clientString)
@@ -58,7 +57,6 @@ func TestFromStrings(t *testing.T) {
 			Frags:  5,
 			Ping:   25,
 			Time:   4,
-			IsBot:  false,
 		},
 		{
 			Name:   qstring.New("NL"),
@@ -68,7 +66,6 @@ func TestFromStrings(t *testing.T) {
 			Frags:  2,
 			Ping:   38,
 			Time:   4,
-			IsBot:  false,
 		},
 		{
 			Name:   qstring.New("[ServeMe]"),
@@ -78,7 +75,6 @@ func TestFromStrings(t *testing.T) {
 			Frags:  -9999,
 			Ping:   -666,
 			Time:   16,
-			IsBot:  true,
 		},
 		{
 			Name:   qstring.New("Final"),
@@ -88,7 +84,6 @@ func TestFromStrings(t *testing.T) {
 			Frags:  -9999,
 			Ping:   -68,
 			Time:   122,
-			IsBot:  false,
 		},
 	}
 
@@ -113,7 +108,12 @@ func TestIsBotName(t *testing.T) {
 
 func TestIsBotPing(t *testing.T) {
 	assert.True(t, qclient.IsBotPing(10))
-
 	assert.False(t, qclient.IsBotPing(0))
 	assert.False(t, qclient.IsBotPing(38))
+}
+
+func TestIsSpectatorPing(t *testing.T) {
+	assert.True(t, qclient.IsSpectatorPing(-10))
+	assert.False(t, qclient.IsSpectatorPing(0))
+	assert.False(t, qclient.IsSpectatorPing(10))
 }

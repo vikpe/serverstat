@@ -19,7 +19,19 @@ type Client struct {
 	Ping   int
 	Time   uint8
 	CC     string
-	IsBot  bool
+}
+
+func (client Client) IsBot() bool {
+	return IsBot(client)
+}
+
+func (client Client) IsSpectator() bool {
+	return IsSpectatorPing(client.Ping)
+}
+
+type Spectator struct {
+	Name  qstring.QuakeString
+	IsBot bool
 }
 
 func NewFromStrings(clientStrings []string) []Client {
@@ -100,9 +112,15 @@ func NewFromString(clientString string) (Client, error) {
 		Ping:   ping,
 		Time:   uint8(qutil.StringToInt(clientRecord[IndexTime])),
 		CC:     flag,
-		IsBot:  IsBotName(name.ToPlainString()) || IsBotPing(ping),
 	}, nil
+}
 
+func IsSpectatorPing(ping int) bool {
+	return ping < 0
+}
+
+func IsBot(client Client) bool {
+	return IsBotName(client.Name.ToPlainString()) || IsBotPing(client.Ping)
 }
 
 func IsBotName(name string) bool {

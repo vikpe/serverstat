@@ -4,10 +4,34 @@ import (
 	"sync"
 
 	"github.com/vikpe/serverstat/qserver"
+	"github.com/vikpe/serverstat/qserver/commands/status87"
+	"github.com/vikpe/serverstat/qserver/mvdsv"
+	"github.com/vikpe/serverstat/qserver/qversion"
+	"github.com/vikpe/udpclient"
 )
 
 func GetInfo(address string) (qserver.GenericServer, error) {
-	return qserver.GetInfo(address)
+	settings, clients, err := status87.ParseResponse(
+		udpclient.New().SendCommand(address, status87.Command),
+	)
+
+	if err != nil {
+		return qserver.GenericServer{}, err
+	}
+
+	server := qserver.GenericServer{
+		Address:  address,
+		Version:  qversion.New(settings.Get("*version", "")),
+		Clients:  clients,
+		Settings: settings,
+	}
+
+	if server.Version.IsMvdsv() {
+		stream, _ := mvdsv.GetQtvStream(address)
+		server.ExtraInfo.QtvStream = stream
+	}
+
+	return server, nil
 }
 
 func GetInfoFromMany(addresses []string) []qserver.GenericServer {

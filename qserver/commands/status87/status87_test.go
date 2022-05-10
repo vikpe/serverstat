@@ -39,7 +39,6 @@ func TestParseResponse(t *testing.T) {
 				Ping:   38,
 				Time:   4,
 				CC:     "SE",
-				IsBot:  false,
 			},
 			{
 				Name:   qstring.New("[ServeMe]"),
@@ -50,7 +49,6 @@ func TestParseResponse(t *testing.T) {
 				Ping:   -666,
 				Time:   16,
 				CC:     "",
-				IsBot:  true,
 			},
 		}
 
