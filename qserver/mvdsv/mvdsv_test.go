@@ -73,29 +73,30 @@ func TestGetQtvStream(t *testing.T) {
 }
 
 func TestParse(t *testing.T) {
+	playerClient := qclient.Client{
+		Name:   qstring.New("NL"),
+		Team:   qstring.New("red"),
+		Skin:   "",
+		Colors: [2]uint8{13, 13},
+		Frags:  2,
+		Ping:   38,
+		Time:   4,
+	}
+
+	spectatorClient := qclient.Client{
+		Name:   qstring.New("[ServeMe]"),
+		Team:   qstring.New("lqwc"),
+		Skin:   "",
+		Colors: [2]uint8{12, 11},
+		Frags:  -9999,
+		Ping:   -666,
+		Time:   16,
+	}
+
 	genericServer := qserver.GenericServer{
-		Address: "qw.foppa.dk:27501",
-		Version: qversion.Version("mvdsv 0.15"),
-		Clients: []qclient.Client{
-			{
-				Name:   qstring.New("NL"),
-				Team:   qstring.New("red"),
-				Skin:   "",
-				Colors: [2]uint8{13, 13},
-				Frags:  2,
-				Ping:   38,
-				Time:   4,
-			},
-			{
-				Name:   qstring.New("[ServeMe]"),
-				Team:   qstring.New("lqwc"),
-				Skin:   "",
-				Colors: [2]uint8{12, 11},
-				Frags:  -9999,
-				Ping:   -666,
-				Time:   16,
-			},
-		},
+		Address:  "qw.foppa.dk:27501",
+		Version:  qversion.Version("mvdsv 0.15"),
+		Clients:  []qclient.Client{playerClient, spectatorClient},
 		Settings: qsettings.Settings{"map": "dm2"},
 		ExtraInfo: struct {
 			QtvStream qtvstream.QtvStream
@@ -103,23 +104,11 @@ func TestParse(t *testing.T) {
 	}
 
 	expect := mvdsv.Server{
-		Address: genericServer.Address,
-		Players: []qclient.Client{
-			{
-				Name:   qstring.New("NL"),
-				Team:   qstring.New("red"),
-				Skin:   "",
-				Colors: [2]uint8{13, 13},
-				Frags:  2,
-				Ping:   38,
-				Time:   4,
-			},
-		},
-		SpectatorNames: []qstring.QuakeString{
-			qstring.New("[ServeMe]"),
-		},
-		Settings:  genericServer.Settings,
-		QtvStream: qtvstream.QtvStream{},
+		Address:        genericServer.Address,
+		Players:        []qclient.Client{playerClient},
+		SpectatorNames: []qstring.QuakeString{spectatorClient.Name},
+		Settings:       genericServer.Settings,
+		QtvStream:      qtvstream.QtvStream{},
 	}
 
 	assert.Equal(t, expect, mvdsv.Parse(genericServer))
