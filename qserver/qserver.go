@@ -11,13 +11,13 @@ import (
 )
 
 type GenericServer struct {
-	Version   qversion.Version `json:"-"`
+	Version   qversion.Version
 	Address   string
 	Clients   []qclient.Client
 	Settings  qsettings.Settings
 	ExtraInfo struct {
 		QtvStream qtvstream.QtvStream
-	} `json:"-"`
+	}
 }
 
 func GetInfo(address string) (GenericServer, error) {
