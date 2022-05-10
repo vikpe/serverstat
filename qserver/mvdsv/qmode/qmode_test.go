@@ -38,7 +38,6 @@ func TestModeValidators(t *testing.T) {
 		"ffa":      func(m qmode.Mode) bool { return m.IsFfa() },
 		"ctf":      func(m qmode.Mode) bool { return m.IsCtf() },
 		"coop":     func(m qmode.Mode) bool { return m.IsCoop() },
-		"custom":   func(m qmode.Mode) bool { return m.IsCustom() },
 		"fortress": func(m qmode.Mode) bool { return m.IsFortress() },
 		"unknown":  func(m qmode.Mode) bool { return m.IsUnknown() },
 	}

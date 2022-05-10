@@ -7,32 +7,44 @@ import (
 	"github.com/vikpe/serverstat/qserver/qsettings"
 )
 
+const (
+	mode1on1     = "1on1"
+	mode2on2     = "2on2"
+	mode3on3     = "3on3"
+	mode4on4     = "4on4"
+	modeRace     = "Race"
+	modeFfa      = "ffa"
+	modeCtf      = "ctf"
+	modeCoop     = "coop"
+	modeFortress = "fortress"
+	modeUnknown  = "unknown"
+)
+
 type Mode string
 
 func (m Mode) Is(name string) bool {
 	return strings.ToLower(name) == strings.ToLower(string(m))
 }
-func (m Mode) Is1on1() bool     { return m.Is("1on1") }
-func (m Mode) Is2on2() bool     { return m.Is("2on2") }
-func (m Mode) Is3on3() bool     { return m.Is("3on3") }
-func (m Mode) Is4on4() bool     { return m.Is("4on4") }
-func (m Mode) IsRace() bool     { return m.Is("race") }
-func (m Mode) IsFfa() bool      { return m.Is("ffa") }
-func (m Mode) IsCtf() bool      { return m.Is("ctf") }
-func (m Mode) IsCoop() bool     { return m.Is("coop") }
-func (m Mode) IsCustom() bool   { return m.Is("custom") }
-func (m Mode) IsFortress() bool { return m.Is("fortress") }
-func (m Mode) IsUnknown() bool  { return m.Is("unknown") }
+func (m Mode) Is1on1() bool     { return m.Is(mode1on1) }
+func (m Mode) Is2on2() bool     { return m.Is(mode2on2) }
+func (m Mode) Is3on3() bool     { return m.Is(mode3on3) }
+func (m Mode) Is4on4() bool     { return m.Is(mode4on4) }
+func (m Mode) IsRace() bool     { return m.Is(modeRace) }
+func (m Mode) IsFfa() bool      { return m.Is(modeFfa) }
+func (m Mode) IsCtf() bool      { return m.Is(modeCtf) }
+func (m Mode) IsCoop() bool     { return m.Is(modeCoop) }
+func (m Mode) IsFortress() bool { return m.Is(modeFortress) }
+func (m Mode) IsUnknown() bool  { return m.Is(modeUnknown) }
 
 func Parse(settings qsettings.Settings) Mode {
-	gameDir := strings.ToLower(settings.Get("*gamedir", "unknown"))
+	gameDir := strings.ToLower(settings.Get("*gamedir", modeUnknown))
 
 	if "qw" != gameDir {
 		return Mode(gameDir)
 	}
 
 	if settings.Has("ktxmode") {
-		return Mode(strings.ToLower(settings.Get("ktxmode", "unknown")))
+		return Mode(strings.ToLower(settings.Get("ktxmode", modeUnknown)))
 	}
 
 	teamplay := settings.GetInt("teamplay", 0)
@@ -49,8 +61,8 @@ func Parse(settings qsettings.Settings) Mode {
 	}
 
 	if 2 == maxClients {
-		return "1on1"
+		return mode1on1
 	} else {
-		return "ffa"
+		return modeFfa
 	}
 }
