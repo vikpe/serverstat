@@ -25,14 +25,14 @@ func (m Mode) IsFortress() bool { return m.Is("fortress") }
 func (m Mode) IsUnknown() bool  { return m.Is("unknown") }
 
 func Parse(settings qsettings.Settings) Mode {
-	gameDir := settings.Get("*gamedir", "unknown")
+	gameDir := strings.ToLower(settings.Get("*gamedir", "unknown"))
 
 	if "qw" != gameDir {
 		return Mode(gameDir)
 	}
 
 	if settings.Has("ktxmode") {
-		return Mode(settings.Get("ktxmode", "unknown"))
+		return Mode(strings.ToLower(settings.Get("ktxmode", "unknown")))
 	}
 
 	teamplay := settings.GetInt("teamplay", 0)
