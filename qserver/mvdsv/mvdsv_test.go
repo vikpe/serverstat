@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
+	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qsettings"
@@ -34,9 +35,10 @@ func TestGetQtvStream(t *testing.T) {
 
 		stream, err := mvdsv.GetQtvStream(":5001")
 		expectStream := qtvstream.QtvStream{
-			Title:         "qw.foppa.dk - qtv (3)",
-			Url:           "3@qw.foppa.dk:28000",
-			NumSpectators: 0,
+			Title:          "qw.foppa.dk - qtv (3)",
+			Url:            "3@qw.foppa.dk:28000",
+			NumSpectators:  0,
+			SpectatorNames: []qstring.QuakeString{},
 		}
 		assert.Equal(t, expectStream, stream)
 		assert.Nil(t, err)
@@ -97,7 +99,7 @@ func TestParse(t *testing.T) {
 		Address:  "qw.foppa.dk:27501",
 		Version:  qversion.Version("mvdsv 0.15"),
 		Clients:  []qclient.Client{playerClient, spectatorClient},
-		Settings: qsettings.Settings{"map": "dm2"},
+		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw"},
 		ExtraInfo: struct {
 			QtvStream qtvstream.QtvStream
 		}{},
@@ -105,6 +107,7 @@ func TestParse(t *testing.T) {
 
 	expect := mvdsv.Server{
 		Address:        genericServer.Address,
+		Mode:           qmode.Mode("ffa"),
 		Players:        []qclient.Client{playerClient},
 		SpectatorNames: []qstring.QuakeString{spectatorClient.Name},
 		Settings:       genericServer.Settings,
