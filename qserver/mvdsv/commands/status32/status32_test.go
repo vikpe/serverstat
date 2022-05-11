@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/status32"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
+	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
 func TestParseResponse(t *testing.T) {
@@ -33,9 +34,10 @@ func TestParseResponse(t *testing.T) {
 
 		result, err := status32.ParseResponse(responseBody, nil)
 		expect := qtvstream.QtvStream{
-			Title:         "qw.foppa.dk - qtv (3)",
-			Url:           "3@qw.foppa.dk:28000",
-			NumSpectators: 4,
+			Title:          "qw.foppa.dk - qtv (3)",
+			Url:            "3@qw.foppa.dk:28000",
+			NumSpectators:  4,
+			SpectatorNames: []qstring.QuakeString{},
 		}
 		assert.Equal(t, expect, result)
 		assert.Nil(t, err)
