@@ -17,6 +17,7 @@ func TestParse(t *testing.T) {
 		"1on1":     {"*gamedir": "qw", "maxclients": "2"},
 		"2on2":     {"*gamedir": "qw", "maxclients": "4", "teamplay": "2"},
 		"4on4":     {"*gamedir": "qw", "maxclients": "8", "teamplay": "2"},
+		"ctf":      {"*gamedir": "qw", "maxclients": "16", "teamplay": "4"},
 		"ffa":      {"*gamedir": "qw", "maxclients": "8"},
 	}
 

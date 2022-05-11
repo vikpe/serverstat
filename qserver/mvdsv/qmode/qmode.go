@@ -53,6 +53,8 @@ func Parse(settings qsettings.Settings) Mode {
 	if teamplay > 0 {
 		if 2 == teamplay && 26 == maxClients {
 			return "coop"
+		} else if 4 == teamplay && 16 == maxClients {
+			return "ctf"
 		} else {
 			playersPerTeam := maxClients / 2
 			modeName := fmt.Sprintf("%don%d", playersPerTeam, playersPerTeam)
