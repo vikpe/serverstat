@@ -14,5 +14,5 @@ type GenericServer struct {
 	Settings  qsettings.Settings
 	ExtraInfo struct {
 		QtvStream qtvstream.QtvStream
-	}
+	} `json:"-"`
 }
