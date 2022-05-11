@@ -40,5 +40,5 @@ func TestSettings_Get(t *testing.T) {
 func TestSettings_GetInt(t *testing.T) {
 	settings := qsettings.Settings{"foo": "2"}
 	assert.Equal(t, 2, settings.GetInt("foo", 0))
-	assert.Equal(t, 0, settings.GetInt("alpha", 0))
+	assert.Equal(t, 5, settings.GetInt("alpha", 5))
 }

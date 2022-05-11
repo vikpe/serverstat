@@ -21,9 +21,12 @@ func (settings Settings) Get(key string, default_ string) string {
 }
 
 func (settings Settings) GetInt(key string, default_ int) int {
-	stringVal := settings.Get(key, "")
-	intVal, _ := strconv.Atoi(stringVal)
-	return intVal
+	if stringVal, ok := settings[key]; ok {
+		intVal, _ := strconv.Atoi(stringVal)
+		return intVal
+	} else {
+		return default_
+	}
 }
 
 func ParseString(settingsString string) Settings {
