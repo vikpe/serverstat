@@ -8,6 +8,7 @@ import (
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
+	"github.com/vikpe/serverstat/qserver/mvdsv/qstatus"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qsettings"
@@ -99,14 +100,22 @@ func TestParse(t *testing.T) {
 		Address:  "qw.foppa.dk:27501",
 		Version:  qversion.Version("mvdsv 0.15"),
 		Clients:  []qclient.Client{playerClient, spectatorClient},
-		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw"},
+		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "Standby"},
 		ExtraInfo: struct {
 			QtvStream qtvstream.QtvStream
 		}{},
 	}
 
 	expect := mvdsv.Server{
-		Address:        genericServer.Address,
+		Address: genericServer.Address,
+		Status: qstatus.Status{
+			Name: "Standby",
+			Duration: qstatus.MatchDuration{
+				Elapsed:   0,
+				Total:     0,
+				Remaining: 0,
+			},
+		},
 		Mode:           qmode.Mode("ffa"),
 		Players:        []qclient.Client{playerClient},
 		SpectatorNames: []qstring.QuakeString{spectatorClient.Name},

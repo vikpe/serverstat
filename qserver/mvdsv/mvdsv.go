@@ -5,6 +5,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/qtvusers"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/status32"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
+	"github.com/vikpe/serverstat/qserver/mvdsv/qstatus"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qsettings"
@@ -14,6 +15,7 @@ import (
 
 type Server struct {
 	Address        string
+	Status         qstatus.Status
 	Mode           qmode.Mode
 	Players        []qclient.Client
 	SpectatorNames []qstring.QuakeString
@@ -36,6 +38,7 @@ func Parse(genericServer qserver.GenericServer) Server {
 	return Server{
 		Address:        genericServer.Address,
 		Mode:           qmode.Parse(genericServer.Settings),
+		Status:         qstatus.Parse(genericServer.Settings),
 		Players:        players,
 		SpectatorNames: spectatorNames,
 		Settings:       genericServer.Settings,
