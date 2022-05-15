@@ -68,7 +68,7 @@ func IsFortressOne(version string) bool {
 }
 
 func IsType(version string, serverType Type) bool {
-	return strings.Contains(
+	return strings.HasPrefix(
 		strings.ToLower(version),
 		strings.ToLower(string(serverType)),
 	)
