@@ -35,10 +35,6 @@ func (v Version) IsQtv() bool {
 	return v.IsType(TypeQtv)
 }
 
-func (v Version) IsGameServer() bool {
-	return IsGameServer(string(v))
-}
-
 func (v Version) IsFortressOne() bool {
 	return v.IsType(TypeFortressOne)
 }
@@ -69,10 +65,6 @@ func IsQtv(version string) bool {
 
 func IsFortressOne(version string) bool {
 	return IsType(version, TypeFortressOne)
-}
-
-func IsGameServer(version string) bool {
-	return IsMvdsv(version) || IsFte(version)
 }
 
 func IsType(version string, serverType Type) bool {

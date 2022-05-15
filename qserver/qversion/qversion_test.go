@@ -72,22 +72,6 @@ func TestVersion_IsFortressOne(t *testing.T) {
 	}
 }
 
-func TestVersion_IsGameServer(t *testing.T) {
-	testCases := map[string]bool{
-		"fte":    true,
-		"mvdsv":  true,
-		"qtv":    false,
-		"qwfwd":  false,
-		"fo svn": false,
-		"":       false,
-		"foo":    false,
-	}
-
-	for version, expect := range testCases {
-		assert.Equal(t, expect, qversion.New(version).IsGameServer(), version)
-	}
-}
-
 func TestVersion_GetType(t *testing.T) {
 	testCases := map[string]qversion.Type{
 		"mvdsv":  qversion.TypeMvdsv,
