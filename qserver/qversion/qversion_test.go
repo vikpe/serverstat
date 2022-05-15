@@ -59,14 +59,28 @@ func TestVersion_IsQtv(t *testing.T) {
 	}
 }
 
+func TestVersion_IsFortressOne(t *testing.T) {
+	testCases := map[string]bool{
+		"FO SVN 6128": true,
+		"fo svn":      true,
+		"":            false,
+		"foo":         false,
+	}
+
+	for version, expect := range testCases {
+		assert.Equal(t, expect, qversion.New(version).IsFortressOne(), version)
+	}
+}
+
 func TestVersion_IsGameServer(t *testing.T) {
 	testCases := map[string]bool{
-		"fte":   true,
-		"mvdsv": true,
-		"qtv":   false,
-		"qwfwd": false,
-		"":      false,
-		"foo":   false,
+		"fte":    true,
+		"mvdsv":  true,
+		"qtv":    false,
+		"qwfwd":  false,
+		"fo svn": false,
+		"":       false,
+		"foo":    false,
 	}
 
 	for version, expect := range testCases {
@@ -80,6 +94,7 @@ func TestVersion_GetType(t *testing.T) {
 		"qwfwd":  qversion.TypeProxy,
 		"qtv":    qversion.TypeQtv,
 		"fte":    qversion.TypeFte,
+		"fo svn": qversion.TypeFortressOne,
 		"foobar": qversion.TypeUnknown,
 	}
 

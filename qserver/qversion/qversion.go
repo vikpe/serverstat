@@ -5,11 +5,12 @@ import "strings"
 type Type string
 
 const (
-	TypeFte     Type = "fte"
-	TypeMvdsv   Type = "mvdsv"
-	TypeProxy   Type = "qwfwd"
-	TypeQtv     Type = "qtv"
-	TypeUnknown Type = "unknown"
+	TypeFte         Type = "fte"
+	TypeMvdsv       Type = "mvdsv"
+	TypeProxy       Type = "qwfwd"
+	TypeQtv         Type = "qtv"
+	TypeFortressOne Type = "fo svn"
+	TypeUnknown     Type = "unknown"
 )
 
 type Version string
@@ -38,6 +39,10 @@ func (v Version) IsGameServer() bool {
 	return IsGameServer(string(v))
 }
 
+func (v Version) IsFortressOne() bool {
+	return v.IsType(TypeFortressOne)
+}
+
 func (v Version) IsType(t Type) bool {
 	return IsType(string(v), t)
 }
@@ -62,6 +67,10 @@ func IsQtv(version string) bool {
 	return IsType(version, TypeQtv)
 }
 
+func IsFortressOne(version string) bool {
+	return IsType(version, TypeFortressOne)
+}
+
 func IsGameServer(version string) bool {
 	return IsMvdsv(version) || IsFte(version)
 }
@@ -82,6 +91,8 @@ func GetType(v string) Type {
 		return TypeQtv
 	} else if IsFte(v) {
 		return TypeFte
+	} else if IsFortressOne(v) {
+		return TypeFortressOne
 	} else {
 		return TypeUnknown
 	}
