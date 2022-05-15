@@ -25,6 +25,7 @@ func ToMvdsv(genericServer qserver.GenericServer) mvdsv.Mvdsv {
 
 	return mvdsv.Mvdsv{
 		Address:        genericServer.Address,
+		Type:           genericServer.Version.GetType(),
 		Mode:           qmode.Parse(genericServer.Settings),
 		Status:         qstatus.Parse(genericServer.Settings),
 		Players:        players,
@@ -43,6 +44,7 @@ func ToQtv(genericServer qserver.GenericServer) qtv.Qtv {
 
 	return qtv.Qtv{
 		Address:        genericServer.Address,
+		Type:           genericServer.Version.GetType(),
 		SpectatorNames: spectatorNames,
 		Settings:       genericServer.Settings,
 	}
@@ -57,6 +59,7 @@ func ToQwfwd(genericServer qserver.GenericServer) qwfwd.Qwfwd {
 
 	return qwfwd.Qwfwd{
 		Address:     genericServer.Address,
+		Type:        genericServer.Version.GetType(),
 		ClientNames: clientNames,
 		Settings:    genericServer.Settings,
 	}

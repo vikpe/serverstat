@@ -51,6 +51,7 @@ func TestToMvdsv(t *testing.T) {
 
 	expect := mvdsv.Mvdsv{
 		Address: genericServer.Address,
+		Type:    "mvdsv",
 		Status: qstatus.Status{
 			Name: "Standby",
 			Duration: qstatus.MatchDuration{
@@ -96,6 +97,7 @@ func TestToQtv(t *testing.T) {
 
 	expect := qtv.Qtv{
 		Address:        genericServer.Address,
+		Type:           "qtv",
 		SpectatorNames: []qstring.QuakeString{client.Name},
 		Settings:       genericServer.Settings,
 	}
@@ -130,6 +132,7 @@ func TestToQwfwd(t *testing.T) {
 
 	expect := qwfwd.Qwfwd{
 		Address:     genericServer.Address,
+		Type:        "qwfwd",
 		ClientNames: []qstring.QuakeString{client.Name},
 		Settings:    genericServer.Settings,
 	}

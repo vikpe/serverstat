@@ -17,6 +17,7 @@ const VersionPrefix = Name
 
 type Mvdsv struct {
 	Address        string
+	Type           string
 	Mode           qmode.Mode
 	Status         qstatus.Status
 	Players        []qclient.Client

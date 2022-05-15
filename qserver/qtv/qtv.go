@@ -10,6 +10,7 @@ const VersionPrefix = Name
 
 type Qtv struct {
 	Address        string
+	Type           string
 	SpectatorNames []qstring.QuakeString
 	Settings       qsettings.Settings
 }

@@ -10,6 +10,7 @@ const VersionPrefix = Name
 
 type Qwfwd struct {
 	Address     string
+	Type        string
 	ClientNames []qstring.QuakeString
 	Settings    qsettings.Settings
 }
