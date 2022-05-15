@@ -3,8 +3,6 @@ package convert
 import (
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
-	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
-	"github.com/vikpe/serverstat/qserver/mvdsv/qstatus"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qtv"
 	"github.com/vikpe/serverstat/qserver/qwfwd"
@@ -25,8 +23,6 @@ func ToMvdsv(genericServer qserver.GenericServer) mvdsv.Mvdsv {
 
 	return mvdsv.Mvdsv{
 		Address:        genericServer.Address,
-		Mode:           qmode.Parse(genericServer.Settings),
-		Status:         qstatus.Parse(genericServer.Settings),
 		Players:        players,
 		SpectatorNames: spectatorNames,
 		Settings:       genericServer.Settings,

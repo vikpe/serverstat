@@ -1,0 +1,85 @@
+package qteam
+
+import (
+	"encoding/json"
+	"fmt"
+	"sort"
+	"strings"
+
+	"github.com/vikpe/serverstat/qserver/qclient"
+	"github.com/vikpe/serverstat/qtext/qstring"
+)
+
+type Team struct {
+	Name    qstring.QuakeString
+	Players []qclient.Client
+}
+
+func (t Team) MarshalJSON() ([]byte, error) {
+	type teamJson struct {
+		Name   qstring.QuakeString
+		Frags  int
+		Colors [2]uint8
+	}
+
+	return json.Marshal(teamJson{
+		Name:   t.Name,
+		Colors: t.Colors(),
+		Frags:  t.Frags(),
+	})
+}
+
+func (t Team) Frags() int {
+	frags := 0
+
+	for _, p := range t.Players {
+		frags += p.Frags
+	}
+
+	return frags
+}
+
+func (t Team) Colors() [2]uint8 {
+	colorCount := make(map[[2]uint8]int, 0)
+
+	for _, p := range t.Players {
+		colorCount[p.Colors]++
+	}
+
+	highestCount := 0
+	teamColors := [2]uint8{0, 0}
+
+	for colorCombination, count := range colorCount {
+		if count > highestCount {
+			teamColors = colorCombination
+			highestCount = count
+		}
+	}
+
+	return teamColors
+}
+
+func (t Team) String() string {
+	playerCount := len(t.Players)
+
+	if 0 == playerCount || playerCount > 4 {
+		return t.Name.ToPlainString()
+	}
+
+	playerNames := make([]string, 0)
+
+	for _, p := range t.Players {
+		playerNames = append(playerNames, p.Name.ToPlainString())
+	}
+
+	sortFunc := func(i, j int) bool {
+		return strings.ToLower(playerNames[i]) < strings.ToLower(playerNames[j])
+	}
+	sort.Slice(playerNames, sortFunc)
+
+	return fmt.Sprintf("%s (%s)", t.Name.ToPlainString(), strings.Join(playerNames, ", "))
+}
+
+func Parse(players []qclient.Client) []Team {
+	return make([]Team, 0)
+}

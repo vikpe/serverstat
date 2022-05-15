@@ -19,12 +19,22 @@ const VersionPrefix = Name
 
 type Mvdsv struct {
 	Address        string
-	Mode           qmode.Mode
-	Status         qstatus.Status
 	Players        []qclient.Client
 	SpectatorNames []qstring.QuakeString
 	Settings       qsettings.Settings
 	QtvStream      qtvstream.QtvStream
+}
+
+func (server Mvdsv) Mode() qmode.Mode {
+	return qmode.Parse(server.Settings)
+}
+
+func (server Mvdsv) Status() qstatus.Status {
+	return qstatus.Parse(server.Settings)
+}
+
+func (server Mvdsv) Teams() []qteam.Team {
+	return qteam.Parse(server.Players)
 }
 
 func (server Mvdsv) MarshalJSON() ([]byte, error) {
@@ -35,6 +45,7 @@ func (server Mvdsv) MarshalJSON() ([]byte, error) {
 		Status         qstatus.Status
 		Title          string
 		Players        []qclient.Client
+		Teams          []qteam.Team
 		SpectatorNames []qstring.QuakeString
 		Settings       qsettings.Settings
 		QtvStream      qtvstream.QtvStream
@@ -43,10 +54,11 @@ func (server Mvdsv) MarshalJSON() ([]byte, error) {
 	return json.Marshal(mvdsvJson{
 		Address:        server.Address,
 		Type:           Name,
-		Mode:           server.Mode,
-		Status:         server.Status,
+		Mode:           server.Mode(),
+		Status:         server.Status(),
 		Title:          "hehe",
 		Players:        server.Players,
+		Teams:          server.Teams(),
 		SpectatorNames: server.SpectatorNames,
 		Settings:       server.Settings,
 		QtvStream:      server.QtvStream,

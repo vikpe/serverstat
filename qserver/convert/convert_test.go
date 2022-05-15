@@ -7,8 +7,6 @@ import (
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/convert"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
-	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
-	"github.com/vikpe/serverstat/qserver/mvdsv/qstatus"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qsettings"
@@ -50,16 +48,7 @@ func TestToMvdsv(t *testing.T) {
 	}
 
 	expect := mvdsv.Mvdsv{
-		Address: genericServer.Address,
-		Status: qstatus.Status{
-			Name: "Standby",
-			Duration: qstatus.MatchDuration{
-				Elapsed:   0,
-				Total:     0,
-				Remaining: 0,
-			},
-		},
-		Mode:           qmode.Mode("ffa"),
+		Address:        genericServer.Address,
 		Players:        []qclient.Client{playerClient},
 		SpectatorNames: []qstring.QuakeString{spectatorClient.Name},
 		Settings:       genericServer.Settings,
