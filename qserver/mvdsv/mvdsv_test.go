@@ -106,7 +106,7 @@ func TestParse(t *testing.T) {
 		}{},
 	}
 
-	expect := mvdsv.Server{
+	expect := mvdsv.Mvdsv{
 		Address: genericServer.Address,
 		Status: qstatus.Status{
 			Name: "Standby",

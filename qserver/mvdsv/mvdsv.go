@@ -13,7 +13,7 @@ import (
 	"github.com/vikpe/udpclient"
 )
 
-type Server struct {
+type Mvdsv struct {
 	Address        string
 	Status         qstatus.Status
 	Mode           qmode.Mode
@@ -23,7 +23,7 @@ type Server struct {
 	QtvStream      qtvstream.QtvStream
 }
 
-func Parse(genericServer qserver.GenericServer) Server {
+func Parse(genericServer qserver.GenericServer) Mvdsv {
 	spectatorNames := make([]qstring.QuakeString, 0)
 	players := make([]qclient.Client, 0)
 
@@ -35,7 +35,7 @@ func Parse(genericServer qserver.GenericServer) Server {
 		}
 	}
 
-	return Server{
+	return Mvdsv{
 		Address:        genericServer.Address,
 		Mode:           qmode.Parse(genericServer.Settings),
 		Status:         qstatus.Parse(genericServer.Settings),
