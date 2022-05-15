@@ -61,8 +61,8 @@ func TestVersion_IsQtv(t *testing.T) {
 
 func TestVersion_IsFortressOne(t *testing.T) {
 	testCases := map[string]bool{
-		"FO SVN 6128": true,
 		"fo svn":      true,
+		"FO SVN 6128": true,
 		"":            false,
 		"foo":         false,
 	}
