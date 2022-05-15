@@ -2,15 +2,18 @@ package qversion
 
 import "strings"
 
-type Type string
+type Type struct {
+	Name          string
+	VersionPrefix string
+}
 
-const (
-	TypeFte         Type = "fte"
-	TypeMvdsv       Type = "mvdsv"
-	TypeQwfwd       Type = "qwfwd"
-	TypeQtv         Type = "qtv"
-	TypeFortressOne Type = "fo svn"
-	TypeUnknown     Type = "unknown"
+var (
+	TypeFte         = Type{Name: "fte", VersionPrefix: "fte"}
+	TypeMvdsv       = Type{Name: "mvdsv", VersionPrefix: "mvdsv"}
+	TypeQwfwd       = Type{Name: "qwfwd", VersionPrefix: "qwfwd"}
+	TypeQtv         = Type{Name: "qtv", VersionPrefix: "qtv"}
+	TypeFortressOne = Type{Name: "fortress_one", VersionPrefix: "fo svn"}
+	TypeUnknown     = Type{Name: "unknown", VersionPrefix: ""}
 )
 
 type Version string
@@ -70,7 +73,7 @@ func IsFortressOne(version string) bool {
 func IsType(version string, serverType Type) bool {
 	return strings.HasPrefix(
 		strings.ToLower(version),
-		strings.ToLower(string(serverType)),
+		strings.ToLower(serverType.VersionPrefix),
 	)
 }
 
