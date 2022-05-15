@@ -33,7 +33,7 @@ func TestVersion_IsFte(t *testing.T) {
 	}
 }
 
-func TestVersion_IsProxy(t *testing.T) {
+func TestVersion_IsQwfwd(t *testing.T) {
 	testCases := map[string]bool{
 		"qwfwd":     true,
 		"QWFWD 1.2": true,
@@ -42,7 +42,7 @@ func TestVersion_IsProxy(t *testing.T) {
 	}
 
 	for version, expect := range testCases {
-		assert.Equal(t, expect, qversion.New(version).IsProxy(), version)
+		assert.Equal(t, expect, qversion.New(version).IsQwfwd(), version)
 	}
 }
 
@@ -91,7 +91,7 @@ func TestVersion_IsGameServer(t *testing.T) {
 func TestVersion_GetType(t *testing.T) {
 	testCases := map[string]qversion.Type{
 		"mvdsv":  qversion.TypeMvdsv,
-		"qwfwd":  qversion.TypeProxy,
+		"qwfwd":  qversion.TypeQwfwd,
 		"qtv":    qversion.TypeQtv,
 		"fte":    qversion.TypeFte,
 		"fo svn": qversion.TypeFortressOne,

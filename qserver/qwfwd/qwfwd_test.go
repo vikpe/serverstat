@@ -1,4 +1,4 @@
-package proxy_test
+package qwfwd_test
 
 import (
 	"testing"
@@ -6,10 +6,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
-	"github.com/vikpe/serverstat/qserver/proxy"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qsettings"
 	"github.com/vikpe/serverstat/qserver/qversion"
+	"github.com/vikpe/serverstat/qserver/qwfwd"
 	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
@@ -38,11 +38,11 @@ func TestParse(t *testing.T) {
 		}{},
 	}
 
-	expect := proxy.Proxy{
+	expect := qwfwd.Qwfwd{
 		Address:     genericServer.Address,
 		ClientNames: []qstring.QuakeString{client.Name},
 		Settings:    genericServer.Settings,
 	}
 
-	assert.Equal(t, expect, proxy.Parse(genericServer))
+	assert.Equal(t, expect, qwfwd.Parse(genericServer))
 }

@@ -7,7 +7,7 @@ type Type string
 const (
 	TypeFte         Type = "fte"
 	TypeMvdsv       Type = "mvdsv"
-	TypeProxy       Type = "qwfwd"
+	TypeQwfwd       Type = "qwfwd"
 	TypeQtv         Type = "qtv"
 	TypeFortressOne Type = "fo svn"
 	TypeUnknown     Type = "unknown"
@@ -27,8 +27,8 @@ func (v Version) IsFte() bool {
 	return v.IsType(TypeFte)
 }
 
-func (v Version) IsProxy() bool {
-	return v.IsType(TypeProxy)
+func (v Version) IsQwfwd() bool {
+	return v.IsType(TypeQwfwd)
 }
 
 func (v Version) IsQtv() bool {
@@ -59,8 +59,8 @@ func IsFte(version string) bool {
 	return IsType(version, TypeFte)
 }
 
-func IsProxy(version string) bool {
-	return IsType(version, TypeProxy)
+func IsQwfwd(version string) bool {
+	return IsType(version, TypeQwfwd)
 }
 
 func IsQtv(version string) bool {
@@ -85,8 +85,8 @@ func IsType(version string, serverType Type) bool {
 func GetType(v string) Type {
 	if IsMvdsv(v) {
 		return TypeMvdsv
-	} else if IsProxy(v) {
-		return TypeProxy
+	} else if IsQwfwd(v) {
+		return TypeQwfwd
 	} else if IsQtv(v) {
 		return TypeQtv
 	} else if IsFte(v) {
