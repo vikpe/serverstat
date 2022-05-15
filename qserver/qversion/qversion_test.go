@@ -74,8 +74,8 @@ func TestVersion_IsFortressOne(t *testing.T) {
 
 func TestVersion_GetType(t *testing.T) {
 	testCases := map[string]string{
-		"mvdsv":  "mvdsv",
-		"qwfwd":  "qwfwd",
+		"Mvdsv":  "mvdsv",
+		"QWFWD":  "qwfwd",
 		"qtv":    "qtv",
 		"fte":    "fte",
 		"fo svn": "fortress_one",

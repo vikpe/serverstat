@@ -13,7 +13,7 @@ import (
 type Version string
 
 func New(value string) Version {
-	return Version(strings.ToLower(value))
+	return Version(value)
 }
 
 func (v Version) IsMvdsv() bool {
@@ -37,7 +37,7 @@ func (v Version) IsFortressOne() bool {
 }
 
 func (v Version) hasPrefix(prefix string) bool {
-	return strings.HasPrefix(string(v), strings.ToLower(prefix))
+	return strings.HasPrefix(strings.ToLower(string(v)), strings.ToLower(prefix))
 }
 
 func (v Version) GetType() string {
