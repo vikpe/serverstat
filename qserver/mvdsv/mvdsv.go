@@ -10,6 +10,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qsettings"
+	"github.com/vikpe/serverstat/qserver/qteam"
 	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udpclient"
 )
