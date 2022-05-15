@@ -1,7 +1,6 @@
 package mvdsv
 
 import (
-	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/qtvusers"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/status32"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
@@ -13,6 +12,9 @@ import (
 	"github.com/vikpe/udpclient"
 )
 
+const Name = "mvdsv"
+const VersionPrefix = Name
+
 type Mvdsv struct {
 	Address        string
 	Status         qstatus.Status
@@ -21,29 +23,6 @@ type Mvdsv struct {
 	SpectatorNames []qstring.QuakeString
 	Settings       qsettings.Settings
 	QtvStream      qtvstream.QtvStream
-}
-
-func Parse(genericServer qserver.GenericServer) Mvdsv {
-	spectatorNames := make([]qstring.QuakeString, 0)
-	players := make([]qclient.Client, 0)
-
-	for _, client := range genericServer.Clients {
-		if client.IsSpectator() {
-			spectatorNames = append(spectatorNames, client.Name)
-		} else {
-			players = append(players, client)
-		}
-	}
-
-	return Mvdsv{
-		Address:        genericServer.Address,
-		Mode:           qmode.Parse(genericServer.Settings),
-		Status:         qstatus.Parse(genericServer.Settings),
-		Players:        players,
-		SpectatorNames: spectatorNames,
-		Settings:       genericServer.Settings,
-		QtvStream:      genericServer.ExtraInfo.QtvStream,
-	}
 }
 
 func GetQtvUsers(address string) ([]qstring.QuakeString, error) {

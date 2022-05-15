@@ -1,94 +1,57 @@
 package qversion
 
-import "strings"
+import (
+	"strings"
 
-type Type struct {
-	Name          string
-	VersionPrefix string
-}
-
-var (
-	TypeFte         = Type{Name: "fte", VersionPrefix: "fte"}
-	TypeMvdsv       = Type{Name: "mvdsv", VersionPrefix: "mvdsv"}
-	TypeQwfwd       = Type{Name: "qwfwd", VersionPrefix: "qwfwd"}
-	TypeQtv         = Type{Name: "qtv", VersionPrefix: "qtv"}
-	TypeFortressOne = Type{Name: "fortress_one", VersionPrefix: "fo svn"}
-	TypeUnknown     = Type{Name: "unknown", VersionPrefix: ""}
+	"github.com/vikpe/serverstat/qserver/fortressone"
+	"github.com/vikpe/serverstat/qserver/fte"
+	"github.com/vikpe/serverstat/qserver/mvdsv"
+	"github.com/vikpe/serverstat/qserver/qtv"
+	"github.com/vikpe/serverstat/qserver/qwfwd"
 )
 
 type Version string
 
 func New(value string) Version {
-	return Version(value)
+	return Version(strings.ToLower(value))
 }
 
 func (v Version) IsMvdsv() bool {
-	return v.IsType(TypeMvdsv)
+	return v.hasPrefix(mvdsv.VersionPrefix)
 }
 
 func (v Version) IsFte() bool {
-	return v.IsType(TypeFte)
+	return v.hasPrefix(fte.VersionPrefix)
 }
 
 func (v Version) IsQwfwd() bool {
-	return v.IsType(TypeQwfwd)
+	return v.hasPrefix(qwfwd.VersionPrefix)
 }
 
 func (v Version) IsQtv() bool {
-	return v.IsType(TypeQtv)
+	return v.hasPrefix(qtv.VersionPrefix)
 }
 
 func (v Version) IsFortressOne() bool {
-	return v.IsType(TypeFortressOne)
+	return v.hasPrefix(fortressone.VersionPrefix)
 }
 
-func (v Version) IsType(t Type) bool {
-	return IsType(string(v), t)
+func (v Version) hasPrefix(prefix string) bool {
+	return strings.HasPrefix(string(v), strings.ToLower(prefix))
 }
 
-func (v Version) GetType() Type {
-	return GetType(string(v))
-}
-
-func IsMvdsv(version string) bool {
-	return IsType(version, TypeMvdsv)
-}
-
-func IsFte(version string) bool {
-	return IsType(version, TypeFte)
-}
-
-func IsQwfwd(version string) bool {
-	return IsType(version, TypeQwfwd)
-}
-
-func IsQtv(version string) bool {
-	return IsType(version, TypeQtv)
-}
-
-func IsFortressOne(version string) bool {
-	return IsType(version, TypeFortressOne)
-}
-
-func IsType(version string, serverType Type) bool {
-	return strings.HasPrefix(
-		strings.ToLower(version),
-		strings.ToLower(serverType.VersionPrefix),
-	)
-}
-
-func GetType(v string) Type {
-	if IsMvdsv(v) {
-		return TypeMvdsv
-	} else if IsQwfwd(v) {
-		return TypeQwfwd
-	} else if IsQtv(v) {
-		return TypeQtv
-	} else if IsFte(v) {
-		return TypeFte
-	} else if IsFortressOne(v) {
-		return TypeFortressOne
+func (v Version) GetType() string {
+	if v.IsMvdsv() {
+		return mvdsv.Name
+	} else if v.IsQwfwd() {
+		return qwfwd.Name
+	} else if v.IsQtv() {
+		return qtv.Name
+	} else if v.IsFte() {
+		return fte.Name
+	} else if v.IsFortressOne() {
+		return fortressone.Name
 	} else {
-		return TypeUnknown
+		return "unknown"
 	}
 }

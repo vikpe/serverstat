@@ -5,14 +5,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
-	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
-	"github.com/vikpe/serverstat/qserver/mvdsv/qstatus"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
-	"github.com/vikpe/serverstat/qserver/qclient"
-	"github.com/vikpe/serverstat/qserver/qsettings"
-	"github.com/vikpe/serverstat/qserver/qversion"
 	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udphelper"
 )
@@ -73,55 +67,4 @@ func TestGetQtvStream(t *testing.T) {
 		assert.Equal(t, expectStream, stream)
 		assert.Nil(t, err)
 	})
-}
-
-func TestParse(t *testing.T) {
-	playerClient := qclient.Client{
-		Name:   qstring.New("NL"),
-		Team:   qstring.New("red"),
-		Skin:   "",
-		Colors: [2]uint8{13, 13},
-		Frags:  2,
-		Ping:   38,
-		Time:   4,
-	}
-
-	spectatorClient := qclient.Client{
-		Name:   qstring.New("[ServeMe]"),
-		Team:   qstring.New("lqwc"),
-		Skin:   "",
-		Colors: [2]uint8{12, 11},
-		Frags:  -9999,
-		Ping:   -666,
-		Time:   16,
-	}
-
-	genericServer := qserver.GenericServer{
-		Address:  "qw.foppa.dk:27501",
-		Version:  qversion.Version("mvdsv 0.15"),
-		Clients:  []qclient.Client{playerClient, spectatorClient},
-		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "Standby"},
-		ExtraInfo: struct {
-			QtvStream qtvstream.QtvStream
-		}{},
-	}
-
-	expect := mvdsv.Mvdsv{
-		Address: genericServer.Address,
-		Status: qstatus.Status{
-			Name: "Standby",
-			Duration: qstatus.MatchDuration{
-				Elapsed:   0,
-				Total:     0,
-				Remaining: 0,
-			},
-		},
-		Mode:           qmode.Mode("ffa"),
-		Players:        []qclient.Client{playerClient},
-		SpectatorNames: []qstring.QuakeString{spectatorClient.Name},
-		Settings:       genericServer.Settings,
-		QtvStream:      genericServer.ExtraInfo.QtvStream,
-	}
-
-	assert.Equal(t, expect, mvdsv.Parse(genericServer))
 }

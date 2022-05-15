@@ -73,16 +73,16 @@ func TestVersion_IsFortressOne(t *testing.T) {
 }
 
 func TestVersion_GetType(t *testing.T) {
-	testCases := map[string]qversion.Type{
-		"mvdsv":  qversion.TypeMvdsv,
-		"qwfwd":  qversion.TypeQwfwd,
-		"qtv":    qversion.TypeQtv,
-		"fte":    qversion.TypeFte,
-		"fo svn": qversion.TypeFortressOne,
-		"foobar": qversion.TypeUnknown,
+	testCases := map[string]string{
+		"mvdsv":  "mvdsv",
+		"qwfwd":  "qwfwd",
+		"qtv":    "qtv",
+		"fte":    "fte",
+		"fo svn": "fortress_one",
+		"foobar": "unknown",
 	}
 
-	for version, expect := range testCases {
-		assert.Equal(t, expect, qversion.New(version).GetType(), version)
+	for version, expectType := range testCases {
+		assert.Equal(t, expectType, qversion.New(version).GetType(), version)
 	}
 }
