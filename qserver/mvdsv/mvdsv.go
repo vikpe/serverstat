@@ -124,9 +124,9 @@ func (server Mvdsv) MarshalJSON() ([]byte, error) {
 		Address        string
 		Type           string
 		Mode           qmode.Mode
+		Title          string
 		Status         string
 		Time           qtime.Time
-		Title          string
 		PlayerSlots    ClientSlots
 		Players        []qclient.Client
 		Teams          []qteam.Team
