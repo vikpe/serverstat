@@ -98,16 +98,14 @@ func TestFromPlayers(t *testing.T) {
 	}
 	players := []qclient.Client{xantom, bps, valla}
 
-	expect := []qteam.Team{
-		{
-			Name:    qstring.New("f0m"),
-			Players: []qclient.Client{xantom, valla},
-		},
-		{
-			Name:    qstring.New("-s-"),
-			Players: []qclient.Client{bps},
-		},
-	}
+	teams := qteam.FromPlayers(players)
 
-	assert.Equal(t, expect, qteam.FromPlayers(players))
+	assert.Contains(t, teams, qteam.Team{
+		Name:    qstring.New("-s-"),
+		Players: []qclient.Client{bps},
+	})
+	assert.Contains(t, teams, qteam.Team{
+		Name:    qstring.New("f0m"),
+		Players: []qclient.Client{xantom, valla},
+	})
 }
