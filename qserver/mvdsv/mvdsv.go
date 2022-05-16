@@ -13,6 +13,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/qsettings"
 	"github.com/vikpe/serverstat/qserver/qstatus"
 	"github.com/vikpe/serverstat/qserver/qteam"
+	"github.com/vikpe/serverstat/qserver/qtime"
 	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udpclient"
 )
@@ -34,6 +35,12 @@ func (server Mvdsv) Mode() qmode.Mode {
 
 func (server Mvdsv) Status() string {
 	return qstatus.Parse(server.Settings.Get("status", ""))
+}
+
+func (server Mvdsv) Time() qtime.Time {
+	timelimit := server.Settings.GetInt("timelimit", 0)
+	status := server.Settings.Get("status", "")
+	return qtime.Parse(timelimit, status)
 }
 
 func (server Mvdsv) Teams() []qteam.Team {
@@ -96,6 +103,7 @@ func (server Mvdsv) MarshalJSON() ([]byte, error) {
 		Type           string
 		Mode           qmode.Mode
 		Status         string
+		Time           qtime.Time
 		Title          string
 		Players        []qclient.Client
 		Teams          []qteam.Team
@@ -109,6 +117,7 @@ func (server Mvdsv) MarshalJSON() ([]byte, error) {
 		Type:           Name,
 		Mode:           server.Mode(),
 		Status:         server.Status(),
+		Time:           server.Time(),
 		Title:          server.Title(),
 		Players:        server.Players,
 		Teams:          server.Teams(),
