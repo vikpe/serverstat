@@ -42,6 +42,10 @@ func (server Mvdsv) Teams() []qteam.Team {
 	return make([]qteam.Team, 0)
 }
 
+func (server Mvdsv) Title() string {
+	return "TODO"
+}
+
 func (server Mvdsv) MarshalJSON() ([]byte, error) {
 	type mvdsvJson struct {
 		Address        string
@@ -61,7 +65,7 @@ func (server Mvdsv) MarshalJSON() ([]byte, error) {
 		Type:           Name,
 		Mode:           server.Mode(),
 		Status:         server.Status(),
-		Title:          "hehe",
+		Title:          server.Title(),
 		Players:        server.Players,
 		Teams:          server.Teams(),
 		SpectatorNames: server.SpectatorNames,
