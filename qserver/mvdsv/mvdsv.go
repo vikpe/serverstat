@@ -59,18 +59,10 @@ func (server Mvdsv) Title() string {
 	titleParts = append(titleParts, fmt.Sprintf("%s:", string(mode)))
 
 	// participants
-	var participantDelimiter string
-
-	if mode.IsCoop() {
-		participantDelimiter = ", "
-	} else {
-		participantDelimiter = " vs "
-	}
-
 	participants := make([]string, 0)
 	isTeamplay := server.Settings.GetInt("teamplay", 0) > 0
 
-	if isTeamplay {
+	if isTeamplay && !mode.IsCoop() {
 		for _, t := range server.Teams() {
 			participants = append(participants, t.String())
 		}
@@ -81,6 +73,14 @@ func (server Mvdsv) Title() string {
 	}
 
 	if len(participants) > 0 {
+		var participantDelimiter string
+
+		if mode.IsCoop() {
+			participantDelimiter = ", "
+		} else {
+			participantDelimiter = " vs "
+		}
+
 		titleParts = append(titleParts, strings.Join(participants, participantDelimiter))
 	}
 
