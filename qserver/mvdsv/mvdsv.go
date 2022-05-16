@@ -8,10 +8,10 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/qtvusers"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/status32"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
-	"github.com/vikpe/serverstat/qserver/mvdsv/qstatus"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qsettings"
+	"github.com/vikpe/serverstat/qserver/qstatus"
 	"github.com/vikpe/serverstat/qserver/qteam"
 	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udpclient"
@@ -32,8 +32,8 @@ func (server Mvdsv) Mode() qmode.Mode {
 	return qmode.Parse(server.Settings)
 }
 
-func (server Mvdsv) Status() qstatus.Status {
-	return qstatus.Parse(server.Settings)
+func (server Mvdsv) Status() string {
+	return qstatus.Parse(server.Settings.Get("status", ""))
 }
 
 func (server Mvdsv) Teams() []qteam.Team {
@@ -95,7 +95,7 @@ func (server Mvdsv) MarshalJSON() ([]byte, error) {
 		Address        string
 		Type           string
 		Mode           qmode.Mode
-		Status         qstatus.Status
+		Status         string
 		Title          string
 		Players        []qclient.Client
 		Teams          []qteam.Team
