@@ -35,7 +35,11 @@ func (server Mvdsv) Status() qstatus.Status {
 }
 
 func (server Mvdsv) Teams() []qteam.Team {
-	return qteam.Parse(server.Players)
+	if server.Settings.GetInt("teamplay", 0) > 0 {
+		return qteam.FromPlayers(server.Players)
+	}
+
+	return make([]qteam.Team, 0)
 }
 
 func (server Mvdsv) MarshalJSON() ([]byte, error) {
