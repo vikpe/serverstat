@@ -2,6 +2,8 @@ package mvdsv
 
 import (
 	"encoding/json"
+	"fmt"
+	"strings"
 
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/qtvusers"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/status32"
@@ -43,7 +45,49 @@ func (server Mvdsv) Teams() []qteam.Team {
 }
 
 func (server Mvdsv) Title() string {
-	return "TODO"
+	titleParts := make([]string, 0)
+
+	// matchtag
+	matchTag := server.Settings.Get("matchtag", "")
+
+	if matchTag != "" {
+		titleParts = append(titleParts, fmt.Sprintf("%s / ", matchTag))
+	}
+
+	// mode
+	mode := server.Mode()
+	titleParts = append(titleParts, fmt.Sprintf("%s:", string(mode)))
+
+	// participants
+	var participantDelimiter string
+
+	if mode.IsCoop() {
+		participantDelimiter = ", "
+	} else {
+		participantDelimiter = " vs "
+	}
+
+	participants := make([]string, 0)
+	isTeamplay := server.Settings.GetInt("teamplay", 0) > 0
+
+	if isTeamplay {
+		for _, t := range server.Teams() {
+			participants = append(participants, t.String())
+		}
+	} else if !mode.IsFfa() {
+		for _, p := range server.Players {
+			participants = append(participants, p.Name.ToPlainString())
+		}
+	}
+
+	if len(participants) > 0 {
+		titleParts = append(titleParts, strings.Join(participants, participantDelimiter))
+	}
+
+	// map
+	titleParts = append(titleParts, fmt.Sprintf("[%s]", server.Settings.Get("map", "")))
+
+	return strings.Join(titleParts, " ")
 }
 
 func (server Mvdsv) MarshalJSON() ([]byte, error) {
