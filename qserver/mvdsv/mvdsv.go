@@ -29,12 +29,34 @@ type Mvdsv struct {
 	QtvStream      qtvstream.QtvStream
 }
 
+type ClientSlots struct {
+	Used  int
+	Total int
+	Free  int
+}
+
+func NewSlots(total int, used int) ClientSlots {
+	return ClientSlots{
+		Used:  used,
+		Total: total,
+		Free:  total - used,
+	}
+}
+
 func (server Mvdsv) Mode() qmode.Mode {
 	return qmode.Parse(server.Settings)
 }
 
 func (server Mvdsv) Status() string {
 	return qstatus.Parse(server.Settings.Get("status", ""))
+}
+
+func (server Mvdsv) PlayerSlots() ClientSlots {
+	return NewSlots(server.Settings.GetInt("maxclients", 0), len(server.Players))
+}
+
+func (server Mvdsv) SpectatorSlots() ClientSlots {
+	return NewSlots(server.Settings.GetInt("maxspectators", 0), len(server.SpectatorNames))
 }
 
 func (server Mvdsv) Time() qtime.Time {
@@ -105,8 +127,10 @@ func (server Mvdsv) MarshalJSON() ([]byte, error) {
 		Status         string
 		Time           qtime.Time
 		Title          string
+		PlayerSlots    ClientSlots
 		Players        []qclient.Client
 		Teams          []qteam.Team
+		SpectatorSlots ClientSlots
 		SpectatorNames []qstring.QuakeString
 		Settings       qsettings.Settings
 		QtvStream      qtvstream.QtvStream
@@ -119,8 +143,10 @@ func (server Mvdsv) MarshalJSON() ([]byte, error) {
 		Status:         server.Status(),
 		Time:           server.Time(),
 		Title:          server.Title(),
+		PlayerSlots:    server.PlayerSlots(),
 		Players:        server.Players,
 		Teams:          server.Teams(),
+		SpectatorSlots: server.SpectatorSlots(),
 		SpectatorNames: server.SpectatorNames,
 		Settings:       server.Settings,
 		QtvStream:      server.QtvStream,
