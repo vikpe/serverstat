@@ -17,15 +17,17 @@ type Team struct {
 
 func (t Team) MarshalJSON() ([]byte, error) {
 	type teamJson struct {
-		Name   qstring.QuakeString
-		Frags  int
-		Colors [2]uint8
+		Name    qstring.QuakeString
+		Frags   int
+		Colors  [2]uint8
+		Players []qclient.Client
 	}
 
 	return json.Marshal(teamJson{
-		Name:   t.Name,
-		Colors: t.Colors(),
-		Frags:  t.Frags(),
+		Name:    t.Name,
+		Colors:  t.Colors(),
+		Frags:   t.Frags(),
+		Players: t.Players,
 	})
 }
 
