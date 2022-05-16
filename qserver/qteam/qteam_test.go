@@ -64,3 +64,50 @@ func TestTeam_String(t *testing.T) {
 		assert.Equal(t, "f0m", team.String())
 	})
 }
+
+func TestFromPlayers(t *testing.T) {
+	xantom := qclient.Client{
+		Name:   qstring.New("XantoM"),
+		Team:   qstring.New("f0m"),
+		Skin:   "",
+		Colors: [2]uint8{4, 2},
+		Frags:  0,
+		Ping:   0,
+		Time:   0,
+		CC:     "",
+	}
+	bps := qclient.Client{
+		Name:   qstring.New("bps"),
+		Team:   qstring.New("-s-"),
+		Skin:   "",
+		Colors: [2]uint8{4, 2},
+		Frags:  0,
+		Ping:   0,
+		Time:   0,
+		CC:     "",
+	}
+	valla := qclient.Client{
+		Name:   qstring.New("valla"),
+		Team:   qstring.New("f0m"),
+		Skin:   "",
+		Colors: [2]uint8{4, 2},
+		Frags:  0,
+		Ping:   0,
+		Time:   0,
+		CC:     "",
+	}
+	players := []qclient.Client{xantom, bps, valla}
+
+	expect := []qteam.Team{
+		{
+			Name:    qstring.New("f0m"),
+			Players: []qclient.Client{xantom, valla},
+		},
+		{
+			Name:    qstring.New("-s-"),
+			Players: []qclient.Client{bps},
+		},
+	}
+
+	assert.Equal(t, expect, qteam.FromPlayers(players))
+}

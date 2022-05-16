@@ -80,6 +80,24 @@ func (t Team) String() string {
 	return fmt.Sprintf("%s (%s)", t.Name.ToPlainString(), strings.Join(playerNames, ", "))
 }
 
-func Parse(players []qclient.Client) []Team {
-	return make([]Team, 0)
+func FromPlayers(players []qclient.Client) []Team {
+	playersPerTeamName := make(map[string][]qclient.Client, 0)
+	teamNamePerId := make(map[string]qstring.QuakeString, 0)
+
+	for _, player := range players {
+		teamId := player.Team.ToPlainString()
+		playersPerTeamName[teamId] = append(playersPerTeamName[teamId], player)
+		teamNamePerId[teamId] = player.Team
+	}
+
+	teams := make([]Team, 0)
+
+	for teamId, teamName := range teamNamePerId {
+		teams = append(teams, Team{
+			Name:    teamName,
+			Players: playersPerTeamName[teamId],
+		})
+	}
+
+	return teams
 }
