@@ -15,20 +15,24 @@ type Team struct {
 	Players []qclient.Client
 }
 
-func (t Team) MarshalJSON() ([]byte, error) {
-	type teamJson struct {
-		Name    qstring.QuakeString
-		Frags   int
-		Colors  [2]uint8
-		Players []qclient.Client
-	}
+type TeamExport struct {
+	Name    qstring.QuakeString
+	Frags   int
+	Colors  [2]uint8
+	Players []qclient.Client
+}
 
-	return json.Marshal(teamJson{
+func Export(t Team) TeamExport {
+	return TeamExport{
 		Name:    t.Name,
 		Colors:  t.Colors(),
 		Frags:   t.Frags(),
 		Players: t.Players,
-	})
+	}
+}
+
+func (t Team) MarshalJSON() ([]byte, error) {
+	return json.Marshal(Export(t))
 }
 
 func (t Team) Frags() int {
