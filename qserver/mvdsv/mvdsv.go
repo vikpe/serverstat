@@ -72,7 +72,7 @@ func (server Mvdsv) Teams() []qteam.Team {
 	return make([]qteam.Team, 0)
 }
 
-func (server Mvdsv) Export() MvdsvExport {
+func Export(server Mvdsv) MvdsvExport {
 	return MvdsvExport{
 		Address:        server.Address,
 		Mode:           server.Mode(),
