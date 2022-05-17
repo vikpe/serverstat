@@ -8,6 +8,7 @@ import (
 
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qtext/qstring"
+	"github.com/vikpe/serverstat/qutil"
 )
 
 type Team struct {
@@ -77,6 +78,8 @@ func (t Team) String() string {
 	for _, p := range t.Players {
 		playerNames = append(playerNames, p.Name.ToPlainString())
 	}
+
+	playerNames = qutil.StripQuakeFixes(playerNames)
 
 	sort.Slice(playerNames, func(i, j int) bool {
 		return strings.ToLower(playerNames[i]) < strings.ToLower(playerNames[j])

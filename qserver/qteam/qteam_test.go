@@ -63,6 +63,27 @@ func TestTeam_String(t *testing.T) {
 		}
 		assert.Equal(t, "f0m", team.String())
 	})
+
+	t.Run("don't strip prefix/suffix for single player", func(t *testing.T) {
+		team := qteam.Team{
+			Name: qstring.New("oeks"),
+			Players: []qclient.Client{
+				{Name: qstring.New("nig......axe")},
+			},
+		}
+		assert.Equal(t, "oeks (nig......axe)", team.String())
+	})
+
+	t.Run("strip common prefix/suffix for multiple players", func(t *testing.T) {
+		team := qteam.Team{
+			Name: qstring.New("oeks"),
+			Players: []qclient.Client{
+				{Name: qstring.New("--nig......axe")},
+				{Name: qstring.New("--trl......axe")},
+			},
+		}
+		assert.Equal(t, "oeks (nig, trl)", team.String())
+	})
 }
 
 func TestFromPlayers(t *testing.T) {
