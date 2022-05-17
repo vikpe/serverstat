@@ -13,6 +13,7 @@ func TestParse(t *testing.T) {
 		"Countdown":  "Countdown",
 		"Started":    "Started",
 		"3 min left": "Started",
+		"foo":        "Unknown",
 	}
 
 	for status, expect := range testCases {
