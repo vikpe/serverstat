@@ -39,7 +39,7 @@ func TestMvdsv_Title(t *testing.T) {
 			{Name: qstring.New("valla"), Team: qstring.New("blue")},
 		}
 		settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2", "map": "dm6"}
-		assert.Equal(t, "2on2: red (XantoM) vs blue (valla, Xterm) [dm6]", qtitle.New(settings, players))
+		assert.Equal(t, "2on2: blue (valla, Xterm) vs red (XantoM) [dm6]", qtitle.New(settings, players))
 	})
 
 	t.Run("coop", func(t *testing.T) {

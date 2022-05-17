@@ -2,6 +2,7 @@ package qtitle
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
@@ -49,6 +50,9 @@ func New(settings qsettings.Settings, players []qclient.Client) string {
 			participantDelimiter = " vs "
 		}
 
+		sort.Slice(participants, func(i, j int) bool {
+			return strings.ToLower(participants[i]) < strings.ToLower(participants[j])
+		})
 		title += ": " + strings.Join(participants, participantDelimiter)
 	}
 

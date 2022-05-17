@@ -78,10 +78,9 @@ func (t Team) String() string {
 		playerNames = append(playerNames, p.Name.ToPlainString())
 	}
 
-	sortFunc := func(i, j int) bool {
+	sort.Slice(playerNames, func(i, j int) bool {
 		return strings.ToLower(playerNames[i]) < strings.ToLower(playerNames[j])
-	}
-	sort.Slice(playerNames, sortFunc)
+	})
 
 	return fmt.Sprintf("%s (%s)", t.Name.ToPlainString(), strings.Join(playerNames, ", "))
 }
