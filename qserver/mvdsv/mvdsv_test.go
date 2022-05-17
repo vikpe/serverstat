@@ -7,6 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
+	"github.com/vikpe/serverstat/qserver/qclient"
+	"github.com/vikpe/serverstat/qserver/qsettings"
 	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udphelper"
 )
@@ -67,4 +69,13 @@ func TestGetQtvStream(t *testing.T) {
 		assert.Equal(t, expectStream, stream)
 		assert.Nil(t, err)
 	})
+}
+
+func TestMvdsv_Title(t *testing.T) {
+	server := mvdsv.Mvdsv{
+		Players:  []qclient.Client{},
+		Settings: qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "map": "dm2"},
+	}
+
+	assert.Equal(t, "ffa [dm2]", server.Title())
 }

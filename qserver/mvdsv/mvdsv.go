@@ -86,7 +86,7 @@ func (server Mvdsv) Title() string {
 
 	// mode
 	mode := server.Mode()
-	titleParts = append(titleParts, fmt.Sprintf("%s:", string(mode)))
+	titleParts = append(titleParts, string(mode))
 
 	// participants
 	participants := make([]string, 0)
@@ -111,6 +111,7 @@ func (server Mvdsv) Title() string {
 			participantDelimiter = " vs "
 		}
 
+		titleParts = append(titleParts, ":")
 		titleParts = append(titleParts, strings.Join(participants, participantDelimiter))
 	}
 
