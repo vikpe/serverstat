@@ -64,7 +64,7 @@ func StripQuakeFixes(strs []string) []string {
 		}
 	}
 
-	delimiterChars := ".•_-|[]{}"
+	delimiterChars := ".•_-|[]{}()"
 
 	// prefix
 	prefix := CommonPrefix(strs)
