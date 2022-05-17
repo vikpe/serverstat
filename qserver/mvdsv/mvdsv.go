@@ -1,7 +1,6 @@
 package mvdsv
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -10,6 +9,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
+	"github.com/vikpe/serverstat/qserver/qclient/slots"
 	"github.com/vikpe/serverstat/qserver/qsettings"
 	"github.com/vikpe/serverstat/qserver/qstatus"
 	"github.com/vikpe/serverstat/qserver/qteam"
@@ -29,18 +29,19 @@ type Mvdsv struct {
 	QtvStream      qtvstream.QtvStream
 }
 
-type ClientSlots struct {
-	Used  int
-	Total int
-	Free  int
-}
-
-func NewSlots(total int, used int) ClientSlots {
-	return ClientSlots{
-		Used:  used,
-		Total: total,
-		Free:  total - used,
-	}
+type MvdsvExport struct {
+	Address        string
+	Mode           qmode.Mode
+	Title          string
+	Status         string
+	Time           qtime.Time
+	PlayerSlots    slots.Slots
+	Players        []qclient.Client
+	Teams          []qteam.Team
+	SpectatorSlots slots.Slots
+	SpectatorNames []qstring.QuakeString
+	Settings       qsettings.Settings
+	QtvStream      qtvstream.QtvStream
 }
 
 func (server Mvdsv) Mode() qmode.Mode {
@@ -51,12 +52,12 @@ func (server Mvdsv) Status() string {
 	return qstatus.Parse(server.Settings.Get("status", ""))
 }
 
-func (server Mvdsv) PlayerSlots() ClientSlots {
-	return NewSlots(server.Settings.GetInt("maxclients", 0), len(server.Players))
+func (server Mvdsv) PlayerSlots() slots.Slots {
+	return slots.New(server.Settings.GetInt("maxclients", 0), len(server.Players))
 }
 
-func (server Mvdsv) SpectatorSlots() ClientSlots {
-	return NewSlots(server.Settings.GetInt("maxspectators", 0), len(server.SpectatorNames))
+func (server Mvdsv) SpectatorSlots() slots.Slots {
+	return slots.New(server.Settings.GetInt("maxspectators", 0), len(server.SpectatorNames))
 }
 
 func (server Mvdsv) Time() qtime.Time {
@@ -119,26 +120,9 @@ func (server Mvdsv) Title() string {
 	return strings.Join(titleParts, " ")
 }
 
-func (server Mvdsv) MarshalJSON() ([]byte, error) {
-	type mvdsvJson struct {
-		Address        string
-		Type           string
-		Mode           qmode.Mode
-		Title          string
-		Status         string
-		Time           qtime.Time
-		PlayerSlots    ClientSlots
-		Players        []qclient.Client
-		Teams          []qteam.Team
-		SpectatorSlots ClientSlots
-		SpectatorNames []qstring.QuakeString
-		Settings       qsettings.Settings
-		QtvStream      qtvstream.QtvStream
-	}
-
-	return json.Marshal(mvdsvJson{
+func (server Mvdsv) Export() MvdsvExport {
+	return MvdsvExport{
 		Address:        server.Address,
-		Type:           Name,
 		Mode:           server.Mode(),
 		Title:          server.Title(),
 		Status:         server.Status(),
@@ -150,7 +134,7 @@ func (server Mvdsv) MarshalJSON() ([]byte, error) {
 		SpectatorNames: server.SpectatorNames,
 		Settings:       server.Settings,
 		QtvStream:      server.QtvStream,
-	})
+	}
 }
 
 func GetQtvUsers(address string) ([]qstring.QuakeString, error) {
