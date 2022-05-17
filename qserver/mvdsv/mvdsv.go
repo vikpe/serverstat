@@ -1,9 +1,6 @@
 package mvdsv
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/qtvusers"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/status32"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
@@ -14,6 +11,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/qstatus"
 	"github.com/vikpe/serverstat/qserver/qteam"
 	"github.com/vikpe/serverstat/qserver/qtime"
+	"github.com/vikpe/serverstat/qserver/qtitle"
 	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udpclient"
 )
@@ -74,58 +72,11 @@ func (server Mvdsv) Teams() []qteam.Team {
 	return make([]qteam.Team, 0)
 }
 
-func (server Mvdsv) Title() string {
-	titleParts := make([]string, 0)
-
-	// matchtag
-	matchTag := server.Settings.Get("matchtag", "")
-
-	if matchTag != "" {
-		titleParts = append(titleParts, fmt.Sprintf("%s / ", matchTag))
-	}
-
-	// mode
-	mode := server.Mode()
-	titleParts = append(titleParts, string(mode))
-
-	// participants
-	participants := make([]string, 0)
-	isTeamplay := server.Settings.GetInt("teamplay", 0) > 0
-
-	if isTeamplay && !mode.IsCoop() {
-		for _, t := range server.Teams() {
-			participants = append(participants, t.String())
-		}
-	} else if !mode.IsFfa() {
-		for _, p := range server.Players {
-			participants = append(participants, p.Name.ToPlainString())
-		}
-	}
-
-	if len(participants) > 0 {
-		var participantDelimiter string
-
-		if mode.IsCoop() {
-			participantDelimiter = ", "
-		} else {
-			participantDelimiter = " vs "
-		}
-
-		titleParts = append(titleParts, ":")
-		titleParts = append(titleParts, strings.Join(participants, participantDelimiter))
-	}
-
-	// map
-	titleParts = append(titleParts, fmt.Sprintf("[%s]", server.Settings.Get("map", "")))
-
-	return strings.Join(titleParts, " ")
-}
-
 func (server Mvdsv) Export() MvdsvExport {
 	return MvdsvExport{
 		Address:        server.Address,
 		Mode:           server.Mode(),
-		Title:          server.Title(),
+		Title:          qtitle.New(server.Settings, server.Players),
 		Status:         server.Status(),
 		Time:           server.Time(),
 		PlayerSlots:    server.PlayerSlots(),
