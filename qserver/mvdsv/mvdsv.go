@@ -28,6 +28,7 @@ type Mvdsv struct {
 }
 
 type MvdsvExport struct {
+	Type           string
 	Address        string
 	Mode           qmode.Mode
 	Title          string
@@ -74,6 +75,7 @@ func (server Mvdsv) Teams() []qteam.Team {
 
 func Export(server Mvdsv) MvdsvExport {
 	return MvdsvExport{
+		Type:           Name,
 		Address:        server.Address,
 		Mode:           server.Mode(),
 		Title:          qtitle.New(server.Settings, server.Players),

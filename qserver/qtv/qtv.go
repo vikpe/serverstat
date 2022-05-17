@@ -13,3 +13,15 @@ type Qtv struct {
 	SpectatorNames []qstring.QuakeString
 	Settings       qsettings.Settings
 }
+
+type QtvExport struct {
+	Type string
+	Qtv
+}
+
+func Export(qtv Qtv) QtvExport {
+	return QtvExport{
+		Type: Name,
+		Qtv:  qtv,
+	}
+}

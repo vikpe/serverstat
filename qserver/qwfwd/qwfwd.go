@@ -13,3 +13,15 @@ type Qwfwd struct {
 	ClientNames []qstring.QuakeString
 	Settings    qsettings.Settings
 }
+
+type QwfwdExport struct {
+	Type string
+	Qwfwd
+}
+
+func Export(qwfwd Qwfwd) QwfwdExport {
+	return QwfwdExport{
+		Type:  Name,
+		Qwfwd: qwfwd,
+	}
+}
