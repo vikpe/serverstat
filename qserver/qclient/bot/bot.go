@@ -18,5 +18,5 @@ func IsBotName(name string) bool {
 }
 
 func IsBotPing(ping int) bool {
-	return 10 == ping || ping < -400
+	return 10 == ping || ping < -400 || ping > 400
 }

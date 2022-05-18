@@ -24,6 +24,7 @@ func TestIsBotPing(t *testing.T) {
 	testCases := map[int]bool{
 		10:   true,
 		-666: true,
+		807:  true,
 		12:   false,
 		255:  false,
 	}
