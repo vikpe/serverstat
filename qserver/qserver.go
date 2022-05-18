@@ -18,3 +18,13 @@ type GenericServer struct {
 		Geo       geo.Info
 	}
 }
+
+func (server GenericServer) HasPlayers() bool {
+	for _, c := range server.Clients {
+		if !c.IsSpectator() && !c.IsBot() {
+			return true
+		}
+	}
+
+	return false
+}
