@@ -1,6 +1,7 @@
 package mvdsv
 
 import (
+	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/qtvusers"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/status32"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
@@ -25,6 +26,7 @@ type Mvdsv struct {
 	SpectatorNames []qstring.QuakeString
 	Settings       qsettings.Settings
 	QtvStream      qtvstream.QtvStream
+	Geo            geo.Info
 }
 
 type MvdsvExport struct {
@@ -41,6 +43,7 @@ type MvdsvExport struct {
 	SpectatorNames []qstring.QuakeString
 	Settings       qsettings.Settings
 	QtvStream      qtvstream.QtvStream
+	Geo            geo.Info
 }
 
 func (server Mvdsv) Mode() qmode.Mode {
@@ -88,6 +91,7 @@ func Export(server Mvdsv) MvdsvExport {
 		SpectatorNames: server.SpectatorNames,
 		Settings:       server.Settings,
 		QtvStream:      server.QtvStream,
+		Geo:            server.Geo,
 	}
 }
 

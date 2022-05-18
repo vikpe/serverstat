@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/convert"
+	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
@@ -44,6 +45,7 @@ func TestToMvdsv(t *testing.T) {
 		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "Standby"},
 		ExtraInfo: struct {
 			QtvStream qtvstream.QtvStream
+			Geo       geo.Info
 		}{},
 	}
 
@@ -80,6 +82,7 @@ func TestToQtv(t *testing.T) {
 		},
 		ExtraInfo: struct {
 			QtvStream qtvstream.QtvStream
+			Geo       geo.Info
 		}{},
 	}
 
@@ -114,6 +117,7 @@ func TestToQwfwd(t *testing.T) {
 		},
 		ExtraInfo: struct {
 			QtvStream qtvstream.QtvStream
+			Geo       geo.Info
 		}{},
 	}
 

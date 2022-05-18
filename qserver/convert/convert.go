@@ -27,7 +27,12 @@ func ToMvdsv(genericServer qserver.GenericServer) mvdsv.Mvdsv {
 		SpectatorNames: spectatorNames,
 		Settings:       genericServer.Settings,
 		QtvStream:      genericServer.ExtraInfo.QtvStream,
+		Geo:            genericServer.ExtraInfo.Geo,
 	}
+}
+
+func ToMvdsvExport(genericServer qserver.GenericServer) mvdsv.MvdsvExport {
+	return mvdsv.Export(ToMvdsv(genericServer))
 }
 
 func ToQtv(genericServer qserver.GenericServer) qtv.Qtv {
@@ -41,7 +46,12 @@ func ToQtv(genericServer qserver.GenericServer) qtv.Qtv {
 		Address:        genericServer.Address,
 		SpectatorNames: spectatorNames,
 		Settings:       genericServer.Settings,
+		Geo:            genericServer.ExtraInfo.Geo,
 	}
+}
+
+func ToQtvExport(genericServer qserver.GenericServer) qtv.QtvExport {
+	return qtv.Export(ToQtv(genericServer))
 }
 
 func ToQwfwd(genericServer qserver.GenericServer) qwfwd.Qwfwd {
@@ -55,5 +65,10 @@ func ToQwfwd(genericServer qserver.GenericServer) qwfwd.Qwfwd {
 		Address:     genericServer.Address,
 		ClientNames: clientNames,
 		Settings:    genericServer.Settings,
+		Geo:         genericServer.ExtraInfo.Geo,
 	}
+}
+
+func ToQwfwdExport(genericServer qserver.GenericServer) qwfwd.QwfwdExport {
+	return qwfwd.Export(ToQwfwd(genericServer))
 }

@@ -1,6 +1,7 @@
 package qwfwd
 
 import (
+	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/qsettings"
 	"github.com/vikpe/serverstat/qtext/qstring"
 )
@@ -12,6 +13,7 @@ type Qwfwd struct {
 	Address     string
 	ClientNames []qstring.QuakeString
 	Settings    qsettings.Settings
+	Geo         geo.Info
 }
 
 type QwfwdExport struct {

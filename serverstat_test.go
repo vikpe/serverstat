@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat"
 	"github.com/vikpe/serverstat/qserver"
+	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qversion"
@@ -62,6 +63,7 @@ func TestGetInfo(t *testing.T) {
 			},
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream
+				Geo       geo.Info
 			}{},
 		}
 		assert.Equal(t, expectedServer, server)
@@ -108,6 +110,7 @@ func TestGetInfoFromMany(t *testing.T) {
 			},
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream
+				Geo       geo.Info
 			}{},
 		}
 
@@ -122,6 +125,7 @@ func TestGetInfoFromMany(t *testing.T) {
 			},
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream
+				Geo       geo.Info
 			}{},
 		}
 

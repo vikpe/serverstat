@@ -1,6 +1,7 @@
 package qserver
 
 import (
+	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qsettings"
@@ -14,5 +15,6 @@ type GenericServer struct {
 	Settings  qsettings.Settings
 	ExtraInfo struct {
 		QtvStream qtvstream.QtvStream
+		Geo       geo.Info
 	}
 }
