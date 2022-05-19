@@ -139,10 +139,11 @@ func TestExport(t *testing.T) {
 		Players: []qclient.Client{player1},
 	}
 	expect := qteam.TeamExport{
-		Name:    qstring.New("red"),
-		Frags:   2,
-		Colors:  [2]uint8{4, 2},
-		Players: []qclient.Client{player1},
+		Name:      qstring.New("red"),
+		NameColor: "www",
+		Frags:     2,
+		Colors:    [2]uint8{4, 2},
+		Players:   []qclient.Client{player1},
 	}
 	assert.Equal(t, expect, qteam.Export(team))
 }
