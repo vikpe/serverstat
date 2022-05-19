@@ -17,18 +17,20 @@ type Team struct {
 }
 
 type TeamExport struct {
-	Name    qstring.QuakeString
-	Frags   int
-	Colors  [2]uint8
-	Players []qclient.Client
+	Name      qstring.QuakeString
+	NameColor string
+	Frags     int
+	Colors    [2]uint8
+	Players   []qclient.Client
 }
 
 func Export(t Team) TeamExport {
 	return TeamExport{
-		Name:    t.Name,
-		Colors:  t.Colors(),
-		Frags:   t.Frags(),
-		Players: t.Players,
+		Name:      t.Name,
+		NameColor: t.Name.ToColorCodes(),
+		Colors:    t.Colors(),
+		Frags:     t.Frags(),
+		Players:   t.Players,
 	}
 }
 

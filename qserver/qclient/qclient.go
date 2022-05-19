@@ -36,28 +36,30 @@ func (client Client) MarshalJSON() ([]byte, error) {
 }
 
 type ClientExport struct {
-	Name   qstring.QuakeString
-	Team   qstring.QuakeString
-	Skin   string
-	Colors [2]uint8
-	Frags  int
-	Ping   int
-	Time   uint8
-	CC     string
-	IsBot  bool
+	Name      qstring.QuakeString
+	NameColor string
+	Team      qstring.QuakeString
+	Skin      string
+	Colors    [2]uint8
+	Frags     int
+	Ping      int
+	Time      uint8
+	CC        string
+	IsBot     bool
 }
 
 func Export(client Client) ClientExport {
 	return ClientExport{
-		Name:   client.Name,
-		Team:   client.Team,
-		Skin:   client.Skin,
-		Colors: client.Colors,
-		Frags:  client.Frags,
-		Ping:   client.Ping,
-		Time:   client.Time,
-		CC:     client.CC,
-		IsBot:  client.IsBot(),
+		Name:      client.Name,
+		NameColor: client.Name.ToColorCodes(),
+		Team:      client.Team,
+		Skin:      client.Skin,
+		Colors:    client.Colors,
+		Frags:     client.Frags,
+		Ping:      client.Ping,
+		Time:      client.Time,
+		CC:        client.CC,
+		IsBot:     client.IsBot(),
 	}
 }
 
