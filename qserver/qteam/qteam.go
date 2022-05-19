@@ -1,7 +1,6 @@
 package qteam
 
 import (
-	"encoding/json"
 	"fmt"
 	"sort"
 	"strings"
@@ -35,7 +34,7 @@ func Export(t Team) TeamExport {
 }
 
 func (t Team) MarshalJSON() ([]byte, error) {
-	return json.Marshal(Export(t))
+	return qutil.MarshalNoEscapeHtml(Export(t))
 }
 
 func (t Team) Frags() int {

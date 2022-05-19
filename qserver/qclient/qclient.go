@@ -2,7 +2,6 @@ package qclient
 
 import (
 	"encoding/csv"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -32,7 +31,7 @@ func (client Client) IsSpectator() bool {
 }
 
 func (client Client) MarshalJSON() ([]byte, error) {
-	return json.Marshal(Export(client))
+	return qutil.MarshalNoEscapeHtml(Export(client))
 }
 
 type ClientExport struct {

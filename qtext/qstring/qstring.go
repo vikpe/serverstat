@@ -1,9 +1,8 @@
 package qstring
 
 import (
-	"encoding/json"
-
 	"github.com/vikpe/serverstat/qtext/qchar"
+	"github.com/vikpe/serverstat/qutil"
 )
 
 type QuakeString struct {
@@ -23,7 +22,7 @@ func (qs QuakeString) ToColorCodes() string {
 }
 
 func (qs QuakeString) MarshalJSON() ([]byte, error) {
-	return json.Marshal(qs.ToPlainString())
+	return qutil.MarshalNoEscapeHtml(qs.ToPlainString())
 }
 
 func ToPlainString(str string) string {

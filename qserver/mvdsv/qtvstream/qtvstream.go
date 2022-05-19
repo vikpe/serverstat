@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/vikpe/serverstat/qtext/qstring"
+	"github.com/vikpe/serverstat/qutil"
 )
 
 type QtvStream struct {
@@ -19,7 +20,7 @@ func (q QtvStream) MarshalJSON() ([]byte, error) {
 	} else {
 		type QtvStreamJson QtvStream
 
-		return json.Marshal(QtvStreamJson{
+		return qutil.MarshalNoEscapeHtml(QtvStreamJson{
 			Title:          q.Title,
 			Url:            q.Url,
 			SpectatorNames: q.SpectatorNames,
