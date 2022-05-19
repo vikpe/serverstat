@@ -39,6 +39,7 @@ type ClientExport struct {
 	Name      qstring.QuakeString
 	NameColor string
 	Team      qstring.QuakeString
+	TeamColor string
 	Skin      string
 	Colors    [2]uint8
 	Frags     int
@@ -53,6 +54,7 @@ func Export(client Client) ClientExport {
 		Name:      client.Name,
 		NameColor: client.Name.ToColorCodes(),
 		Team:      client.Team,
+		TeamColor: client.Team.ToColorCodes(),
 		Skin:      client.Skin,
 		Colors:    client.Colors,
 		Frags:     client.Frags,
