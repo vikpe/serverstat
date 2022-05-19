@@ -2,6 +2,7 @@ package qclient
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -28,6 +29,36 @@ func (client Client) IsBot() bool {
 
 func (client Client) IsSpectator() bool {
 	return client.Ping < 0
+}
+
+func (client Client) MarshalJSON() ([]byte, error) {
+	return json.Marshal(Export(client))
+}
+
+type ClientExport struct {
+	Name   qstring.QuakeString
+	Team   qstring.QuakeString
+	Skin   string
+	Colors [2]uint8
+	Frags  int
+	Ping   int
+	Time   uint8
+	CC     string
+	IsBot  bool
+}
+
+func Export(client Client) ClientExport {
+	return ClientExport{
+		Name:   client.Name,
+		Team:   client.Team,
+		Skin:   client.Skin,
+		Colors: client.Colors,
+		Frags:  client.Frags,
+		Ping:   client.Ping,
+		Time:   client.Time,
+		CC:     client.CC,
+		IsBot:  client.IsBot(),
+	}
 }
 
 func NewFromStrings(clientStrings []string) []Client {
