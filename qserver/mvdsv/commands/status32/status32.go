@@ -21,7 +21,7 @@ func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) 
 		return qtvstream.QtvStream{}, err
 	}
 
-	// example repsonse body
+	// example response body
 	// ����nqtv 1 "qw.foppa.dk - qtv (3)" "3@qw.foppa.dk:28000" 0
 	reader := csv.NewReader(strings.NewReader(string(responseBody)))
 	reader.Comma = ' '

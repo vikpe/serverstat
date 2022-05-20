@@ -56,7 +56,7 @@ func StripQuakeFixes(strs []string) []string {
 		return strs
 	}
 
-	// minimium fix to strip
+	// minimum fix to strip
 	minFixLength := 2
 
 	// skip if any value is equal to or shorter than min fix length
