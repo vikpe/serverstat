@@ -22,15 +22,36 @@ func TestTeam_Frags(t *testing.T) {
 }
 
 func TestTeam_Colors(t *testing.T) {
-	team := qteam.Team{
-		Name: qstring.New("red"),
-		Players: []qclient.Client{
-			{Colors: [2]uint8{0, 0}},
-			{Colors: [2]uint8{4, 2}},
-			{Colors: [2]uint8{4, 2}},
-		},
-	}
-	assert.Equal(t, [2]uint8{4, 2}, team.Colors())
+	t.Run("no players", func(t *testing.T) {
+		team := qteam.Team{
+			Name: qstring.New("red"),
+		}
+		assert.Equal(t, [2]uint8{0, 0}, team.Colors())
+	})
+
+	t.Run("majority colors", func(t *testing.T) {
+		team := qteam.Team{
+			Name: qstring.New("red"),
+			Players: []qclient.Client{
+				{Colors: [2]uint8{0, 0}},
+				{Colors: [2]uint8{4, 2}},
+				{Colors: [2]uint8{4, 2}},
+			},
+		}
+		assert.Equal(t, [2]uint8{4, 2}, team.Colors())
+	})
+
+	t.Run("no majority colors (use color from first player)", func(t *testing.T) {
+		team := qteam.Team{
+			Name: qstring.New("red"),
+			Players: []qclient.Client{
+				{Colors: [2]uint8{13, 6}},
+				{Colors: [2]uint8{0, 0}},
+				{Colors: [2]uint8{4, 2}},
+			},
+		}
+		assert.Equal(t, [2]uint8{13, 6}, team.Colors())
+	})
 }
 
 func TestTeam_String(t *testing.T) {

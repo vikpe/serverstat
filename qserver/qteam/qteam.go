@@ -52,10 +52,18 @@ func (t Team) Frags() int {
 }
 
 func (t Team) Colors() [2]uint8 {
+	if 0 == len(t.Players) {
+		return [2]uint8{0, 0}
+	}
+
 	colorCount := make(map[[2]uint8]int, 0)
 
 	for _, p := range t.Players {
 		colorCount[p.Colors]++
+	}
+
+	if len(colorCount) == len(t.Players) {
+		return t.Players[0].Colors
 	}
 
 	highestCount := 0
