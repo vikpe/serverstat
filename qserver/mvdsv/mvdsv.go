@@ -83,6 +83,12 @@ func Export(server Mvdsv) MvdsvExport {
 		return server.Players[i].Frags > server.Players[j].Frags
 	})
 
+	teams := server.Teams()
+
+	sort.Slice(teams, func(i, j int) bool {
+		return teams[i].Name.ToPlainString() < teams[j].Name.ToPlainString()
+	})
+
 	return MvdsvExport{
 		Type:           Name,
 		Address:        server.Address,
@@ -92,7 +98,7 @@ func Export(server Mvdsv) MvdsvExport {
 		Time:           server.Time(),
 		PlayerSlots:    server.PlayerSlots(),
 		Players:        server.Players,
-		Teams:          server.Teams(),
+		Teams:          teams,
 		SpectatorSlots: server.SpectatorSlots(),
 		SpectatorNames: server.SpectatorNames,
 		Settings:       server.Settings,
