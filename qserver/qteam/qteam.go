@@ -24,6 +24,10 @@ type TeamExport struct {
 }
 
 func Export(t Team) TeamExport {
+	sort.Slice(t.Players, func(i, j int) bool {
+		return t.Players[i].Frags > t.Players[j].Frags
+	})
+
 	return TeamExport{
 		Name:      t.Name,
 		NameColor: t.Name.ToColorCodes(),
