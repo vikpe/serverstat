@@ -34,19 +34,22 @@ func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) 
 
 	const (
 		IndexTitle       = 1
-		IndexAddress     = 2
+		IndexUrl         = 2
 		IndexClientCount = 3
 	)
 
-	if record[IndexAddress] == "" {
+	if record[IndexUrl] == "" {
 		// invalid configuration (not reporting qtv ip as they should)
 		return qtvstream.QtvStream{}, errors.New("invalid QTV configuration")
 	}
 
+	urlParts := strings.Split(record[IndexUrl], "@")
+
 	stream := qtvstream.QtvStream{
 		Title:          record[IndexTitle],
-		Url:            record[IndexAddress],
-		NumSpectators:  uint8(qutil.StringToInt(record[IndexClientCount])),
+		Id:             qutil.StringToInt(urlParts[0]),
+		Address:        urlParts[1],
+		NumSpectators:  qutil.StringToInt(record[IndexClientCount]),
 		SpectatorNames: []qstring.QuakeString{},
 	}
 	return stream, nil

@@ -1,30 +1,43 @@
 package qtvstream
 
 import (
-	"encoding/json"
+	"fmt"
 
 	"github.com/vikpe/serverstat/qtext/qstring"
-	"github.com/vikpe/serverstat/qutil"
 )
 
 type QtvStream struct {
 	Title          string
-	Url            string
+	Id             int
+	Address        string
 	SpectatorNames []qstring.QuakeString
-	NumSpectators  uint8
+	NumSpectators  int
 }
 
-func (q QtvStream) MarshalJSON() ([]byte, error) {
-	if "" == q.Url {
-		return json.Marshal("")
+func (q QtvStream) Url() string {
+	if "" != q.Address {
+		return fmt.Sprintf("%d@%s", q.Id, q.Address)
 	} else {
-		type QtvStreamJson QtvStream
+		return ""
+	}
+}
 
-		return qutil.MarshalNoEscapeHtml(QtvStreamJson{
-			Title:          q.Title,
-			Url:            q.Url,
-			SpectatorNames: q.SpectatorNames,
-			NumSpectators:  q.NumSpectators,
-		})
+type QtvStreamExport struct {
+	Title          string
+	Url            string
+	Id             int
+	Address        string
+	SpectatorNames []qstring.QuakeString
+	NumSpectators  int
+}
+
+func Export(q QtvStream) QtvStreamExport {
+	return QtvStreamExport{
+		Title:          q.Title,
+		Url:            q.Url(),
+		Id:             q.Id,
+		Address:        q.Address,
+		SpectatorNames: q.SpectatorNames,
+		NumSpectators:  0,
 	}
 }

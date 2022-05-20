@@ -1,23 +1,20 @@
 package qtvstream_test
 
 import (
-	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 )
 
-func TestQtvStream_MarshalJSON(t *testing.T) {
-	// empty URL
-	emptyStream := qtvstream.QtvStream{Url: ""}
-	result, _ := json.Marshal(emptyStream)
-	expect := `""`
-	assert.Equal(t, expect, string(result))
+func TestQtvStream_Url(t *testing.T) {
+	t.Run("empty", func(t *testing.T) {
+		stream := qtvstream.QtvStream{Id: 0, Address: ""}
+		assert.Equal(t, "", stream.Url())
+	})
 
-	// non-empty URL
-	stream := qtvstream.QtvStream{Url: "1@qw.foppa.dk:28000"}
-	expect = `{"Title":"","Url":"1@qw.foppa.dk:28000","SpectatorNames":null,"NumSpectators":0}`
-	result, _ = json.Marshal(stream)
-	assert.Equal(t, expect, string(result))
+	t.Run("not empty", func(t *testing.T) {
+		stream := qtvstream.QtvStream{Id: 12, Address: "qw.foppa.dk:28000"}
+		assert.Equal(t, "12@qw.foppa.dk:28000", stream.Url())
+	})
 }

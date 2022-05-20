@@ -31,7 +31,8 @@ func TestGetQtvStream(t *testing.T) {
 		stream, err := mvdsv.GetQtvStream(":5001")
 		expectStream := qtvstream.QtvStream{
 			Title:          "qw.foppa.dk - qtv (3)",
-			Url:            "3@qw.foppa.dk:28000",
+			Id:             3,
+			Address:        "qw.foppa.dk:28000",
 			NumSpectators:  0,
 			SpectatorNames: []qstring.QuakeString{},
 		}
@@ -56,7 +57,8 @@ func TestGetQtvStream(t *testing.T) {
 		stream, err := mvdsv.GetQtvStream(":5002")
 		expectStream := qtvstream.QtvStream{
 			Title:         "qw.foppa.dk - qtv (3)",
-			Url:           "3@qw.foppa.dk:28000",
+			Id:            3,
+			Address:       "qw.foppa.dk:28000",
 			NumSpectators: 2,
 			SpectatorNames: []qstring.QuakeString{
 				qstring.New("XantoM"),

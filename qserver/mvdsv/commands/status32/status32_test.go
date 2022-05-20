@@ -35,7 +35,8 @@ func TestParseResponse(t *testing.T) {
 		result, err := status32.ParseResponse(responseBody, nil)
 		expect := qtvstream.QtvStream{
 			Title:          "qw.foppa.dk - qtv (3)",
-			Url:            "3@qw.foppa.dk:28000",
+			Id:             3,
+			Address:        "qw.foppa.dk:28000",
 			NumSpectators:  4,
 			SpectatorNames: []qstring.QuakeString{},
 		}
