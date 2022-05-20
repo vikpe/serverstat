@@ -1,6 +1,8 @@
 package mvdsv
 
 import (
+	"sort"
+
 	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/qtvusers"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/status32"
@@ -77,6 +79,10 @@ func (server Mvdsv) Teams() []qteam.Team {
 }
 
 func Export(server Mvdsv) MvdsvExport {
+	sort.Slice(server.Players, func(i, j int) bool {
+		return server.Players[i].Frags > server.Players[j].Frags
+	})
+
 	return MvdsvExport{
 		Type:           Name,
 		Address:        server.Address,
