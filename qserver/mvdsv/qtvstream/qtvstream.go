@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/vikpe/serverstat/qtext/qstring"
+	"github.com/vikpe/serverstat/qutil"
 )
 
 type QtvStream struct {
@@ -14,12 +15,16 @@ type QtvStream struct {
 	NumSpectators  int
 }
 
-func (q QtvStream) Url() string {
-	if "" != q.Address {
-		return fmt.Sprintf("%d@%s", q.Id, q.Address)
+func (stream QtvStream) Url() string {
+	if "" != stream.Address {
+		return fmt.Sprintf("%d@%s", stream.Id, stream.Address)
 	} else {
 		return ""
 	}
+}
+
+func (stream QtvStream) MarshalJSON() ([]byte, error) {
+	return qutil.MarshalNoEscapeHtml(Export(stream))
 }
 
 type QtvStreamExport struct {
