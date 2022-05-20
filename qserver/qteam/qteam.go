@@ -62,16 +62,18 @@ func (t Team) Colors() [2]uint8 {
 		colorCount[p.Colors]++
 	}
 
-	if len(colorCount) == len(t.Players) {
-		return t.Players[0].Colors
+	isLowerColor := func(a [2]uint8, b [2]uint8) bool {
+		return (a[0]*13 + a[1]) < (b[0]*13 + b[1])
 	}
 
 	highestCount := 0
 	teamColors := [2]uint8{0, 0}
 
-	for colorCombination, count := range colorCount {
-		if count > highestCount {
-			teamColors = colorCombination
+	for colors, count := range colorCount {
+		shouldSwap := (count > highestCount) || (count == highestCount && isLowerColor(colors, teamColors))
+
+		if shouldSwap {
+			teamColors = colors
 			highestCount = count
 		}
 	}

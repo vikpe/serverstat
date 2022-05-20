@@ -41,16 +41,30 @@ func TestTeam_Colors(t *testing.T) {
 		assert.Equal(t, [2]uint8{4, 2}, team.Colors())
 	})
 
-	t.Run("no majority colors (use color from first player)", func(t *testing.T) {
+	t.Run("no majority colors (use lowst color) [1]", func(t *testing.T) {
 		team := qteam.Team{
 			Name: qstring.New("red"),
 			Players: []qclient.Client{
-				{Colors: [2]uint8{13, 6}},
-				{Colors: [2]uint8{0, 0}},
+				{Colors: [2]uint8{9, 6}},
+				{Colors: [2]uint8{2, 0}},
+				{Colors: [2]uint8{1, 11}},
 				{Colors: [2]uint8{4, 2}},
 			},
 		}
-		assert.Equal(t, [2]uint8{13, 6}, team.Colors())
+		assert.Equal(t, [2]uint8{1, 11}, team.Colors())
+	})
+
+	t.Run("no majority colors (use lowest color) [2]", func(t *testing.T) {
+		team := qteam.Team{
+			Name: qstring.New("red"),
+			Players: []qclient.Client{
+				{Colors: [2]uint8{4, 2}},
+				{Colors: [2]uint8{0, 5}},
+				{Colors: [2]uint8{0, 5}},
+				{Colors: [2]uint8{4, 2}},
+			},
+		}
+		assert.Equal(t, [2]uint8{0, 5}, team.Colors())
 	})
 }
 
