@@ -124,6 +124,8 @@ func GetQtvStream(address string) (qtvstream.QtvStream, error) {
 		if err == nil {
 			stream.SpectatorNames = spectatorNames
 		}
+	} else {
+		stream.SpectatorNames = make([]qstring.QuakeString, 0)
 	}
 
 	return stream, err
