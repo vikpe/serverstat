@@ -14,7 +14,9 @@ import (
 func TestGetQtvStream(t *testing.T) {
 	t.Run("error", func(t *testing.T) {
 		stream, err := mvdsv.GetQtvStream("foo:666")
-		assert.Equal(t, qtvstream.QtvStream{}, stream)
+		assert.Equal(t, qtvstream.QtvStream{
+			SpectatorNames: make([]qstring.QuakeString, 0),
+		}, stream)
 		assert.NotNil(t, err)
 	})
 

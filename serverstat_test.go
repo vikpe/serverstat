@@ -64,7 +64,11 @@ func TestGetInfo(t *testing.T) {
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream
 				Geo       geo.Info
-			}{},
+			}{
+				QtvStream: qtvstream.QtvStream{
+					SpectatorNames: make([]qstring.QuakeString, 0),
+				},
+			},
 		}
 		assert.Equal(t, expectedServer, server)
 		assert.Nil(t, err)
@@ -111,7 +115,11 @@ func TestGetInfoFromMany(t *testing.T) {
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream
 				Geo       geo.Info
-			}{},
+			}{
+				QtvStream: qtvstream.QtvStream{
+					SpectatorNames: make([]qstring.QuakeString, 0),
+				},
+			},
 		}
 
 		server2 := qserver.GenericServer{
@@ -126,7 +134,11 @@ func TestGetInfoFromMany(t *testing.T) {
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream
 				Geo       geo.Info
-			}{},
+			}{
+				QtvStream: qtvstream.QtvStream{
+					SpectatorNames: make([]qstring.QuakeString, 0),
+				},
+			},
 		}
 
 		assert.Contains(t, servers, server1)
