@@ -121,7 +121,7 @@ func GetQtvStream(address string) (qtvstream.QtvStream, error) {
 	if err == nil && stream.NumSpectators > 0 {
 		spectatorNames, err := GetQtvUsers(address)
 
-		if err != nil {
+		if err == nil {
 			stream.SpectatorNames = spectatorNames
 		}
 	}
