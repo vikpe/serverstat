@@ -43,6 +43,6 @@ func Export(q QtvStream) QtvStreamExport {
 		Id:             q.Id,
 		Address:        q.Address,
 		SpectatorNames: q.SpectatorNames,
-		NumSpectators:  0,
+		NumSpectators:  len(q.SpectatorNames),
 	}
 }
