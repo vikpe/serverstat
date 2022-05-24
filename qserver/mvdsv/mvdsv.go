@@ -128,7 +128,5 @@ func GetQtvStream(address string) (qtvstream.QtvStream, error) {
 		stream.SpectatorNames = make([]qstring.QuakeString, 0)
 	}
 
-	stream.NumSpectators = len(stream.SpectatorNames)
-
 	return stream, err
 }
