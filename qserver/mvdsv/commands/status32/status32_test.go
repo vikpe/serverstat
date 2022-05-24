@@ -38,7 +38,7 @@ func TestParseResponse(t *testing.T) {
 			Id:             3,
 			Address:        "qw.foppa.dk:28000",
 			NumSpectators:  4,
-			SpectatorNames: []qstring.QuakeString{},
+			SpectatorNames: make([]qstring.QuakeString, 0),
 		}
 		assert.Equal(t, expect, result)
 		assert.Nil(t, err)
