@@ -167,18 +167,20 @@ func TestFromPlayers(t *testing.T) {
 }
 
 func TestExport(t *testing.T) {
-	player1 := qclient.Client{Name: qstring.New("XantoM"), Colors: [2]uint8{4, 2}, Frags: 2}
+	player1 := qclient.Client{Name: qstring.New("XantoM"), Colors: [2]uint8{4, 2}, Frags: 12}
+	player2 := qclient.Client{Name: qstring.New("Milton"), Colors: [2]uint8{4, 2}, Frags: 8}
+	player3 := qclient.Client{Name: qstring.New("bps"), Colors: [2]uint8{13, 5}, Frags: 8}
 
 	team := qteam.Team{
 		Name:    qstring.New("red"),
-		Players: []qclient.Client{player1},
+		Players: []qclient.Client{player1, player2, player3},
 	}
 	expect := qteam.TeamExport{
 		Name:      qstring.New("red"),
 		NameColor: "www",
-		Frags:     2,
+		Frags:     28,
 		Colors:    [2]uint8{4, 2},
-		Players:   []qclient.Client{player1},
+		Players:   []qclient.Client{player1, player3, player2},
 	}
 	assert.Equal(t, expect, qteam.Export(team))
 }
