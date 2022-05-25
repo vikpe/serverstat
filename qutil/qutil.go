@@ -73,10 +73,20 @@ func StripQuakeFixes(strs []string) []string {
 
 	if strings.ContainsAny(prefix, delimiterChars) {
 		lastDelimiterIndex := strings.LastIndexAny(prefix, delimiterChars)
-		quakePrefix := string([]rune(prefix)[0 : lastDelimiterIndex+1])
+		prefixRuneCount := len([]rune(prefix))
 
-		if len(quakePrefix) >= minFixLength {
-			strs = StripPrefix(strs, quakePrefix)
+		// utf8 runes have length > 1
+		if lastDelimiterIndex > prefixRuneCount {
+			lastDelimiterIndex = prefixRuneCount - 1
+		}
+
+		prefixLength := lastDelimiterIndex + 1
+
+		if prefixLength >= minFixLength {
+			for index := range strs {
+				runes := []rune(strs[index])
+				strs[index] = string(runes[prefixLength:])
+			}
 		}
 	}
 
@@ -84,27 +94,16 @@ func StripQuakeFixes(strs []string) []string {
 	suffix := CommonSuffix(strs)
 
 	if strings.ContainsAny(suffix, delimiterChars) {
-		quakeSuffix := suffix[strings.IndexAny(suffix, delimiterChars):]
+		firstDelimiterIndex := strings.IndexAny(suffix, delimiterChars)
+		suffixLength := len([]rune(suffix)) - firstDelimiterIndex
 
-		if len(quakeSuffix) >= minFixLength {
-			strs = StripSuffix(strs, quakeSuffix)
+		if suffixLength >= minFixLength {
+			for index := range strs {
+				runes := []rune(strs[index])
+				newLastIndex := len(runes) - suffixLength
+				strs[index] = string(runes[0:newLastIndex])
+			}
 		}
-	}
-
-	return strs
-}
-
-func StripSuffix(strs []string, value string) []string {
-	for index, val := range strs {
-		strs[index] = strings.TrimSuffix(val, value)
-	}
-
-	return strs
-}
-
-func StripPrefix(strs []string, value string) []string {
-	for index, val := range strs {
-		strs[index] = strings.TrimPrefix(val, value)
 	}
 
 	return strs
