@@ -26,12 +26,12 @@ func CommonPrefix(strs []string) string {
 
 	if len(strs) > 0 {
 		sort.Strings(strs)
-		first := strs[0]
-		last := strs[len(strs)-1]
+		firstRunes := []rune(strs[0])
+		lastRunes := []rune(strs[len(strs)-1])
 
-		for i := 0; i < len(first); i++ {
-			if string(last[i]) == string(first[i]) {
-				longestPrefix += string(last[i])
+		for i := 0; i < len(firstRunes); i++ {
+			if lastRunes[i] == firstRunes[i] {
+				longestPrefix += string(lastRunes[i])
 			} else {
 				break
 			}
@@ -72,7 +72,8 @@ func StripQuakeFixes(strs []string) []string {
 	prefix := CommonPrefix(strs)
 
 	if strings.ContainsAny(prefix, delimiterChars) {
-		quakePrefix := prefix[0 : strings.LastIndexAny(prefix, delimiterChars)+1]
+		lastDelimiterIndex := strings.LastIndexAny(prefix, delimiterChars)
+		quakePrefix := string([]rune(prefix)[0 : lastDelimiterIndex+1])
 
 		if len(quakePrefix) >= minFixLength {
 			strs = StripPrefix(strs, quakePrefix)
