@@ -102,3 +102,15 @@ func TestClient_IsBot(t *testing.T) {
 	assert.True(t, qclient.Client{Name: qstring.New("[ServeMe]"), Ping: 12}.IsBot()) // bot name
 	assert.False(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 12}.IsBot())   // neither
 }
+
+func TestSortPlayers(t *testing.T) {
+	player1 := qclient.Client{Name: qstring.New("Milton"), Colors: [2]uint8{4, 2}, Frags: 8}
+	player2 := qclient.Client{Name: qstring.New("bps"), Colors: [2]uint8{13, 5}, Frags: 8}
+	player3 := qclient.Client{Name: qstring.New("valla"), Colors: [2]uint8{4, 2}, Frags: 6}
+	player4 := qclient.Client{Name: qstring.New("XantoM"), Colors: [2]uint8{4, 2}, Frags: 12}
+	players := []qclient.Client{player1, player2, player3, player4}
+	qclient.SortPlayers(players)
+
+	expect := []qclient.Client{player4, player2, player1, player3}
+	assert.Equal(t, expect, players)
+}

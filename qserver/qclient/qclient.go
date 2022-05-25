@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/vikpe/serverstat/qserver/qclient/bot"
@@ -143,4 +144,14 @@ func NewFromString(clientString string) (Client, error) {
 		Time:   uint8(qutil.StringToInt(clientRecord[IndexTime])),
 		CC:     flag,
 	}, nil
+}
+
+func SortPlayers(players []Client) {
+	sort.Slice(players, func(i, j int) bool {
+		if players[i].Frags == players[j].Frags {
+			return strings.ToLower(players[i].Name.ToPlainString()) < strings.ToLower(players[j].Name.ToPlainString())
+		} else {
+			return players[i].Frags > players[j].Frags
+		}
+	})
 }

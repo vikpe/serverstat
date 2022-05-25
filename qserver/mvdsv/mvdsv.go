@@ -79,9 +79,7 @@ func (server Mvdsv) Teams() []qteam.Team {
 }
 
 func Export(server Mvdsv) MvdsvExport {
-	sort.Slice(server.Players, func(i, j int) bool {
-		return server.Players[i].Frags > server.Players[j].Frags
-	})
+	qclient.SortPlayers(server.Players)
 
 	teams := server.Teams()
 
