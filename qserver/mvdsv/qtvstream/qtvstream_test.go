@@ -21,20 +21,42 @@ func TestQtvStream_Url(t *testing.T) {
 }
 
 func TestExport(t *testing.T) {
-	stream := qtvstream.QtvStream{
-		Title:          "foppa qtv",
-		Id:             12,
-		Address:        "qw.foppa.dk:28000",
-		SpectatorNames: []qstring.QuakeString{qstring.New("XantoM")},
-		NumSpectators:  1,
-	}
-	expect := qtvstream.QtvStreamExport{
-		Title:          stream.Title,
-		Url:            "12@qw.foppa.dk:28000",
-		Id:             stream.Id,
-		Address:        stream.Address,
-		SpectatorNames: stream.SpectatorNames,
-		NumSpectators:  1,
-	}
-	assert.Equal(t, expect, qtvstream.Export(stream))
+	t.Run("Empty", func(t *testing.T) {
+		stream := qtvstream.QtvStream{
+			Title:          "",
+			Id:             0,
+			Address:        "",
+			SpectatorNames: []qstring.QuakeString{},
+			NumSpectators:  0,
+		}
+		expect := qtvstream.QtvStreamExport{
+			Title:          stream.Title,
+			Url:            "",
+			Id:             stream.Id,
+			Address:        stream.Address,
+			SpectatorNames: make([]qstring.QuakeString, 0),
+			NumSpectators:  0,
+		}
+		assert.Equal(t, expect, qtvstream.Export(stream))
+	})
+
+	t.Run("Non-empty", func(t *testing.T) {
+		stream := qtvstream.QtvStream{
+			Title:          "foppa qtv",
+			Id:             12,
+			Address:        "qw.foppa.dk:28000",
+			SpectatorNames: []qstring.QuakeString{qstring.New("XantoM")},
+			NumSpectators:  1,
+		}
+		expect := qtvstream.QtvStreamExport{
+			Title:          stream.Title,
+			Url:            "12@qw.foppa.dk:28000",
+			Id:             stream.Id,
+			Address:        stream.Address,
+			SpectatorNames: stream.SpectatorNames,
+			NumSpectators:  1,
+		}
+		assert.Equal(t, expect, qtvstream.Export(stream))
+	})
+
 }

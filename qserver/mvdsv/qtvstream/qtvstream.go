@@ -37,6 +37,10 @@ type QtvStreamExport struct {
 }
 
 func Export(q QtvStream) QtvStreamExport {
+	if q.SpectatorNames == nil {
+		q.SpectatorNames = make([]qstring.QuakeString, 0)
+	}
+
 	return QtvStreamExport{
 		Title:          q.Title,
 		Url:            q.Url(),
