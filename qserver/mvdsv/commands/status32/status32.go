@@ -50,7 +50,7 @@ func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) 
 		Id:             qutil.StringToInt(urlParts[0]),
 		Address:        urlParts[1],
 		NumSpectators:  qutil.StringToInt(record[IndexClientCount]),
-		SpectatorNames: []qstring.QuakeString{},
+		SpectatorNames: make([]qstring.QuakeString, 0),
 	}
 	return stream, nil
 }
