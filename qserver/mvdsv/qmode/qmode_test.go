@@ -10,21 +10,27 @@ import (
 )
 
 func TestParse(t *testing.T) {
-	testCases := map[string]qsettings.Settings{
-		"fortress": {"*gamedir": "fortress"},
-		"race":     {"*gamedir": "qw", "ktxmode": "race"},
-		"coop":     {"*gamedir": "qw", "teamplay": "2", "maxclients": "26"},
-		"1on1":     {"*gamedir": "qw", "maxclients": "2"},
-		"2on2":     {"*gamedir": "qw", "maxclients": "4", "teamplay": "2"},
-		"4on4":     {"*gamedir": "qw", "maxclients": "8", "teamplay": "2"},
-		"ctf":      {"*gamedir": "qw", "maxclients": "16", "teamplay": "4"},
-		"ffa":      {"*gamedir": "qw", "maxclients": "8"},
+	type testCase struct {
+		mode     string
+		settings qsettings.Settings
 	}
 
-	for expectedModeName, settings := range testCases {
-		t.Run(expectedModeName, func(t *testing.T) {
-			expect := qmode.Mode(expectedModeName)
-			assert.Equal(t, expect, qmode.Parse(settings), expectedModeName)
+	testCases := []testCase{
+		{"fortress", qsettings.Settings{"*gamedir": "fortress"}},
+		{"race", qsettings.Settings{"*gamedir": "qw", "ktxmode": "race"}},
+		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "26"}},
+		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "12"}},
+		{"1on1", qsettings.Settings{"*gamedir": "qw", "maxclients": "2"}},
+		{"2on2", qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2"}},
+		{"4on4", qsettings.Settings{"*gamedir": "qw", "maxclients": "8", "teamplay": "2"}},
+		{"ctf", qsettings.Settings{"*gamedir": "qw", "maxclients": "16", "teamplay": "4"}},
+		{"ffa", qsettings.Settings{"*gamedir": "qw", "maxclients": "8"}},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.mode, func(t *testing.T) {
+			expect := qmode.Mode(tc.mode)
+			assert.Equal(t, expect, qmode.Parse(tc.settings), tc.mode)
 		})
 	}
 }
