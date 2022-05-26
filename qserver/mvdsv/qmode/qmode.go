@@ -40,6 +40,7 @@ func (m Mode) IsUnknown() bool  { return m.Is(modeUnknown) }
 func Parse(settings qsettings.Settings) Mode {
 	gameDir := strings.ToLower(settings.Get("*gamedir", modeUnknown))
 
+	// check gamedir
 	customGameDirs := map[string]string{
 		"ktx-ffa": "ffa",
 	}
@@ -48,14 +49,16 @@ func Parse(settings qsettings.Settings) Mode {
 		return Mode(modeName)
 	}
 
+	// check ktx mode
 	if "qw" != gameDir {
 		return Mode(gameDir)
 	}
 
-	if settings.Has("ktxmode") {
-		return Mode(strings.ToLower(settings.Get("ktxmode", modeUnknown)))
+	if ktxMode, ok := settings["ktxmode"]; ok {
+		return Mode(strings.ToLower(ktxMode))
 	}
 
+	// derive from settings
 	teamplay := settings.GetInt("teamplay", 0)
 	maxClients := settings.GetInt("maxclients", 0)
 
