@@ -42,7 +42,7 @@ func Parse(settings qsettings.Settings) Mode {
 
 	// check gamedir
 	customGameDirs := map[string]string{
-		"ktx-ffa": "ffa",
+		"ktx-ffa": modeFfa,
 	}
 
 	if modeName, ok := customGameDirs[gameDir]; ok {
