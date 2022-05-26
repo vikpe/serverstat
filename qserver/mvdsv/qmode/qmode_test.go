@@ -25,6 +25,7 @@ func TestParse(t *testing.T) {
 		{"4on4", qsettings.Settings{"*gamedir": "qw", "maxclients": "8", "teamplay": "2"}},
 		{"ctf", qsettings.Settings{"*gamedir": "qw", "maxclients": "16", "teamplay": "4"}},
 		{"ffa", qsettings.Settings{"*gamedir": "qw", "maxclients": "8"}},
+		{"ffa", qsettings.Settings{"*gamedir": "ktx-ffa"}},
 	}
 
 	for _, tc := range testCases {

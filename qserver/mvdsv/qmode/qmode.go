@@ -40,6 +40,14 @@ func (m Mode) IsUnknown() bool  { return m.Is(modeUnknown) }
 func Parse(settings qsettings.Settings) Mode {
 	gameDir := strings.ToLower(settings.Get("*gamedir", modeUnknown))
 
+	customGameDirs := map[string]string{
+		"ktx-ffa": "ffa",
+	}
+
+	if modeName, ok := customGameDirs[gameDir]; ok {
+		return Mode(modeName)
+	}
+
 	if "qw" != gameDir {
 		return Mode(gameDir)
 	}
