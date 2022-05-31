@@ -17,14 +17,14 @@ import (
 )
 
 func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
-	spectatorNames := clientNames(server.Spectators())
-	status := qstatus.Parse(server.Settings.Get("status", ""))
-	playerSlots := slots.New(server.Settings.GetInt("maxclients", 0), len(server.Players()))
-	spectatorSlots := slots.New(server.Settings.GetInt("maxspectators", 0), len(spectatorNames))
-	timelimit := server.Settings.GetInt("timelimit", 0)
-
 	players := server.Players()
 	qclient.SortPlayers(players)
+
+	spectatorNames := clientNames(server.Spectators())
+	status := qstatus.Parse(server.Settings.Get("status", ""))
+	playerSlots := slots.New(server.Settings.GetInt("maxclients", 0), len(players))
+	spectatorSlots := slots.New(server.Settings.GetInt("maxspectators", 0), len(spectatorNames))
+	timelimit := server.Settings.GetInt("timelimit", 0)
 
 	teams := make([]qteam.Team, 0)
 
