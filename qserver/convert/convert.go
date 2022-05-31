@@ -1,7 +1,11 @@
 package convert
 
 import (
+	"fmt"
+
+	"github.com/goccy/go-json"
 	"github.com/ssoroka/slice"
+	"github.com/valyala/fastjson"
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
@@ -70,4 +74,28 @@ func clientNames(clients []qclient.Client) []string {
 	return slice.Map[qclient.Client, string](clients, func(client qclient.Client) string {
 		return client.Name.ToPlainString()
 	})
+}
+
+func ToJson(server qserver.GenericServer) string {
+	serverToJson := func(v any) []byte {
+		jsonBytes, _ := json.Marshal(v)
+		return jsonBytes
+	}
+
+	var serverJsonBytes []byte
+
+	if server.Version.IsMvdsv() {
+		serverJsonBytes = serverToJson(ToMvdsv(server))
+	} else if server.Version.IsQtv() {
+		serverJsonBytes = serverToJson(ToQtv(server))
+	} else if server.Version.IsQwfwd() {
+		serverJsonBytes = serverToJson(ToQwfwd(server))
+	} else {
+		serverJsonBytes = serverToJson(server)
+	}
+
+	result := fastjson.MustParseBytes(serverJsonBytes)
+	result.Set("Type", fastjson.MustParse(fmt.Sprintf(`"%s"`, server.Version.GetType())))
+
+	return result.String()
 }
