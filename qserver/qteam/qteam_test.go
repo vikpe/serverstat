@@ -1,6 +1,7 @@
 package qteam_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -121,44 +122,42 @@ func TestTeam_String(t *testing.T) {
 	})
 }
 
-func TestFromPlayers(t *testing.T) {
+func TestNew(t *testing.T) {
 	xantom := qclient.Client{
 		Name:   qstring.New("XantoM"),
 		Team:   qstring.New("f0m"),
-		Skin:   "",
 		Colors: [2]uint8{4, 2},
-		Frags:  0,
-		Ping:   0,
-		Time:   0,
-		CC:     "",
+		Frags:  9,
+	}
+	xterm := qclient.Client{
+		Name:   qstring.New("Xterm"),
+		Team:   qstring.New("f0m"),
+		Colors: [2]uint8{4, 2},
+		Frags:  12,
 	}
 	bps := qclient.Client{
 		Name:   qstring.New("bps"),
 		Team:   qstring.New("-s-"),
-		Skin:   "",
 		Colors: [2]uint8{4, 2},
-		Frags:  0,
-		Ping:   0,
-		Time:   0,
-		CC:     "",
+		Frags:  3,
 	}
 	valla := qclient.Client{
 		Name:   qstring.New("valla"),
 		Team:   qstring.New("f0m"),
-		Skin:   "",
 		Colors: [2]uint8{4, 2},
-		Frags:  0,
-		Ping:   0,
-		Time:   0,
-		CC:     "",
+		Frags:  9,
 	}
-	players := []qclient.Client{xantom, bps, valla}
-	teams := qteam.FromPlayers(players)
+	players := []qclient.Client{xantom, xterm, bps, valla}
+	teams := qteam.New(players)
 
 	expect := []qteam.Team{
 		{Name: qstring.New("-s-"), Players: []qclient.Client{bps}},
-		{Name: qstring.New("f0m"), Players: []qclient.Client{xantom, valla}},
+		{Name: qstring.New("f0m"), Players: []qclient.Client{xterm, valla, xantom}},
 	}
+	for _, t := range teams {
+		fmt.Println(t.String())
+	}
+
 	assert.Equal(t, expect, teams)
 }
 

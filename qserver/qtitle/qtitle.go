@@ -30,7 +30,7 @@ func New(settings qsettings.Settings, players []qclient.Client) string {
 	isTeamplay := settings.GetInt("teamplay", 0) > 0
 
 	if isTeamplay && !mode.IsCoop() {
-		teams := qteam.FromPlayers(players)
+		teams := qteam.New(players)
 
 		for _, t := range teams {
 			participants = append(participants, t.String())

@@ -29,7 +29,7 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 	teams := make([]qteam.Team, 0)
 
 	if server.Settings.GetInt("teamplay", 0) > 0 {
-		teams = qteam.FromPlayers(players)
+		teams = qteam.New(players)
 	}
 
 	return mvdsv.Mvdsv{

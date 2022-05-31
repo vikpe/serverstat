@@ -101,7 +101,7 @@ func (t Team) String() string {
 	return fmt.Sprintf("%s (%s)", t.Name.ToPlainString(), strings.Join(playerNames, ", "))
 }
 
-func FromPlayers(players []qclient.Client) []Team {
+func New(players []qclient.Client) []Team {
 	playersPerTeamName := make(map[string][]qclient.Client, 0)
 	teamNamePerId := make(map[string]qstring.QuakeString, 0)
 
@@ -114,14 +114,17 @@ func FromPlayers(players []qclient.Client) []Team {
 	teams := make([]Team, 0)
 
 	for teamId, teamName := range teamNamePerId {
+		teamPlayers := playersPerTeamName[teamId]
+		qclient.SortPlayers(teamPlayers)
+
 		teams = append(teams, Team{
 			Name:    teamName,
-			Players: playersPerTeamName[teamId],
+			Players: teamPlayers,
 		})
 	}
 
 	sort.Slice(teams, func(i, j int) bool {
-		return teams[i].Name.ToPlainString() < teams[j].Name.ToPlainString()
+		return strings.ToLower(teams[i].Name.ToPlainString()) < strings.ToLower(teams[j].Name.ToPlainString())
 	})
 
 	return teams
