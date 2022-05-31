@@ -46,7 +46,7 @@ func TestToMvdsv(t *testing.T) {
 		Address:  "qw.foppa.dk:27501",
 		Version:  qversion.Version("mvdsv 0.15"),
 		Clients:  []qclient.Client{playerClient, spectatorClient},
-		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "Standby", "maxclients": "8", "maxspectators": "4"},
+		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "3 min left", "timelimit": "10", "maxclients": "8", "maxspectators": "4"},
 		ExtraInfo: struct {
 			QtvStream qtvstream.QtvStream
 			Geo       geo.Info
@@ -57,11 +57,11 @@ func TestToMvdsv(t *testing.T) {
 		Address: genericServer.Address,
 		Mode:    qmode.Mode("ffa"),
 		Title:   "ffa [dm2]",
-		Status:  "Standby",
+		Status:  "Started",
 		Time: qtime.Time{
-			Elapsed:   0,
-			Total:     0,
-			Remaining: 0,
+			Elapsed:   7,
+			Total:     10,
+			Remaining: 3,
 		},
 		Players: []qclient.Client{playerClient},
 		PlayerSlots: slots.Slots{

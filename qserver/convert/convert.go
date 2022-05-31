@@ -21,7 +21,7 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 	qclient.SortPlayers(players)
 
 	spectatorNames := clientNames(server.Spectators())
-	status := qstatus.Parse(server.Settings.Get("status", ""))
+	status := server.Settings.Get("status", "")
 	playerSlots := slots.New(server.Settings.GetInt("maxclients", 0), len(players))
 	spectatorSlots := slots.New(server.Settings.GetInt("maxspectators", 0), len(spectatorNames))
 	timelimit := server.Settings.GetInt("timelimit", 0)
@@ -36,7 +36,7 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 		Address:        server.Address,
 		Mode:           qmode.Parse(server.Settings),
 		Title:          qtitle.New(server.Settings, server.Players()),
-		Status:         status,
+		Status:         qstatus.Parse(status),
 		Time:           qtime.Parse(timelimit, status),
 		Players:        players,
 		PlayerSlots:    playerSlots,
