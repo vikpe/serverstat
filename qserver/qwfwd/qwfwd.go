@@ -15,15 +15,3 @@ type Qwfwd struct {
 	Settings    qsettings.Settings
 	Geo         geo.Info
 }
-
-type QwfwdExport struct {
-	Type string
-	Qwfwd
-}
-
-func Export(qwfwd Qwfwd) QwfwdExport {
-	return QwfwdExport{
-		Type:  Name,
-		Qwfwd: qwfwd,
-	}
-}

@@ -15,15 +15,3 @@ type Qtv struct {
 	Settings       qsettings.Settings
 	Geo            geo.Info
 }
-
-type QtvExport struct {
-	Type string
-	Qtv
-}
-
-func Export(qtv Qtv) QtvExport {
-	return QtvExport{
-		Type: Name,
-		Qtv:  qtv,
-	}
-}
