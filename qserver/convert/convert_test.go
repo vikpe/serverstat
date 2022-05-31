@@ -46,7 +46,7 @@ func TestToMvdsv(t *testing.T) {
 		Address:  "qw.foppa.dk:27501",
 		Version:  qversion.Version("mvdsv 0.15"),
 		Clients:  []qclient.Client{playerClient, spectatorClient},
-		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "3 min left", "timelimit": "10", "maxclients": "8", "maxspectators": "4"},
+		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "3 min left", "timelimit": "10", "maxclients": "8", "maxspectators": "4", "teamplay": "2"},
 		ExtraInfo: struct {
 			QtvStream qtvstream.QtvStream
 			Geo       geo.Info
@@ -55,8 +55,8 @@ func TestToMvdsv(t *testing.T) {
 
 	expect := mvdsv.Mvdsv{
 		Address: genericServer.Address,
-		Mode:    qmode.Mode("ffa"),
-		Title:   "ffa [dm2]",
+		Mode:    qmode.Mode("4on4"),
+		Title:   "4on4: red (NL) [dm2]",
 		Status:  "Started",
 		Time: qtime.Time{
 			Elapsed:   7,
@@ -77,7 +77,12 @@ func TestToMvdsv(t *testing.T) {
 		},
 		Settings:  genericServer.Settings,
 		QtvStream: genericServer.ExtraInfo.QtvStream,
-		Teams:     []qteam.Team{},
+		Teams: []qteam.Team{
+			{
+				Name:    qstring.New("red"),
+				Players: []qclient.Client{playerClient},
+			},
+		},
 		Geo: geo.Info{
 			CC:      "",
 			Country: "",
