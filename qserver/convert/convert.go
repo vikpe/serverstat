@@ -30,15 +30,13 @@ func ToMvdsvExport(server qserver.GenericServer) mvdsv.MvdsvExport {
 }
 
 func ToQtv(server qserver.GenericServer) qtv.Qtv {
-	spectatorNames := make([]qstring.QuakeString, 0)
-
-	for _, client := range server.Clients {
-		spectatorNames = append(spectatorNames, client.Name)
-	}
+	clientNames := slice.Map[qclient.Client, qstring.QuakeString](server.Clients, func(client qclient.Client) qstring.QuakeString {
+		return client.Name
+	})
 
 	return qtv.Qtv{
 		Address:        server.Address,
-		SpectatorNames: spectatorNames,
+		SpectatorNames: clientNames,
 		Settings:       server.Settings,
 		Geo:            server.ExtraInfo.Geo,
 	}
