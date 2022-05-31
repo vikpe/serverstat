@@ -19,7 +19,6 @@ const Name = "mvdsv"
 const VersionPrefix = Name
 
 type Mvdsv struct {
-	Type           string
 	Address        string
 	Mode           qmode.Mode
 	Title          string
