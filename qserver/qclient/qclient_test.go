@@ -1,6 +1,7 @@
 package qclient_test
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -118,4 +119,20 @@ func TestSortPlayers(t *testing.T) {
 
 	expect := []qclient.Client{xantom, bps, milton, valla}
 	assert.Equal(t, expect, players)
+}
+
+func TestClient_MarshalJSON(t *testing.T) {
+	client := qclient.Client{
+		Name:   qstring.New("Final"),
+		Team:   qstring.New("red"),
+		Skin:   "",
+		Colors: [2]uint8{2, 3},
+		Frags:  -9999,
+		Ping:   -68,
+		Time:   122,
+	}
+
+	jsonValue, _ := json.Marshal(client)
+	expect := `{"Name":"Final","NameColor":"wwwww","Team":"red","TeamColor":"www","Skin":"","Colors":[2,3],"Frags":-9999,"Ping":-68,"Time":122,"CC":"","IsBot":false}`
+	assert.Equal(t, expect, string(jsonValue))
 }
