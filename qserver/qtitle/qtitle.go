@@ -69,14 +69,31 @@ func ParseMatchtag(matchtag string) string {
 		return ""
 	}
 
-	ignoreList := []string{
+	ignorePartial := []string{
 		"pause",
 		"pausable",
 		"test",
 	}
 
-	for _, word := range ignoreList {
-		if strings.Contains(matchtag, word) {
+	for _, needle := range ignorePartial {
+		if strings.Contains(matchtag, needle) {
+			return ""
+		}
+	}
+
+	ignoreEqual := []string{
+		"duel",
+		"1on1",
+		"2on2",
+		"3on3",
+		"4on4",
+		"ffa",
+		"ctf",
+		"race",
+	}
+
+	for _, word := range ignoreEqual {
+		if matchtag == word {
 			return ""
 		}
 	}

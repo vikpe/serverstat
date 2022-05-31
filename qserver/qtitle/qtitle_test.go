@@ -62,6 +62,8 @@ func TestParseMatchtag(t *testing.T) {
 		"":              "",
 		"xy":            "",
 		"xyz":           "xyz",
+		"2on2":          "",
+		"kombat 2on2":   "kombat 2on2",
 	}
 
 	for matchtag, expect := range testCases {
