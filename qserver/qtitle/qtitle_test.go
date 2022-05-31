@@ -58,6 +58,8 @@ func TestParseMatchtag(t *testing.T) {
 		"testing stuff": "",
 		"pausable game": "",
 		"pause":         "",
+		"xy":            "",
+		"xyz":           "xyz",
 	}
 
 	for matchtag, expect := range testCases {

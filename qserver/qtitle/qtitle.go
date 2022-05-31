@@ -63,7 +63,9 @@ func New(settings qsettings.Settings, players []qclient.Client) string {
 }
 
 func ParseMatchtag(matchtag string) string {
-	if "" == matchtag {
+	const minLength = 3
+
+	if len(matchtag) < minLength {
 		return ""
 	}
 
