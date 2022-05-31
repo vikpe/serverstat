@@ -31,6 +31,10 @@ func (client Client) IsSpectator() bool {
 	return client.Ping < 0
 }
 
+func (client Client) IsPlayer() bool {
+	return !client.IsSpectator()
+}
+
 func (client Client) MarshalJSON() ([]byte, error) {
 	return qutil.MarshalNoEscapeHtml(Export(client))
 }

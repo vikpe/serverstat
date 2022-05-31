@@ -97,6 +97,11 @@ func TestClient_IsSpectator(t *testing.T) {
 	assert.False(t, qclient.Client{Ping: 10}.IsSpectator())
 }
 
+func TestClient_IsPlayer(t *testing.T) {
+	assert.False(t, qclient.Client{Ping: -10}.IsPlayer())
+	assert.True(t, qclient.Client{Ping: 10}.IsPlayer())
+}
+
 func TestClient_IsBot(t *testing.T) {
 	assert.True(t, qclient.Client{Name: qstring.New("XantoM"), Ping: -666}.IsBot())  // bot ping
 	assert.True(t, qclient.Client{Name: qstring.New("[ServeMe]"), Ping: 12}.IsBot()) // bot name
