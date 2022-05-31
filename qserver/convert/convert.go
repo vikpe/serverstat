@@ -1,6 +1,7 @@
 package convert
 
 import (
+	"github.com/ssoroka/slice"
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/qclient"
@@ -9,66 +10,57 @@ import (
 	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
-func ToMvdsv(genericServer qserver.GenericServer) mvdsv.Mvdsv {
-	spectatorNames := make([]qstring.QuakeString, 0)
-	players := make([]qclient.Client, 0)
-
-	for _, client := range genericServer.Clients {
-		if client.IsSpectator() {
-			spectatorNames = append(spectatorNames, client.Name)
-		} else {
-			players = append(players, client)
-		}
-	}
+func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
+	spectatorNames := slice.Map[qclient.Client, qstring.QuakeString](server.Spectators(), func(client qclient.Client) qstring.QuakeString {
+		return client.Name
+	})
 
 	return mvdsv.Mvdsv{
-		Address:        genericServer.Address,
-		Players:        players,
+		Address:        server.Address,
+		Players:        server.Players(),
 		SpectatorNames: spectatorNames,
-		Settings:       genericServer.Settings,
-		QtvStream:      genericServer.ExtraInfo.QtvStream,
-		Geo:            genericServer.ExtraInfo.Geo,
+		Settings:       server.Settings,
+		QtvStream:      server.ExtraInfo.QtvStream,
+		Geo:            server.ExtraInfo.Geo,
 	}
 }
 
-func ToMvdsvExport(genericServer qserver.GenericServer) mvdsv.MvdsvExport {
-	return mvdsv.Export(ToMvdsv(genericServer))
+func ToMvdsvExport(server qserver.GenericServer) mvdsv.MvdsvExport {
+	return mvdsv.Export(ToMvdsv(server))
 }
 
-func ToQtv(genericServer qserver.GenericServer) qtv.Qtv {
+func ToQtv(server qserver.GenericServer) qtv.Qtv {
 	spectatorNames := make([]qstring.QuakeString, 0)
 
-	for _, client := range genericServer.Clients {
+	for _, client := range server.Clients {
 		spectatorNames = append(spectatorNames, client.Name)
 	}
 
 	return qtv.Qtv{
-		Address:        genericServer.Address,
+		Address:        server.Address,
 		SpectatorNames: spectatorNames,
-		Settings:       genericServer.Settings,
-		Geo:            genericServer.ExtraInfo.Geo,
+		Settings:       server.Settings,
+		Geo:            server.ExtraInfo.Geo,
 	}
 }
 
-func ToQtvExport(genericServer qserver.GenericServer) qtv.QtvExport {
-	return qtv.Export(ToQtv(genericServer))
+func ToQtvExport(server qserver.GenericServer) qtv.QtvExport {
+	return qtv.Export(ToQtv(server))
 }
 
-func ToQwfwd(genericServer qserver.GenericServer) qwfwd.Qwfwd {
-	clientNames := make([]qstring.QuakeString, 0)
-
-	for _, client := range genericServer.Clients {
-		clientNames = append(clientNames, client.Name)
-	}
+func ToQwfwd(server qserver.GenericServer) qwfwd.Qwfwd {
+	clientNames := slice.Map[qclient.Client, qstring.QuakeString](server.Clients, func(client qclient.Client) qstring.QuakeString {
+		return client.Name
+	})
 
 	return qwfwd.Qwfwd{
-		Address:     genericServer.Address,
+		Address:     server.Address,
 		ClientNames: clientNames,
-		Settings:    genericServer.Settings,
-		Geo:         genericServer.ExtraInfo.Geo,
+		Settings:    server.Settings,
+		Geo:         server.ExtraInfo.Geo,
 	}
 }
 
-func ToQwfwdExport(genericServer qserver.GenericServer) qwfwd.QwfwdExport {
-	return qwfwd.Export(ToQwfwd(genericServer))
+func ToQwfwdExport(server qserver.GenericServer) qwfwd.QwfwdExport {
+	return qwfwd.Export(ToQwfwd(server))
 }
