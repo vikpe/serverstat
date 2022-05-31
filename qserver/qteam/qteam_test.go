@@ -1,6 +1,7 @@
 package qteam_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 
@@ -178,4 +179,16 @@ func TestExport(t *testing.T) {
 		Players:   []qclient.Client{player1, player3, player2},
 	}
 	assert.Equal(t, expect, qteam.Export(team))
+}
+
+func TestTeam_MarshalJSON(t *testing.T) {
+	player1 := qclient.Client{Name: qstring.New("XantoM"), Colors: [2]uint8{4, 2}, Frags: 12}
+	player2 := qclient.Client{Name: qstring.New("bps"), Colors: [2]uint8{13, 5}, Frags: 8}
+	team := qteam.Team{
+		Name:    qstring.New("red"),
+		Players: []qclient.Client{player1, player2},
+	}
+	jsonValue, _ := json.Marshal(team)
+	expect := `{"Name":"red","NameColor":"www","Frags":20,"Colors":[4,2],"Players":[{"Name":"XantoM","NameColor":"wwwwww","Team":"","TeamColor":"","Skin":"","Colors":[4,2],"Frags":12,"Ping":0,"Time":0,"CC":"","IsBot":false},{"Name":"bps","NameColor":"www","Team":"","TeamColor":"","Skin":"","Colors":[13,5],"Frags":8,"Ping":0,"Time":0,"CC":"","IsBot":false}]}`
+	assert.Equal(t, expect, string(jsonValue))
 }
