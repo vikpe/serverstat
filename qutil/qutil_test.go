@@ -68,7 +68,7 @@ func TestStripQuakeFixes(t *testing.T) {
 }
 
 func TestMarshalNoEscapeHtml(t *testing.T) {
-	jsonValue, err := qutil.MarshalNoEscapeHtml("<foo>")
-	assert.Equal(t, "\"<foo>\"\n", string(jsonValue))
+	jsonValue, err := qutil.MarshalNoEscapeHtml("<foo&bar>")
+	assert.Equal(t, "\"<foo&bar>\"\n", string(jsonValue))
 	assert.Nil(t, err)
 }
