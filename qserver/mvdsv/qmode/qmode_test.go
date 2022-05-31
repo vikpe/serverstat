@@ -19,6 +19,7 @@ func TestParse(t *testing.T) {
 		{"fortress", qsettings.Settings{"*gamedir": "fortress"}},
 		{"race", qsettings.Settings{"*gamedir": "qw", "ktxmode": "race"}},
 		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "26"}},
+		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "24"}},
 		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "12"}},
 		{"1on1", qsettings.Settings{"*gamedir": "qw", "maxclients": "2"}},
 		{"2on2", qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2"}},

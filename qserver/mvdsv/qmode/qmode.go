@@ -63,7 +63,7 @@ func Parse(settings qsettings.Settings) Mode {
 	maxClients := settings.GetInt("maxclients", 0)
 
 	if teamplay > 0 {
-		if 2 == teamplay && slices.Contains([]int{26, 12}, maxClients) {
+		if 2 == teamplay && slices.Contains([]int{26, 24, 12}, maxClients) {
 			return modeCoop
 		} else if 4 == teamplay && 16 == maxClients {
 			return modeCtf
