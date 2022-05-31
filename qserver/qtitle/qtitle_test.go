@@ -44,11 +44,12 @@ func TestMvdsv_Title(t *testing.T) {
 
 	t.Run("coop", func(t *testing.T) {
 		players := []qclient.Client{
-			{Name: qstring.New("XantoM")},
 			{Name: qstring.New("Xterm")},
+			{Name: qstring.New("andeh")},
+			{Name: qstring.New("XantoM")},
 		}
 		settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "26", "teamplay": "2", "map": "bloodfest"}
-		assert.Equal(t, "coop: XantoM, Xterm [bloodfest]", qtitle.New(settings, players))
+		assert.Equal(t, "coop: andeh, XantoM, Xterm [bloodfest]", qtitle.New(settings, players))
 	})
 }
 
