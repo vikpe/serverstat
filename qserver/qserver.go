@@ -1,6 +1,7 @@
 package qserver
 
 import (
+	"github.com/ssoroka/slice"
 	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
@@ -17,4 +18,16 @@ type GenericServer struct {
 		QtvStream qtvstream.QtvStream
 		Geo       geo.Info
 	}
+}
+
+func (server GenericServer) Players() []qclient.Client {
+	return slice.Select(server.Clients, func(i int, c qclient.Client) bool {
+		return c.IsPlayer()
+	})
+}
+
+func (server GenericServer) Spectators() []qclient.Client {
+	return slice.Select(server.Clients, func(i int, c qclient.Client) bool {
+		return c.IsSpectator()
+	})
 }
