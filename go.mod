@@ -4,9 +4,9 @@ go 1.18
 
 require (
 	github.com/stretchr/testify v1.7.1
-	github.com/vikpe/udpclient v0.1.2
+	github.com/vikpe/udpclient v0.1.3
 	github.com/vikpe/udphelper v0.1.3
-	golang.org/x/exp v0.0.0-20220516143420-24438e51023a
+	golang.org/x/exp v0.0.0-20220518171630-0b5c67f07fdf
 )
 
 require (
