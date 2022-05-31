@@ -39,6 +39,6 @@ func TestQuakeString_ToColorCodes(t *testing.T) {
 }
 
 func TestQuakeString_MarshalJSON(t *testing.T) {
-	jsonValue, _ := qstring.New("<XantoM>").MarshalJSON()
-	assert.Equal(t, "\"<XantoM>\"\n", string(jsonValue))
+	jsonValue, _ := qstring.New("<Xan&toM>").MarshalJSON()
+	assert.Equal(t, "\"<Xan&toM>\"\n", string(jsonValue))
 }
