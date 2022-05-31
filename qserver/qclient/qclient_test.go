@@ -109,13 +109,13 @@ func TestClient_IsBot(t *testing.T) {
 }
 
 func TestSortPlayers(t *testing.T) {
-	player1 := qclient.Client{Name: qstring.New("Milton"), Colors: [2]uint8{4, 2}, Frags: 8}
-	player2 := qclient.Client{Name: qstring.New("bps"), Colors: [2]uint8{13, 5}, Frags: 8}
-	player3 := qclient.Client{Name: qstring.New("valla"), Colors: [2]uint8{4, 2}, Frags: 6}
-	player4 := qclient.Client{Name: qstring.New("XantoM"), Colors: [2]uint8{4, 2}, Frags: 12}
-	players := []qclient.Client{player1, player2, player3, player4}
+	milton := qclient.Client{Name: qstring.New("Milton"), Frags: 8}
+	bps := qclient.Client{Name: qstring.New("bps"), Frags: 8}
+	valla := qclient.Client{Name: qstring.New("valla"), Frags: 6}
+	xantom := qclient.Client{Name: qstring.New("XantoM"), Frags: 12}
+	players := []qclient.Client{milton, bps, valla, xantom}
 	qclient.SortPlayers(players)
 
-	expect := []qclient.Client{player4, player2, player1, player3}
+	expect := []qclient.Client{xantom, bps, milton, valla}
 	assert.Equal(t, expect, players)
 }
