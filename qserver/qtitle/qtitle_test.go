@@ -51,3 +51,18 @@ func TestMvdsv_Title(t *testing.T) {
 		assert.Equal(t, "coop: XantoM, Xterm [bloodfest]", qtitle.New(settings, players))
 	})
 }
+
+func TestParseMatchtag(t *testing.T) {
+	testCases := map[string]string{
+		"kombat":        "kombat",
+		"testing stuff": "",
+		"pausable game": "",
+		"pause":         "",
+	}
+
+	for matchtag, expect := range testCases {
+		t.Run(matchtag, func(t *testing.T) {
+			assert.Equal(t, expect, qtitle.ParseMatchtag(matchtag))
+		})
+	}
+}

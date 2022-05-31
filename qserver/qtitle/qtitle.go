@@ -15,7 +15,7 @@ func New(settings qsettings.Settings, players []qclient.Client) string {
 	title := ""
 
 	// matchtag
-	matchTag := settings.Get("matchtag", "")
+	matchTag := ParseMatchtag(settings.Get("matchtag", ""))
 
 	if matchTag != "" {
 		title += fmt.Sprintf("%s / ", matchTag)
@@ -60,4 +60,24 @@ func New(settings qsettings.Settings, players []qclient.Client) string {
 	title += fmt.Sprintf(" [%s]", settings.Get("map", ""))
 
 	return title
+}
+
+func ParseMatchtag(matchtag string) string {
+	if "" == matchtag {
+		return ""
+	}
+
+	ignoreList := []string{
+		"pause",
+		"pausable",
+		"test",
+	}
+
+	for _, word := range ignoreList {
+		if strings.Contains(matchtag, word) {
+			return ""
+		}
+	}
+
+	return matchtag
 }
