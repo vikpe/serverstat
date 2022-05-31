@@ -120,5 +120,9 @@ func FromPlayers(players []qclient.Client) []Team {
 		})
 	}
 
+	sort.Slice(teams, func(i, j int) bool {
+		return teams[i].Name.ToPlainString() < teams[j].Name.ToPlainString()
+	})
+
 	return teams
 }

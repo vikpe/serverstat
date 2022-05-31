@@ -1,8 +1,6 @@
 package convert
 
 import (
-	"sort"
-
 	"github.com/ssoroka/slice"
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
@@ -23,21 +21,16 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 	status := qstatus.Parse(server.Settings.Get("status", ""))
 	playerSlots := slots.New(server.Settings.GetInt("maxclients", 0), len(server.Players()))
 	spectatorSlots := slots.New(server.Settings.GetInt("maxspectators", 0), len(spectatorNames))
-
 	timelimit := server.Settings.GetInt("timelimit", 0)
-	teams := make([]qteam.Team, 0)
 
 	players := server.Players()
+	qclient.SortPlayers(players)
+
+	teams := make([]qteam.Team, 0)
 
 	if server.Settings.GetInt("teamplay", 0) > 0 {
 		teams = qteam.FromPlayers(players)
 	}
-
-	qclient.SortPlayers(players)
-
-	sort.Slice(teams, func(i, j int) bool {
-		return teams[i].Name.ToPlainString() < teams[j].Name.ToPlainString()
-	})
 
 	return mvdsv.Mvdsv{
 		Address:        server.Address,
@@ -58,7 +51,6 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 
 func ToQtv(server qserver.GenericServer) qtv.Qtv {
 	return qtv.Qtv{
-
 		Address:        server.Address,
 		SpectatorNames: clientNames(server.Clients),
 		Settings:       server.Settings,
