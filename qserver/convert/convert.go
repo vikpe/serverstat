@@ -30,35 +30,25 @@ func ToMvdsvExport(server qserver.GenericServer) mvdsv.MvdsvExport {
 }
 
 func ToQtv(server qserver.GenericServer) qtv.Qtv {
-	clientNames := slice.Map[qclient.Client, qstring.QuakeString](server.Clients, func(client qclient.Client) qstring.QuakeString {
-		return client.Name
-	})
-
 	return qtv.Qtv{
 		Address:        server.Address,
-		SpectatorNames: clientNames,
+		SpectatorNames: clientNames(server.Clients),
 		Settings:       server.Settings,
 		Geo:            server.ExtraInfo.Geo,
 	}
 }
 
-func ToQtvExport(server qserver.GenericServer) qtv.QtvExport {
-	return qtv.Export(ToQtv(server))
-}
-
 func ToQwfwd(server qserver.GenericServer) qwfwd.Qwfwd {
-	clientNames := slice.Map[qclient.Client, qstring.QuakeString](server.Clients, func(client qclient.Client) qstring.QuakeString {
-		return client.Name
-	})
-
 	return qwfwd.Qwfwd{
 		Address:     server.Address,
-		ClientNames: clientNames,
+		ClientNames: clientNames(server.Clients),
 		Settings:    server.Settings,
 		Geo:         server.ExtraInfo.Geo,
 	}
 }
 
-func ToQwfwdExport(server qserver.GenericServer) qwfwd.QwfwdExport {
-	return qwfwd.Export(ToQwfwd(server))
+func clientNames(clients []qclient.Client) []qstring.QuakeString {
+	return slice.Map[qclient.Client, qstring.QuakeString](clients, func(client qclient.Client) qstring.QuakeString {
+		return client.Name
+	})
 }
