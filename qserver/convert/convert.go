@@ -94,8 +94,8 @@ func ToJson(server qserver.GenericServer) string {
 		serverJsonBytes = serverToJson(server)
 	}
 
-	result := fastjson.MustParseBytes(serverJsonBytes)
-	result.Set("Type", fastjson.MustParse(fmt.Sprintf(`"%s"`, server.Version.GetType())))
-
-	return result.String()
+	value := fastjson.MustParseBytes(serverJsonBytes)
+	value.Set("Type", fastjson.MustParse(fmt.Sprintf(`"%s"`, server.Version.GetType())))
+	buff := value.MarshalTo(nil)
+	return string(buff)
 }
