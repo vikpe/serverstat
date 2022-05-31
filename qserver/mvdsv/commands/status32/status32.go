@@ -47,10 +47,11 @@ func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) 
 
 	stream := qtvstream.QtvStream{
 		Title:          record[IndexTitle],
+		Url:            record[IndexUrl],
 		Id:             qutil.StringToInt(urlParts[0]),
 		Address:        urlParts[1],
-		NumSpectators:  qutil.StringToInt(record[IndexClientCount]),
 		SpectatorNames: make([]qstring.QuakeString, 0),
+		SpectatorCount: qutil.StringToInt(record[IndexClientCount]),
 	}
 	return stream, nil
 }

@@ -3,6 +3,7 @@ module github.com/vikpe/serverstat
 go 1.18
 
 require (
+	github.com/ssoroka/slice v0.0.0-20220402005549-78f0cea3df8b
 	github.com/stretchr/testify v1.7.1
 	github.com/vikpe/udpclient v0.1.3
 	github.com/vikpe/udphelper v0.1.3
@@ -12,7 +13,6 @@ require (
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/ssoroka/slice v0.0.0-20220402005549-78f0cea3df8b // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 

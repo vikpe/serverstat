@@ -8,9 +8,13 @@ import (
 	"github.com/vikpe/serverstat/qserver/convert"
 	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
+	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
+	"github.com/vikpe/serverstat/qserver/qclient/slots"
 	"github.com/vikpe/serverstat/qserver/qsettings"
+	"github.com/vikpe/serverstat/qserver/qteam"
+	"github.com/vikpe/serverstat/qserver/qtime"
 	"github.com/vikpe/serverstat/qserver/qtv"
 	"github.com/vikpe/serverstat/qserver/qversion"
 	"github.com/vikpe/serverstat/qserver/qwfwd"
@@ -42,7 +46,7 @@ func TestToMvdsv(t *testing.T) {
 		Address:  "qw.foppa.dk:27501",
 		Version:  qversion.Version("mvdsv 0.15"),
 		Clients:  []qclient.Client{playerClient, spectatorClient},
-		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "Standby"},
+		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "Standby", "maxclients": "8", "maxspectators": "4"},
 		ExtraInfo: struct {
 			QtvStream qtvstream.QtvStream
 			Geo       geo.Info
@@ -50,11 +54,35 @@ func TestToMvdsv(t *testing.T) {
 	}
 
 	expect := mvdsv.Mvdsv{
-		Address:        genericServer.Address,
-		Players:        []qclient.Client{playerClient},
+		Address: genericServer.Address,
+		Mode:    qmode.Mode("ffa"),
+		Title:   "ffa [dm2]",
+		Status:  "Standby",
+		Time: qtime.Time{
+			Elapsed:   0,
+			Total:     0,
+			Remaining: 0,
+		},
+		Players: []qclient.Client{playerClient},
+		PlayerSlots: slots.Slots{
+			Used:  1,
+			Total: 8,
+			Free:  7,
+		},
 		SpectatorNames: []qstring.QuakeString{spectatorClient.Name},
-		Settings:       genericServer.Settings,
-		QtvStream:      genericServer.ExtraInfo.QtvStream,
+		SpectatorSlots: slots.Slots{
+			Used:  1,
+			Total: 4,
+			Free:  3,
+		},
+		Settings:  genericServer.Settings,
+		QtvStream: genericServer.ExtraInfo.QtvStream,
+		Teams:     []qteam.Team{},
+		Geo: geo.Info{
+			CC:      "",
+			Country: "",
+			Region:  "",
+		},
 	}
 
 	assert.Equal(t, expect, convert.ToMvdsv(genericServer))
