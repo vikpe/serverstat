@@ -29,7 +29,7 @@ type Mvdsv struct {
 	Players        []qclient.Client
 	Teams          []qteam.Team
 	SpectatorSlots slots.Slots
-	SpectatorNames []qstring.QuakeString
+	SpectatorNames []string
 	Settings       qsettings.Settings
 	QtvStream      qtvstream.QtvStream
 	Geo            geo.Info

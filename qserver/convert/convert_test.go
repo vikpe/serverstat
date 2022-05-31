@@ -69,7 +69,7 @@ func TestToMvdsv(t *testing.T) {
 			Total: 8,
 			Free:  7,
 		},
-		SpectatorNames: []qstring.QuakeString{spectatorClient.Name},
+		SpectatorNames: []string{"[ServeMe]"},
 		SpectatorSlots: slots.Slots{
 			Used:  1,
 			Total: 4,
@@ -116,7 +116,7 @@ func TestToQtv(t *testing.T) {
 
 	expect := qtv.Qtv{
 		Address:        genericServer.Address,
-		SpectatorNames: []qstring.QuakeString{client.Name},
+		SpectatorNames: []string{"XantoM"},
 		Settings:       genericServer.Settings,
 	}
 
@@ -151,7 +151,7 @@ func TestToQwfwd(t *testing.T) {
 
 	expect := qwfwd.Qwfwd{
 		Address:     genericServer.Address,
-		ClientNames: []qstring.QuakeString{client.Name},
+		ClientNames: []string{"XantoM"},
 		Settings:    genericServer.Settings,
 	}
 

@@ -13,7 +13,6 @@ import (
 	"github.com/vikpe/serverstat/qserver/qtitle"
 	"github.com/vikpe/serverstat/qserver/qtv"
 	"github.com/vikpe/serverstat/qserver/qwfwd"
-	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
 func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
@@ -67,8 +66,8 @@ func ToQwfwd(server qserver.GenericServer) qwfwd.Qwfwd {
 	}
 }
 
-func clientNames(clients []qclient.Client) []qstring.QuakeString {
-	return slice.Map[qclient.Client, qstring.QuakeString](clients, func(client qclient.Client) qstring.QuakeString {
-		return client.Name
+func clientNames(clients []qclient.Client) []string {
+	return slice.Map[qclient.Client, string](clients, func(client qclient.Client) string {
+		return client.Name.ToPlainString()
 	})
 }
