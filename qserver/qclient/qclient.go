@@ -124,17 +124,17 @@ func NewFromString(clientString string) (Client, error) {
 	colorBottom := qutil.StringToInt(clientRecord[IndexColorBottom])
 	ping := qutil.StringToInt(clientRecord[IndexPing])
 
-	var lastIndex = columnCount - 1
+	var indexCount = columnCount - 1
 
 	team := qstring.New("")
 
-	if lastIndex >= IndexTeam {
+	if indexCount >= IndexTeam {
 		team = qstring.New(clientRecord[IndexTeam])
 	}
 
 	flag := ""
 
-	if lastIndex >= IndexFlag {
+	if indexCount >= IndexFlag {
 		flag = clientRecord[IndexFlag]
 	}
 
