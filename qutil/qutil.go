@@ -23,7 +23,7 @@ func ReverseString(s string) string {
 }
 
 func CommonPrefix(strs []string) string {
-	var longestPrefix = ""
+	longestPrefix := strings.Builder{}
 
 	if len(strs) > 0 {
 		sort.Strings(strs)
@@ -32,13 +32,14 @@ func CommonPrefix(strs []string) string {
 
 		for i := 0; i < len(firstRunes); i++ {
 			if lastRunes[i] == firstRunes[i] {
-				longestPrefix += string(lastRunes[i])
+				longestPrefix.WriteRune(lastRunes[i])
 			} else {
 				break
 			}
 		}
 	}
-	return longestPrefix
+
+	return longestPrefix.String()
 }
 
 func CommonSuffix(strs []string) string {
@@ -67,7 +68,7 @@ func StripQuakeFixes(strs []string) []string {
 		}
 	}
 
-	delimiterChars := ".•_-|[]{}()"
+	const delimiterChars = ".•_-|[]{}()"
 
 	// prefix
 	prefix := CommonPrefix(strs)

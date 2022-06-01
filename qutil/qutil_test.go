@@ -67,6 +67,26 @@ func TestStripQuakeFixes(t *testing.T) {
 	})
 }
 
+func BenchmarkStripQuakeFixes(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	names := []string{"•••fox•••", "•••alpha•••", "•••beta•••", "•••delta•••", "•••gamma•••", "•••epsilon•••"}
+
+	b.Run("few values", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qutil.StripQuakeFixes(names[0:2])
+		}
+	})
+
+	b.Run("many values", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qutil.StripQuakeFixes(names)
+		}
+	})
+
+}
+
 func TestMarshalNoEscapeHtml(t *testing.T) {
 	jsonValue, err := qutil.MarshalNoEscapeHtml("<foo&bar>")
 	assert.Equal(t, "\"<foo&bar>\"\n", string(jsonValue))
