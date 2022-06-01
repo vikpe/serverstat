@@ -92,6 +92,15 @@ func TestToMvdsv(t *testing.T) {
 	assert.Equal(t, expect, convert.ToMvdsv(GenericServer))
 }
 
+func BenchmarkToMvdsv(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		convert.ToMvdsv(GenericServer)
+	}
+}
+
 func TestToQtv(t *testing.T) {
 	expect := qtv.Qtv{
 		Address:        GenericServer.Address,
@@ -100,6 +109,15 @@ func TestToQtv(t *testing.T) {
 	}
 
 	assert.Equal(t, expect, convert.ToQtv(GenericServer))
+}
+
+func BenchmarkToQtv(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		convert.ToQtv(GenericServer)
+	}
 }
 
 func TestToQwfwd(t *testing.T) {

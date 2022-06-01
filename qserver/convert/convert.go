@@ -71,6 +71,10 @@ func ToQwfwd(server qserver.GenericServer) qwfwd.Qwfwd {
 }
 
 func clientNames(clients []qclient.Client) []string {
+	if 0 == len(clients) {
+		return make([]string, 0)
+	}
+
 	return slice.Map[qclient.Client, string](clients, func(client qclient.Client) string {
 		return client.Name.ToPlainString()
 	})
