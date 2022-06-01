@@ -1,6 +1,8 @@
 package qstring
 
 import (
+	"strings"
+
 	"github.com/vikpe/serverstat/qtext/qchar"
 	"github.com/vikpe/serverstat/qutil"
 )
@@ -26,22 +28,21 @@ func (qs QuakeString) MarshalJSON() ([]byte, error) {
 }
 
 func ToPlainString(str string) string {
-	plainText := ""
+	plainText := strings.Builder{}
 
 	for _, charByte := range []byte(str) {
-		plainText += qchar.ToPlainString(charByte)
+		plainText.WriteString(qchar.ToPlainString(charByte))
 	}
 
-	return plainText
+	return plainText.String()
 }
 
 func ToColorCodes(str string) string {
-	colorCodes := ""
+	colorCodes := strings.Builder{}
 
 	for _, charByte := range []byte(str) {
-		code := qchar.ToColorCode(charByte)
-		colorCodes += code
+		colorCodes.WriteString(qchar.ToColorCode(charByte))
 	}
 
-	return colorCodes
+	return colorCodes.String()
 }
