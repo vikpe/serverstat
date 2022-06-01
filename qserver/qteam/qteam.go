@@ -117,7 +117,7 @@ func FromPlayers(players []qclient.Client) []Team {
 
 	teams := make([]Team, 0)
 	currentTeamIndex := -1
-	currentTeamName := ""
+	currentTeamName := "____________________"
 
 	for _, player := range players {
 		playerTeamName := player.Team.ToPlainString()
