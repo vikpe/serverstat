@@ -2,10 +2,11 @@ package qutil
 
 import (
 	"bytes"
-	"encoding/json"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/goccy/go-json"
 )
 
 func StringToInt(value string) int {
