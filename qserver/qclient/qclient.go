@@ -118,8 +118,6 @@ func NewFromString(clientString string) (Client, error) {
 	nameQuakeStr := clientRecord[IndexName]
 	nameQuakeStr = strings.TrimPrefix(nameQuakeStr, SpectatorPrefix)
 
-	name := qstring.New(nameQuakeStr)
-	frags := qutil.StringToInt(clientRecord[IndexFrags])
 	colorTop := qutil.StringToInt(clientRecord[IndexColorTop])
 	colorBottom := qutil.StringToInt(clientRecord[IndexColorBottom])
 	ping := qutil.StringToInt(clientRecord[IndexPing])
@@ -139,11 +137,11 @@ func NewFromString(clientString string) (Client, error) {
 	}
 
 	return Client{
-		Name:   name,
+		Name:   qstring.New(nameQuakeStr),
 		Team:   team,
 		Skin:   clientRecord[IndexSkin],
 		Colors: [2]uint8{uint8(colorTop), uint8(colorBottom)},
-		Frags:  frags,
+		Frags:  qutil.StringToInt(clientRecord[IndexFrags]),
 		Ping:   ping,
 		Time:   uint8(qutil.StringToInt(clientRecord[IndexTime])),
 		CC:     flag,

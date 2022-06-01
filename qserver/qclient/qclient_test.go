@@ -40,6 +40,15 @@ func TestNewFromString(t *testing.T) {
 	})
 }
 
+func BenchmarkNewFromString(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		qclient.NewFromString(`585 17 25 12 "XantoM" "xantom" 4 2 "f0m" "SE"`)
+	}
+}
+
 func TestFromStrings(t *testing.T) {
 	clientStrings := []string{
 		`63 5 4 25 "Pitbull" "" 4 4 "red"`,
