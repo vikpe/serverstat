@@ -155,9 +155,6 @@ func TestFromPlayers(t *testing.T) {
 		{Name: qstring.New("-s-"), Players: []qclient.Client{bps}},
 		{Name: qstring.New("f0m"), Players: []qclient.Client{xterm, valla, xantom}},
 	}
-	for _, t := range teams {
-		fmt.Println(t.String())
-	}
 
 	assert.Equal(t, expect, teams)
 }
