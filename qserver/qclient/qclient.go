@@ -151,6 +151,10 @@ func NewFromString(clientString string) (Client, error) {
 }
 
 func SortPlayers(players []Client) {
+	if len(players) < 2 {
+		return
+	}
+
 	sort.Slice(players, func(i, j int) bool {
 		if players[i].Frags == players[j].Frags {
 			return strings.ToLower(players[i].Name.ToPlainString()) < strings.ToLower(players[j].Name.ToPlainString())
