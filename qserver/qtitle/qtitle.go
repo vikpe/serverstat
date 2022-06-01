@@ -12,25 +12,33 @@ import (
 )
 
 func New(settings qsettings.Settings, players []qclient.Client) string {
-	title := ""
+	title := strings.Builder{}
 
 	// matchtag
 	matchTag := ParseMatchtag(settings.Get("matchtag", ""))
 
 	if matchTag != "" {
-		title += fmt.Sprintf("%s / ", matchTag)
+		title.WriteString(fmt.Sprintf("%s / ", matchTag))
 	}
 
 	// mode
 	mode := qmode.Parse(settings)
-	title += string(mode)
+	title.WriteString(string(mode))
+
+	if 0 == len(players) || mode.IsFfa() {
+		title.WriteString(fmtMap(settings.Get("map", "")))
+		return title.String()
+	}
 
 	// participants
 	participants := make([]string, 0)
+	var participantDelimiter string
 	isTeamplay := settings.GetInt("teamplay", 0) > 0
 
-	if isTeamplay && !mode.IsCoop() {
-		teams := qteam.New(players)
+	if isTeamplay && !mode.IsCoop() && TeamCount(players) <= 3 {
+		teams := qteam.FromPlayers(players)
+
+		participantDelimiter = " vs "
 
 		for _, t := range teams {
 			participants = append(participants, t.String())
@@ -39,27 +47,41 @@ func New(settings qsettings.Settings, players []qclient.Client) string {
 		for _, p := range players {
 			participants = append(participants, p.Name.ToPlainString())
 		}
-	}
 
-	if len(participants) > 0 {
-		var participantDelimiter string
-
-		if mode.IsCoop() {
-			participantDelimiter = ", "
-		} else {
+		if mode.Is1on1() {
 			participantDelimiter = " vs "
+		} else {
+			participantDelimiter = ", "
 		}
-
-		sort.Slice(participants, func(i, j int) bool {
-			return strings.ToLower(participants[i]) < strings.ToLower(participants[j])
-		})
-		title += ": " + strings.Join(participants, participantDelimiter)
 	}
+
+	sort.Slice(participants, func(i, j int) bool {
+		return strings.ToLower(participants[i]) < strings.ToLower(participants[j])
+	})
+	title.WriteString(": " + strings.Join(participants, participantDelimiter))
 
 	// map
-	title += fmt.Sprintf(" [%s]", settings.Get("map", ""))
+	title.WriteString(fmtMap(settings.Get("map", "")))
 
-	return title
+	return title.String()
+}
+
+func fmtMap(value string) string {
+	return fmt.Sprintf(" [%s]", value)
+}
+
+func TeamCount(players []qclient.Client) int {
+	if len(players) < 2 {
+		return len(players)
+	}
+
+	teams := make(map[string]bool, 0)
+
+	for _, p := range players {
+		teams[p.Team.ToPlainString()] = true
+	}
+
+	return len(teams)
 }
 
 func ParseMatchtag(matchtag string) string {
