@@ -123,7 +123,7 @@ func TestTeam_String(t *testing.T) {
 	})
 }
 
-func TestNew(t *testing.T) {
+func TestFromPlayers(t *testing.T) {
 	xantom := qclient.Client{
 		Name:   qstring.New("XantoM"),
 		Team:   qstring.New("f0m"),
@@ -149,7 +149,7 @@ func TestNew(t *testing.T) {
 		Frags:  9,
 	}
 	players := []qclient.Client{xantom, xterm, bps, valla}
-	teams := qteam.New(players)
+	teams := qteam.FromPlayers(players)
 
 	expect := []qteam.Team{
 		{Name: qstring.New("-s-"), Players: []qclient.Client{bps}},

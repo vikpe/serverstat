@@ -101,7 +101,7 @@ func (t Team) String() string {
 	return fmt.Sprintf("%s (%s)", t.Name.ToPlainString(), strings.Join(playerNames, ", "))
 }
 
-func New(players []qclient.Client) []Team {
+func FromPlayers(players []qclient.Client) []Team {
 	playersPerTeamName := make(map[string][]qclient.Client, 0)
 	teamNamePerId := make(map[string]qstring.QuakeString, 0)
 
