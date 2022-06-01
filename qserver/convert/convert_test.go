@@ -16,54 +16,53 @@ import (
 	"github.com/vikpe/serverstat/qserver/qteam"
 	"github.com/vikpe/serverstat/qserver/qtime"
 	"github.com/vikpe/serverstat/qserver/qtv"
-	"github.com/vikpe/serverstat/qserver/qversion"
 	"github.com/vikpe/serverstat/qserver/qwfwd"
 	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
+var PlayerClient = qclient.Client{
+	Name:   qstring.New("XantoM"),
+	Team:   qstring.New("red"),
+	Skin:   "",
+	Colors: [2]uint8{13, 13},
+	Frags:  2,
+	Ping:   38,
+	Time:   4,
+}
+
+var SpectatorClient = qclient.Client{
+	Name:   qstring.New("[ServeMe]"),
+	Team:   qstring.New("lqwc"),
+	Skin:   "",
+	Colors: [2]uint8{12, 11},
+	Frags:  -9999,
+	Ping:   -666,
+	Time:   16,
+}
+
+var GenericServer = qserver.GenericServer{
+	Address:  "qw.foppa.dk:27501",
+	Version:  "mvdsv 0.15",
+	Clients:  []qclient.Client{PlayerClient, SpectatorClient},
+	Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "3 min left", "timelimit": "10", "maxclients": "8", "maxspectators": "4", "teamplay": "2"},
+	ExtraInfo: struct {
+		QtvStream qtvstream.QtvStream
+		Geo       geo.Info
+	}{},
+}
+
 func TestToMvdsv(t *testing.T) {
-	playerClient := qclient.Client{
-		Name:   qstring.New("NL"),
-		Team:   qstring.New("red"),
-		Skin:   "",
-		Colors: [2]uint8{13, 13},
-		Frags:  2,
-		Ping:   38,
-		Time:   4,
-	}
-
-	spectatorClient := qclient.Client{
-		Name:   qstring.New("[ServeMe]"),
-		Team:   qstring.New("lqwc"),
-		Skin:   "",
-		Colors: [2]uint8{12, 11},
-		Frags:  -9999,
-		Ping:   -666,
-		Time:   16,
-	}
-
-	genericServer := qserver.GenericServer{
-		Address:  "qw.foppa.dk:27501",
-		Version:  qversion.Version("mvdsv 0.15"),
-		Clients:  []qclient.Client{playerClient, spectatorClient},
-		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "3 min left", "timelimit": "10", "maxclients": "8", "maxspectators": "4", "teamplay": "2"},
-		ExtraInfo: struct {
-			QtvStream qtvstream.QtvStream
-			Geo       geo.Info
-		}{},
-	}
-
 	expect := mvdsv.Mvdsv{
-		Address: genericServer.Address,
+		Address: GenericServer.Address,
 		Mode:    qmode.Mode("4on4"),
-		Title:   "4on4: red (NL) [dm2]",
+		Title:   "4on4: red (XantoM) [dm2]",
 		Status:  "Started",
 		Time: qtime.Time{
 			Elapsed:   7,
 			Total:     10,
 			Remaining: 3,
 		},
-		Players: []qclient.Client{playerClient},
+		Players: []qclient.Client{PlayerClient},
 		PlayerSlots: slots.Slots{
 			Used:  1,
 			Total: 8,
@@ -75,12 +74,12 @@ func TestToMvdsv(t *testing.T) {
 			Total: 4,
 			Free:  3,
 		},
-		Settings:  genericServer.Settings,
-		QtvStream: genericServer.ExtraInfo.QtvStream,
+		Settings:  GenericServer.Settings,
+		QtvStream: GenericServer.ExtraInfo.QtvStream,
 		Teams: []qteam.Team{
 			{
 				Name:    qstring.New("red"),
-				Players: []qclient.Client{playerClient},
+				Players: []qclient.Client{PlayerClient},
 			},
 		},
 		Geo: geo.Info{
@@ -90,75 +89,25 @@ func TestToMvdsv(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, expect, convert.ToMvdsv(genericServer))
+	assert.Equal(t, expect, convert.ToMvdsv(GenericServer))
 }
 
 func TestToQtv(t *testing.T) {
-	client := qclient.Client{
-		Name:   qstring.New("XantoM"),
-		Team:   qstring.New(""),
-		Skin:   "",
-		Colors: [2]uint8{0, 0},
-		Frags:  0,
-		Ping:   666,
-		Time:   4,
-	}
-
-	genericServer := qserver.GenericServer{
-		Address: "qw.foppa.dk:28000",
-		Version: qversion.Version("QTV 1.12-rc1"),
-		Clients: []qclient.Client{client},
-		Settings: qsettings.Settings{
-			"*version":   "QTV 1.12-rc1",
-			"hostname":   "qw.foppa.dk - qtv",
-			"maxclients": "100",
-		},
-		ExtraInfo: struct {
-			QtvStream qtvstream.QtvStream
-			Geo       geo.Info
-		}{},
-	}
-
 	expect := qtv.Qtv{
-		Address:        genericServer.Address,
-		SpectatorNames: []string{"XantoM"},
-		Settings:       genericServer.Settings,
+		Address:        GenericServer.Address,
+		SpectatorNames: []string{"XantoM", "[ServeMe]"},
+		Settings:       GenericServer.Settings,
 	}
 
-	assert.Equal(t, expect, convert.ToQtv(genericServer))
+	assert.Equal(t, expect, convert.ToQtv(GenericServer))
 }
 
 func TestToQwfwd(t *testing.T) {
-	client := qclient.Client{
-		Name:   qstring.New("XantoM"),
-		Team:   qstring.New(""),
-		Skin:   "",
-		Colors: [2]uint8{0, 0},
-		Frags:  0,
-		Ping:   666,
-		Time:   4,
-	}
-
-	genericServer := qserver.GenericServer{
-		Address: "troopers.fi:28000",
-		Version: qversion.Version("qwfwd 1.2"),
-		Clients: []qclient.Client{client},
-		Settings: qsettings.Settings{
-			"*version":   "qwfwd 1.2",
-			"hostname":   "troopers.fi QWfwd",
-			"maxclients": "128",
-		},
-		ExtraInfo: struct {
-			QtvStream qtvstream.QtvStream
-			Geo       geo.Info
-		}{},
-	}
-
 	expect := qwfwd.Qwfwd{
-		Address:     genericServer.Address,
-		ClientNames: []string{"XantoM"},
-		Settings:    genericServer.Settings,
+		Address:     GenericServer.Address,
+		ClientNames: []string{"XantoM", "[ServeMe]"},
+		Settings:    GenericServer.Settings,
 	}
 
-	assert.Equal(t, expect, convert.ToQwfwd(genericServer))
+	assert.Equal(t, expect, convert.ToQwfwd(GenericServer))
 }
