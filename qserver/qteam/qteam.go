@@ -102,30 +102,41 @@ func (t Team) String() string {
 }
 
 func FromPlayers(players []qclient.Client) []Team {
-	playersPerTeamName := make(map[string][]qclient.Client, 0)
-	teamNamePerId := make(map[string]qstring.QuakeString, 0)
-
-	for _, player := range players {
-		teamId := player.Team.ToPlainString()
-		playersPerTeamName[teamId] = append(playersPerTeamName[teamId], player)
-		teamNamePerId[teamId] = player.Team
+	if 0 == len(players) {
+		return make([]Team, 0)
+	} else if 1 == len(players) {
+		return []Team{{
+			Name:    players[0].Team,
+			Players: []qclient.Client{players[0]},
+		}}
 	}
+
+	sort.Slice(players, func(i, j int) bool {
+		return players[i].Team.ToPlainString() < players[j].Team.ToPlainString()
+	})
 
 	teams := make([]Team, 0)
+	currentTeamIndex := -1
+	currentTeamName := ""
 
-	for teamId, teamName := range teamNamePerId {
-		teamPlayers := playersPerTeamName[teamId]
-		qclient.SortPlayers(teamPlayers)
+	for _, player := range players {
+		playerTeamName := player.Team.ToPlainString()
 
-		teams = append(teams, Team{
-			Name:    teamName,
-			Players: teamPlayers,
-		})
+		if currentTeamName != playerTeamName {
+			teams = append(teams, Team{
+				Name:    player.Team,
+				Players: []qclient.Client{player},
+			})
+			currentTeamIndex++
+			currentTeamName = playerTeamName
+		} else {
+			teams[currentTeamIndex].Players = append(teams[currentTeamIndex].Players, player)
+		}
 	}
 
-	sort.Slice(teams, func(i, j int) bool {
-		return strings.ToLower(teams[i].Name.ToPlainString()) < strings.ToLower(teams[j].Name.ToPlainString())
-	})
+	for _, team := range teams {
+		qclient.SortPlayers(team.Players)
+	}
 
 	return teams
 }

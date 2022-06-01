@@ -162,6 +162,62 @@ func TestFromPlayers(t *testing.T) {
 	assert.Equal(t, expect, teams)
 }
 
+func BenchmarkFromPlayers(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	xantom := qclient.Client{
+		Name:   qstring.New("XantoM"),
+		Team:   qstring.New("f0m"),
+		Colors: [2]uint8{4, 2},
+		Frags:  9,
+	}
+	xterm := qclient.Client{
+		Name:   qstring.New("Xterm"),
+		Team:   qstring.New("f0m"),
+		Colors: [2]uint8{4, 2},
+		Frags:  12,
+	}
+	bps := qclient.Client{
+		Name:   qstring.New("bps"),
+		Team:   qstring.New("-s-"),
+		Colors: [2]uint8{4, 2},
+		Frags:  3,
+	}
+	valla := qclient.Client{
+		Name:   qstring.New("valla"),
+		Team:   qstring.New("f0m"),
+		Colors: [2]uint8{4, 2},
+		Frags:  9,
+	}
+	paradoks := qclient.Client{
+		Name:   qstring.New("paradoks"),
+		Team:   qstring.New("]sr["),
+		Colors: [2]uint8{3, 11},
+		Frags:  23,
+	}
+
+	players := []qclient.Client{xantom, xterm, bps, valla, paradoks}
+
+	b.Run("no players", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qteam.FromPlayers(make([]qclient.Client, 0))
+		}
+	})
+
+	b.Run("one players", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qteam.FromPlayers(players[0:1])
+		}
+	})
+
+	b.Run("many players", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qteam.FromPlayers(players)
+		}
+	})
+}
+
 func TestExport(t *testing.T) {
 	player1 := qclient.Client{Name: qstring.New("XantoM"), Colors: [2]uint8{4, 2}, Frags: 12}
 	player2 := qclient.Client{Name: qstring.New("Milton"), Colors: [2]uint8{4, 2}, Frags: 8}
