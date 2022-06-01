@@ -53,6 +53,26 @@ func TestMvdsv_Title(t *testing.T) {
 	})
 }
 
+func BenchmarkNew(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	players := []qclient.Client{
+		{Name: qstring.New("hangtime"), Team: qstring.New("+er+")},
+		{Name: qstring.New("FU-hto"), Team: qstring.New("-fu-")},
+		{Name: qstring.New("alice"), Team: qstring.New("1")},
+		{Name: qstring.New("NinJaA"), Team: qstring.New("blue")},
+		{Name: qstring.New("sniegov"), Team: qstring.New("blue")},
+		{Name: qstring.New("Xterm"), Team: qstring.New("com")},
+		{Name: qstring.New("eclip"), Team: qstring.New("r0t")},
+	}
+	settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "8", "teamplay": "2", "map": "dm3", "matchtag": "kombat"}
+
+	for i := 0; i < b.N; i++ {
+		qtitle.New(settings, players)
+	}
+}
+
 func TestParseMatchtag(t *testing.T) {
 	testCases := map[string]string{
 		"kombat":        "kombat",
