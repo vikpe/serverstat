@@ -93,7 +93,7 @@ func TestMvdsv_Title(t *testing.T) {
 	})
 }
 
-func BenchmarkNew(b *testing.B) {
+func zBenchmarkNew(b *testing.B) {
 	players := []qclient.Client{
 		{Name: qstring.New("hangtime"), Team: qstring.New("+er+")},
 		{Name: qstring.New("FU-hto"), Team: qstring.New("-fu-")},
@@ -129,7 +129,7 @@ func BenchmarkNew(b *testing.B) {
 	})
 }
 
-func BenchmarkTeamCount(b *testing.B) {
+func zBenchmarkTeamCount(b *testing.B) {
 	players := []qclient.Client{
 		{Name: qstring.New("hangtime"), Team: qstring.New("+er+")},
 		{Name: qstring.New("FU-hto"), Team: qstring.New("-fu-")},
@@ -165,5 +165,28 @@ func TestParseMatchtag(t *testing.T) {
 		t.Run(matchtag, func(t *testing.T) {
 			assert.Equal(t, expect, qtitle.ParseMatchtag(matchtag))
 		})
+	}
+}
+
+func BenchmarkParseMatchtag(b *testing.B) {
+	matchtags := []string{
+		"kombat",
+		"testing stuff", "",
+		"pausable game", "",
+		"pause",
+		"",
+		"xy",
+		"xyz",
+		"2on2",
+		"kombat 2on2",
+	}
+
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		for _, matchtag := range matchtags {
+			qtitle.ParseMatchtag(matchtag)
+		}
 	}
 }
