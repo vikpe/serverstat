@@ -9,6 +9,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qsettings"
 	"github.com/vikpe/serverstat/qserver/qteam"
+	"github.com/vikpe/serverstat/qutil"
 )
 
 func New(settings qsettings.Settings, players []qclient.Client) string {
@@ -85,9 +86,9 @@ func TeamCount(players []qclient.Client) int {
 }
 
 func ParseMatchtag(matchtag string) string {
-	const minLength = 3
+	result := qutil.TrimSymbols(matchtag)
 
-	if len(matchtag) < minLength {
+	if len(result) < 3 {
 		return ""
 	}
 
@@ -98,7 +99,7 @@ func ParseMatchtag(matchtag string) string {
 	}
 
 	for _, needle := range ignorePartial {
-		if strings.Contains(matchtag, needle) {
+		if strings.Contains(result, needle) {
 			return ""
 		}
 	}
@@ -115,10 +116,10 @@ func ParseMatchtag(matchtag string) string {
 	}
 
 	for _, word := range ignoreEqual {
-		if matchtag == word {
+		if result == word {
 			return ""
 		}
 	}
 
-	return matchtag
+	return result
 }

@@ -150,15 +150,35 @@ func BenchmarkTeamCount(b *testing.B) {
 
 func TestParseMatchtag(t *testing.T) {
 	testCases := map[string]string{
-		"kombat":        "kombat",
+		// too short
+		"":     "",
+		"xy":   "",
+		" xy ": "",
+
+		// ignored phrases
 		"testing stuff": "",
 		"pausable game": "",
 		"pause":         "",
-		"":              "",
-		"xy":            "",
-		"xyz":           "xyz",
 		"2on2":          "",
-		"kombat 2on2":   "kombat 2on2",
+		"race":          "",
+
+		// symbols
+		"--great!!--":        "great",
+		"--great-stuff--":    "great-stuff",
+		"***":                "",
+		"..ab":               "",
+		"acb._[]{}()*\\/def": "acb def",
+		"..abc":              "abc",
+		".a.b.":              "a b",
+
+		// mixed cases
+		"[2on2]":  "",
+		"race...": "",
+
+		// keep
+		"xyz":         "xyz",
+		"kombat":      "kombat",
+		"kombat 2on2": "kombat 2on2",
 	}
 
 	for matchtag, expect := range testCases {
@@ -169,24 +189,18 @@ func TestParseMatchtag(t *testing.T) {
 }
 
 func BenchmarkParseMatchtag(b *testing.B) {
-	matchtags := []string{
-		"kombat",
-		"testing stuff", "",
-		"pausable game", "",
-		"pause",
-		"",
-		"xy",
-		"xyz",
-		"2on2",
-		"kombat 2on2",
-	}
-
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
-		for _, matchtag := range matchtags {
-			qtitle.ParseMatchtag(matchtag)
+	b.Run("long value", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qtitle.ParseMatchtag("acb._[]{}()*\\/def")
 		}
-	}
+	})
+
+	b.Run("short value", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qtitle.ParseMatchtag("..abc")
+		}
+	})
 }
