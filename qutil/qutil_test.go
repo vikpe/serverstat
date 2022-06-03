@@ -68,10 +68,10 @@ func TestStripQuakeFixes(t *testing.T) {
 }
 
 func BenchmarkStripQuakeFixes(b *testing.B) {
+	names := []string{"•••fox•••", "•••alpha•••", "•••beta•••", "•••delta•••", "•••gamma•••", "•••epsilon•••"}
+
 	b.ReportAllocs()
 	b.ResetTimer()
-
-	names := []string{"•••fox•••", "•••alpha•••", "•••beta•••", "•••delta•••", "•••gamma•••", "•••epsilon•••"}
 
 	b.Run("few values", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
@@ -84,7 +84,6 @@ func BenchmarkStripQuakeFixes(b *testing.B) {
 			qutil.StripQuakeFixes(names)
 		}
 	})
-
 }
 
 func TestMarshalNoEscapeHtml(t *testing.T) {

@@ -131,15 +131,15 @@ func TestSortPlayers(t *testing.T) {
 }
 
 func BenchmarkSortPlayers(b *testing.B) {
-	b.ReportAllocs()
-	b.ResetTimer()
-
 	milton := qclient.Client{Name: qstring.New("Milton"), Frags: 8}
 	bps := qclient.Client{Name: qstring.New("bps"), Frags: 8}
 	valla := qclient.Client{Name: qstring.New("valla"), Frags: 6}
 	xantom := qclient.Client{Name: qstring.New("XantoM"), Frags: 12}
 	paradoks := qclient.Client{Name: qstring.New("ParadokS"), Frags: 21}
 	players := []qclient.Client{milton, bps, valla, xantom, paradoks}
+
+	b.ReportAllocs()
+	b.ResetTimer()
 
 	b.Run("no players", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {

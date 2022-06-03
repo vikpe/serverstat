@@ -94,9 +94,6 @@ func TestMvdsv_Title(t *testing.T) {
 }
 
 func BenchmarkNew(b *testing.B) {
-	b.ReportAllocs()
-	b.ResetTimer()
-
 	players := []qclient.Client{
 		{Name: qstring.New("hangtime"), Team: qstring.New("+er+")},
 		{Name: qstring.New("FU-hto"), Team: qstring.New("-fu-")},
@@ -107,6 +104,9 @@ func BenchmarkNew(b *testing.B) {
 		{Name: qstring.New("eclip"), Team: qstring.New("r0t")},
 	}
 	settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "8", "teamplay": "2", "map": "dm3", "matchtag": "kombat"}
+
+	b.ReportAllocs()
+	b.ResetTimer()
 
 	b.Run("teamplay", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
@@ -130,9 +130,6 @@ func BenchmarkNew(b *testing.B) {
 }
 
 func BenchmarkTeamCount(b *testing.B) {
-	b.ReportAllocs()
-	b.ResetTimer()
-
 	players := []qclient.Client{
 		{Name: qstring.New("hangtime"), Team: qstring.New("+er+")},
 		{Name: qstring.New("FU-hto"), Team: qstring.New("-fu-")},
@@ -142,6 +139,9 @@ func BenchmarkTeamCount(b *testing.B) {
 		{Name: qstring.New("Xterm"), Team: qstring.New("com")},
 		{Name: qstring.New("eclip"), Team: qstring.New("r0t")},
 	}
+
+	b.ReportAllocs()
+	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		qtitle.TeamCount(players)

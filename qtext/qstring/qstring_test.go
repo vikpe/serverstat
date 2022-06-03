@@ -25,9 +25,6 @@ func TestQuakeString_ToPlainString(t *testing.T) {
 }
 
 func BenchmarkToPlainString(b *testing.B) {
-	b.ReportAllocs()
-	b.ResetTimer()
-
 	encodedStrings := []string{
 		"HCBtYXplcg==", //"• mazer",
 		"EXNyEA==",     //    "]sr[",
@@ -42,6 +39,9 @@ func BenchmarkToPlainString(b *testing.B) {
 		strBytes, _ := base64.StdEncoding.DecodeString(encodedString)
 		testStrings = append(testStrings, string(strBytes))
 	}
+
+	b.ReportAllocs()
+	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		for _, str := range testStrings {
@@ -65,9 +65,6 @@ func TestQuakeString_ToColorCodes(t *testing.T) {
 }
 
 func BenchmarkToColorCodes(b *testing.B) {
-	b.ReportAllocs()
-	b.ResetTimer()
-
 	encodedStrings := []string{
 		"HCBtYXplcg==", //"• mazer",
 		"EXNyEA==",     //    "]sr[",
@@ -82,6 +79,9 @@ func BenchmarkToColorCodes(b *testing.B) {
 		strBytes, _ := base64.StdEncoding.DecodeString(encodedString)
 		testStrings = append(testStrings, string(strBytes))
 	}
+
+	b.ReportAllocs()
+	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		for _, str := range testStrings {
