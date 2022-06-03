@@ -166,9 +166,6 @@ func TestFromPlayers(t *testing.T) {
 }
 
 func BenchmarkFromPlayers(b *testing.B) {
-	b.ReportAllocs()
-	b.ResetTimer()
-
 	xantom := qclient.Client{
 		Name:   qstring.New("XantoM"),
 		Team:   qstring.New("f0m"),
@@ -201,6 +198,9 @@ func BenchmarkFromPlayers(b *testing.B) {
 	}
 
 	players := []qclient.Client{xantom, xterm, bps, valla, paradoks}
+
+	b.ReportAllocs()
+	b.ResetTimer()
 
 	b.Run("no players", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
