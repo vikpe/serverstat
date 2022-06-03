@@ -93,7 +93,7 @@ func TestMvdsv_Title(t *testing.T) {
 	})
 }
 
-func zBenchmarkNew(b *testing.B) {
+func BenchmarkNew(b *testing.B) {
 	players := []qclient.Client{
 		{Name: qstring.New("hangtime"), Team: qstring.New("+er+")},
 		{Name: qstring.New("FU-hto"), Team: qstring.New("-fu-")},
@@ -129,7 +129,7 @@ func zBenchmarkNew(b *testing.B) {
 	})
 }
 
-func zBenchmarkTeamCount(b *testing.B) {
+func BenchmarkTeamCount(b *testing.B) {
 	players := []qclient.Client{
 		{Name: qstring.New("hangtime"), Team: qstring.New("+er+")},
 		{Name: qstring.New("FU-hto"), Team: qstring.New("-fu-")},
