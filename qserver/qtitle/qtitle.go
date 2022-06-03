@@ -35,7 +35,7 @@ func New(settings qsettings.Settings, players []qclient.Client) string {
 	var participantDelimiter string
 	isTeamplay := settings.GetInt("teamplay", 0) > 0
 
-	if isTeamplay && !mode.IsCoop() && TeamCount(players) <= 3 {
+	if isTeamplay && !mode.IsCoop() && TeamCount(players) <= 2 {
 		teams := qteam.FromPlayers(players)
 
 		participantDelimiter = " vs "

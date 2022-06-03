@@ -32,42 +32,54 @@ func TestMvdsv_Title(t *testing.T) {
 		assert.Equal(t, "1on1: XantoM vs Xterm [dm6]", qtitle.New(settings, players))
 	})
 
-	t.Run("2on2", func(t *testing.T) {
-		players := []qclient.Client{
-			{Name: qstring.New("XantoM"), Team: qstring.New("red")},
-			{Name: qstring.New("Xterm"), Team: qstring.New("blue")},
-			{Name: qstring.New("valla"), Team: qstring.New("blue")},
-		}
-		settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2", "map": "dm6"}
-		assert.Equal(t, "2on2: blue (valla, Xterm) vs red (XantoM) [dm6]", qtitle.New(settings, players))
-	})
+	t.Run("xonx", func(t *testing.T) {
+		t.Run("no players", func(t *testing.T) {
+			players := []qclient.Client{}
+			settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2", "map": "dm6"}
+			assert.Equal(t, "2on2 [dm6]", qtitle.New(settings, players))
+		})
 
-	t.Run("2on2 - one player", func(t *testing.T) {
-		players := []qclient.Client{
-			{Name: qstring.New("XantoM"), Team: qstring.New("red")},
-		}
-		settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2", "map": "dm6"}
-		assert.Equal(t, "2on2: red (XantoM) [dm6]", qtitle.New(settings, players))
-	})
+		t.Run("one team/player", func(t *testing.T) {
+			players := []qclient.Client{
+				{Name: qstring.New("XantoM"), Team: qstring.New("red")},
+			}
+			settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2", "map": "dm6"}
+			assert.Equal(t, "2on2: red (XantoM) [dm6]", qtitle.New(settings, players))
+		})
 
-	t.Run("2on2 - no players", func(t *testing.T) {
-		players := []qclient.Client{}
-		settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2", "map": "dm6"}
-		assert.Equal(t, "2on2 [dm6]", qtitle.New(settings, players))
-	})
+		t.Run("<= 2 teams", func(t *testing.T) {
+			players := []qclient.Client{
+				{Name: qstring.New("XantoM"), Team: qstring.New("red")},
+				{Name: qstring.New("Xterm"), Team: qstring.New("blue")},
+				{Name: qstring.New("valla"), Team: qstring.New("blue")},
+			}
+			settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2", "map": "dm6"}
+			assert.Equal(t, "2on2: blue (valla, Xterm) vs red (XantoM) [dm6]", qtitle.New(settings, players))
+		})
 
-	t.Run("many teams", func(t *testing.T) {
-		players := []qclient.Client{
-			{Name: qstring.New("hangtime"), Team: qstring.New("+er+")},
-			{Name: qstring.New("FU-hto"), Team: qstring.New("-fu-")},
-			{Name: qstring.New("alice"), Team: qstring.New("1")},
-			{Name: qstring.New("NinJaA"), Team: qstring.New("blue")},
-			{Name: qstring.New("sniegov"), Team: qstring.New("blue")},
-			{Name: qstring.New("Xterm"), Team: qstring.New("com")},
-			{Name: qstring.New("eclip"), Team: qstring.New("r0t")},
-		}
-		settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "8", "teamplay": "2", "map": "dm3"}
-		assert.Equal(t, "4on4: alice, eclip, FU-hto, hangtime, NinJaA, sniegov, Xterm [dm3]", qtitle.New(settings, players))
+		t.Run(">2 teams", func(t *testing.T) {
+			players := []qclient.Client{
+				{Name: qstring.New("XantoM"), Team: qstring.New("red")},
+				{Name: qstring.New("Xterm"), Team: qstring.New("blue")},
+				{Name: qstring.New("valla"), Team: qstring.New("mix")},
+			}
+			settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2", "map": "dm6"}
+			assert.Equal(t, "2on2: valla, XantoM, Xterm [dm6]", qtitle.New(settings, players))
+		})
+
+		t.Run("many teams", func(t *testing.T) {
+			players := []qclient.Client{
+				{Name: qstring.New("hangtime"), Team: qstring.New("+er+")},
+				{Name: qstring.New("FU-hto"), Team: qstring.New("-fu-")},
+				{Name: qstring.New("alice"), Team: qstring.New("1")},
+				{Name: qstring.New("NinJaA"), Team: qstring.New("blue")},
+				{Name: qstring.New("sniegov"), Team: qstring.New("blue")},
+				{Name: qstring.New("Xterm"), Team: qstring.New("com")},
+				{Name: qstring.New("eclip"), Team: qstring.New("r0t")},
+			}
+			settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "8", "teamplay": "2", "map": "dm3"}
+			assert.Equal(t, "4on4: alice, eclip, FU-hto, hangtime, NinJaA, sniegov, Xterm [dm3]", qtitle.New(settings, players))
+		})
 	})
 
 	t.Run("coop", func(t *testing.T) {
