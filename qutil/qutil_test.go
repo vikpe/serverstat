@@ -100,3 +100,39 @@ func BenchmarkMarshalNoEscapeHtml(b *testing.B) {
 		qutil.MarshalNoEscapeHtml("<foo&bar>")
 	}
 }
+
+func TestTrimSymbols(t *testing.T) {
+	var testCases = map[string]string{
+		"--great--":                      "great",
+		"--great-stuff--":                "great-stuff",
+		"***":                            "",
+		"..ab":                           "ab",
+		"..abc._[]{}()*\\/def*--2on2* -": "abc def -2on2",
+		"..abc":                          "abc",
+		".a.b. ":                         "a b",
+		".a-b. ":                         "a-b",
+		"[2on2]":                         "2on2",
+		"*race...":                       "race",
+	}
+
+	for value, expect := range testCases {
+		assert.Equal(t, expect, qutil.TrimSymbols(value))
+	}
+}
+
+func BenchmarkTrimSymbols(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	b.Run("short value", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qutil.TrimSymbols("-.a.b. ")
+		}
+	})
+
+	b.Run("long value", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qutil.TrimSymbols("..acb._[]{}()*\\/def*2on2* -")
+		}
+	})
+}
