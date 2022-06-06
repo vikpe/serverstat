@@ -56,7 +56,14 @@ func ParseAddress(address string, hostname string) string {
 	validate := validator.New()
 
 	if strings.Contains(potentialHostname, ":") {
-		potentialHostname = potentialHostname[0 : strings.Index(potentialHostname, ":")+len(":28501")]
+		commaIndex := strings.Index(potentialHostname, ":")
+		const suffixLength = len(":28501")
+
+		if len(potentialHostname) < (commaIndex + suffixLength) {
+			return address
+		}
+
+		potentialHostname = potentialHostname[0 : commaIndex+suffixLength]
 		err := validate.Var(potentialHostname, "hostname_port")
 		if err == nil {
 			return potentialHostname
