@@ -20,7 +20,7 @@ func GetInfo(address string) (qserver.GenericServer, error) {
 	}
 
 	server := qserver.GenericServer{
-		Address:  address,
+		Address:  qserver.ParseAddress(address, settings.Get("hostname", "")),
 		Version:  qversion.New(settings.Get("*version", "")),
 		Clients:  clients,
 		Settings: settings,

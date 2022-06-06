@@ -32,3 +32,49 @@ func TestGenericServer_Spectators(t *testing.T) {
 	expect := []qclient.Client{spectator1}
 	assert.Equal(t, expect, server.Spectators())
 }
+
+func TestParseAddress(t *testing.T) {
+	testCases := map[string][2]string{
+		"10.10.10.10:28501":     {"10.10.10.10:28501", ""},
+		"10.10.10.10:28502":     {"10.10.10.10:28502", "foo:bar"},
+		"78.141.238.193:27500":  {"78.141.238.193:27500", "Barrysworld FFA Tribute"},
+		"91.206.14.17:27508":    {"91.206.14.17:27508", "Gladius SPB KTX #27508"},
+		"de.aye.wtf:28506":      {"108.61.178.207:28506", "de.aye.wtf:28506"},
+		"213.239.216.253:27500": {"213.239.216.253:27500", "FFA @ qw.servegame.org�"},
+		"qw.irc.ax:28501":       {"46.227.68.148:28501", "QW.IRC.AX KTX:28501 (1 vs. trl)�"},
+		"qw.foppa.dk:27501":     {"91.102.91.59:27501", "qw.foppa.dk #1 - ktx"},
+	}
+
+	for expect, input := range testCases {
+		assert.Equal(t, expect, qserver.ParseAddress(input[0], input[1]))
+	}
+}
+
+func BenchmarkParseAddress(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	b.Run("no hostname", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qserver.ParseAddress("78.141.238.193:27500", "")
+		}
+	})
+
+	b.Run("invalid hostname", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qserver.ParseAddress("78.141.238.193:27500", "Barrysworld FFA Tribute")
+		}
+	})
+
+	b.Run("partial hostname", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qserver.ParseAddress("91.102.91.59:27501", "qw.foppa.dk #1 - ktx")
+		}
+	})
+
+	b.Run("exact hostname", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			qserver.ParseAddress("108.61.178.207:28506", "de.aye.wtf:28506")
+		}
+	})
+}
