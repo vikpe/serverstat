@@ -25,7 +25,7 @@ func TestGetInfo(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		go func() {
 			responseHeader := string([]byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'})
-			responseBody := `\maxfps\77\pm_ktjump\1\*version\MVDSV 0.35-dev
+			responseBody := `\hostname\troopers.fi:28501\maxfps\77\pm_ktjump\1\*version\MVDSV 0.35-dev
 66 2 4 38 "NL" "" 13 13 "red"
 65 -9999 16 -666 "\s\[ServeMe]" "" 12 11 "lqwc"`
 			udphelper.New(":8001").Respond([]byte((responseHeader + responseBody)))
@@ -57,9 +57,11 @@ func TestGetInfo(t *testing.T) {
 				},
 			},
 			Settings: map[string]string{
-				"*version":  "MVDSV 0.35-dev",
-				"maxfps":    "77",
-				"pm_ktjump": "1",
+				"*version":        "MVDSV 0.35-dev",
+				"hostname":        "troopers.fi:28501\u0087",
+				"hostname_parsed": "troopers.fi:28501",
+				"maxfps":          "77",
+				"pm_ktjump":       "1",
 			},
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream

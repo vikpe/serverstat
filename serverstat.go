@@ -19,8 +19,12 @@ func GetInfo(address string) (qserver.GenericServer, error) {
 		return qserver.GenericServer{}, err
 	}
 
+	if settings.Has("hostname") {
+		settings["hostname_parsed"] = qserver.ParseHostname(address, settings.Get("hostname", ""))
+	}
+
 	server := qserver.GenericServer{
-		Address:  qserver.ParseAddress(address, settings.Get("hostname", "")),
+		Address:  address,
 		Version:  qversion.New(settings.Get("*version", "")),
 		Clients:  clients,
 		Settings: settings,

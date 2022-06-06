@@ -37,7 +37,7 @@ func (server GenericServer) Spectators() []qclient.Client {
 	})
 }
 
-func ParseAddress(address string, hostname string) string {
+func ParseHostname(address string, hostname string) string {
 	if "" == hostname || !strings.Contains(hostname, ".") {
 		return address
 	}

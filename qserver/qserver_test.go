@@ -49,7 +49,7 @@ func TestParseAddress(t *testing.T) {
 	}
 
 	for expect, input := range testCases {
-		assert.Equal(t, expect, qserver.ParseAddress(input[0], input[1]))
+		assert.Equal(t, expect, qserver.ParseHostname(input[0], input[1]))
 	}
 }
 
@@ -59,25 +59,25 @@ func BenchmarkParseAddress(b *testing.B) {
 
 	b.Run("no hostname", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			qserver.ParseAddress("78.141.238.193:27500", "")
+			qserver.ParseHostname("78.141.238.193:27500", "")
 		}
 	})
 
 	b.Run("invalid hostname", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			qserver.ParseAddress("78.141.238.193:27500", "Barrysworld FFA Tribute")
+			qserver.ParseHostname("78.141.238.193:27500", "Barrysworld FFA Tribute")
 		}
 	})
 
 	b.Run("partial hostname", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			qserver.ParseAddress("91.102.91.59:27501", "qw.foppa.dk #1 - ktx")
+			qserver.ParseHostname("91.102.91.59:27501", "qw.foppa.dk #1 - ktx")
 		}
 	})
 
 	b.Run("exact hostname", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			qserver.ParseAddress("108.61.178.207:28506", "de.aye.wtf:28506")
+			qserver.ParseHostname("108.61.178.207:28506", "de.aye.wtf:28506")
 		}
 	})
 }
