@@ -5,5 +5,5 @@ type Info struct {
 	Country     string
 	Region      string
 	City        string
-	Coordinates [2]int
+	Coordinates [2]float32
 }
