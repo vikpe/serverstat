@@ -136,3 +136,18 @@ func BenchmarkTrimSymbols(b *testing.B) {
 		}
 	})
 }
+
+func TestHostnameToIp(t *testing.T) {
+	assert.Equal(t, "91.102.91.59", qutil.HostnameToIp("qw.foppa.dk"))
+	assert.Equal(t, "91.102.91.59", qutil.HostnameToIp("91.102.91.59"))
+}
+
+func BenchmarkHostnameToIp(b *testing.B) {
+	b.Run("ip", func(b *testing.B) {
+		qutil.HostnameToIp("91.102.91.59")
+	})
+
+	b.Run("hostname", func(b *testing.B) {
+		qutil.HostnameToIp("qw.foppa.dk")
+	})
+}

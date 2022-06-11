@@ -2,6 +2,7 @@ package qutil
 
 import (
 	"bytes"
+	"net"
 	"sort"
 	"strconv"
 	"strings"
@@ -146,4 +147,18 @@ func TrimSymbols(value string) string {
 	}
 
 	return strings.TrimRight(result.String(), " ")
+}
+
+func HostnameToIp(hostname string) string {
+	ips, err := net.LookupIP(hostname)
+
+	if err == nil {
+		for _, ip := range ips {
+			if ipv4 := ip.To4(); ipv4 != nil {
+				return ipv4.String()
+			}
+		}
+	}
+
+	return hostname
 }
