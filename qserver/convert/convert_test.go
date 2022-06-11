@@ -45,9 +45,9 @@ var GenericServer = qserver.GenericServer{
 	Version:  "mvdsv 0.15",
 	Clients:  []qclient.Client{PlayerClient, SpectatorClient},
 	Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "3 min left", "timelimit": "10", "maxclients": "8", "maxspectators": "4", "teamplay": "2"},
+	Geo:      geo.Info{},
 	ExtraInfo: struct {
 		QtvStream qtvstream.QtvStream
-		Geo       geo.Info
 	}{},
 }
 

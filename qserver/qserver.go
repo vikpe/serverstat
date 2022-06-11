@@ -19,9 +19,9 @@ type GenericServer struct {
 	Version   qversion.Version
 	Clients   []qclient.Client
 	Settings  qsettings.Settings
+	Geo       geo.Info
 	ExtraInfo struct {
 		QtvStream qtvstream.QtvStream
-		Geo       geo.Info
 	}
 }
 

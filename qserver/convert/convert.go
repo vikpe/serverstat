@@ -48,7 +48,7 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 		SpectatorSlots: spectatorSlots,
 		Settings:       server.Settings,
 		QtvStream:      server.ExtraInfo.QtvStream,
-		Geo:            server.ExtraInfo.Geo,
+		Geo:            server.Geo,
 	}
 }
 
@@ -57,7 +57,7 @@ func ToQtv(server qserver.GenericServer) qtv.Qtv {
 		Address:        server.Address,
 		SpectatorNames: clientNames(server.Clients),
 		Settings:       server.Settings,
-		Geo:            server.ExtraInfo.Geo,
+		Geo:            server.Geo,
 	}
 }
 
@@ -66,7 +66,7 @@ func ToQwfwd(server qserver.GenericServer) qwfwd.Qwfwd {
 		Address:     server.Address,
 		ClientNames: clientNames(server.Clients),
 		Settings:    server.Settings,
-		Geo:         server.ExtraInfo.Geo,
+		Geo:         server.Geo,
 	}
 }
 

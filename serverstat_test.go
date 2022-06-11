@@ -63,9 +63,9 @@ func TestGetInfo(t *testing.T) {
 				"maxfps":          "77",
 				"pm_ktjump":       "1",
 			},
+			Geo: geo.Info{},
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream
-				Geo       geo.Info
 			}{
 				QtvStream: qtvstream.QtvStream{
 					SpectatorNames: make([]qstring.QuakeString, 0),
@@ -114,9 +114,9 @@ func TestGetInfoFromMany(t *testing.T) {
 				"maxfps":    "77",
 				"pm_ktjump": "1",
 			},
+			Geo: geo.Info{},
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream
-				Geo       geo.Info
 			}{
 				QtvStream: qtvstream.QtvStream{
 					SpectatorNames: make([]qstring.QuakeString, 0),
@@ -133,9 +133,9 @@ func TestGetInfoFromMany(t *testing.T) {
 				"maxfps":    "77",
 				"pm_ktjump": "1",
 			},
+			Geo: geo.Info{},
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream
-				Geo       geo.Info
 			}{
 				QtvStream: qtvstream.QtvStream{
 					SpectatorNames: make([]qstring.QuakeString, 0),
