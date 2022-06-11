@@ -1,18 +1,18 @@
 package geo_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/geo"
 )
 
-func TestNewIpToGeoMap(t *testing.T) {
+func TestIpGeoMap(t *testing.T) {
 	ipToGeo := geo.NewIpToGeoMap()
-
 	assert.True(t, len(ipToGeo) > 100)
 
-	// test first entry
+	// test methods
 	var ip string
 	var info geo.Info
 
@@ -22,5 +22,25 @@ func TestNewIpToGeoMap(t *testing.T) {
 		break
 	}
 
-	assert.Equal(t, info, ipToGeo.GetByIp(ip))
+	t.Run("GetByIp", func(t *testing.T) {
+		t.Run("known", func(t *testing.T) {
+			assert.Equal(t, info, ipToGeo.GetByIp(ip))
+
+		})
+
+		t.Run("unknown", func(t *testing.T) {
+			expect := geo.Info{
+				CC:          "",
+				Country:     "",
+				Region:      "",
+				City:        "",
+				Coordinates: [2]float32{0, 0},
+			}
+			assert.Equal(t, expect, ipToGeo.GetByIp("zzz"))
+		})
+	})
+
+	t.Run("GetByAddress", func(t *testing.T) {
+		assert.Equal(t, info, ipToGeo.GetByAddress(fmt.Sprintf("%s:%d", ip, 28000)))
+	})
 }
