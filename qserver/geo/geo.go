@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/goccy/go-json"
+	"github.com/vikpe/serverstat/qutil"
 )
 
 type Info struct {
@@ -34,7 +35,12 @@ func NewIpToGeoMap() IpToGeoMap {
 }
 
 func (g IpToGeoMap) GetByAddress(address string) Info {
-	ip := strings.SplitN(address, ":", 2)[0]
+	hostname := strings.SplitN(address, ":", 2)[0]
+	return g.GetByHostname(hostname)
+}
+
+func (g IpToGeoMap) GetByHostname(hostname string) Info {
+	ip := qutil.HostnameToIp(hostname)
 	return g.GetByIp(ip)
 }
 
