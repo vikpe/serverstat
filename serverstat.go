@@ -5,6 +5,7 @@ import (
 
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/commands/status87"
+	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/qversion"
 	"github.com/vikpe/udpclient"
@@ -34,6 +35,8 @@ func GetInfo(address string) (qserver.GenericServer, error) {
 		stream, _ := mvdsv.GetQtvStream(address)
 		server.ExtraInfo.QtvStream = stream
 	}
+
+	server.Geo = geo.NewIpToGeoMap().GetByAddress(server.Address)
 
 	return server, nil
 }
@@ -65,6 +68,12 @@ func GetInfoFromMany(addresses []string) []qserver.GenericServer {
 	}
 
 	wg.Wait()
+
+	ipToGeo := geo.NewIpToGeoMap()
+
+	for _, server := range servers {
+		server.Geo = ipToGeo.GetByAddress(server.Address)
+	}
 
 	return servers
 }
