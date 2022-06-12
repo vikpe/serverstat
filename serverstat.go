@@ -7,6 +7,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/commands/status87"
 	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
+	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qversion"
 	"github.com/vikpe/udpclient"
 )
@@ -34,6 +35,8 @@ func GetInfo(address string) (qserver.GenericServer, error) {
 	if server.Version.IsMvdsv() {
 		stream, _ := mvdsv.GetQtvStream(address)
 		server.ExtraInfo.QtvStream = stream
+	} else {
+		server.ExtraInfo.QtvStream = qtvstream.New()
 	}
 
 	server.Geo = geo.NewIpToGeoMap().GetByAddress(server.Address)

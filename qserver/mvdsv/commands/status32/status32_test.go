@@ -10,22 +10,31 @@ import (
 	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
+var EmptyStream = qtvstream.QtvStream{
+	Title:          "",
+	Url:            "",
+	ID:             0,
+	Address:        "",
+	SpectatorNames: make([]qstring.QuakeString, 0),
+	SpectatorCount: 0,
+}
+
 func TestParseResponse(t *testing.T) {
 	t.Run("error", func(t *testing.T) {
 		result, err := status32.ParseResponse([]byte(""), errors.New("some error"))
-		assert.Equal(t, qtvstream.QtvStream{}, result)
+		assert.Equal(t, EmptyStream, result)
 		assert.ErrorContains(t, err, "some error")
 	})
 
 	t.Run("empty response body", func(t *testing.T) {
 		result, err := status32.ParseResponse([]byte(""), nil)
-		assert.Equal(t, qtvstream.QtvStream{}, result)
+		assert.Equal(t, EmptyStream, result)
 		assert.ErrorContains(t, err, "unable to parse response")
 	})
 
 	t.Run("invalid qtv configuration", func(t *testing.T) {
 		result, err := status32.ParseResponse([]byte(`1 "qw.foppa.dk - qtv (3)" "" 2`), nil)
-		assert.Equal(t, qtvstream.QtvStream{}, result)
+		assert.Equal(t, EmptyStream, result)
 		assert.ErrorContains(t, err, "invalid QTV configuration")
 	})
 

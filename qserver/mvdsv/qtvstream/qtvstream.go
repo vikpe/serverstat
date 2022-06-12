@@ -12,3 +12,9 @@ type QtvStream struct {
 	SpectatorNames []qstring.QuakeString `json:"spectator_names"`
 	SpectatorCount int                   `json:"spectator_count"`
 }
+
+func New() QtvStream {
+	return QtvStream{
+		SpectatorNames: make([]qstring.QuakeString, 0),
+	}
+}

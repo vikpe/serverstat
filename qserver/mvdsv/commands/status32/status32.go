@@ -18,7 +18,7 @@ var Command = udpclient.Command{
 
 func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) {
 	if err != nil {
-		return qtvstream.QtvStream{}, err
+		return qtvstream.New(), err
 	}
 
 	// example response body
@@ -29,7 +29,7 @@ func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) 
 
 	record, err := reader.Read()
 	if err != nil {
-		return qtvstream.QtvStream{}, errors.New("unable to parse response")
+		return qtvstream.New(), errors.New("unable to parse response")
 	}
 
 	const (
@@ -40,7 +40,7 @@ func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) 
 
 	if record[IndexUrl] == "" {
 		// invalid configuration (not reporting qtv ip as they should)
-		return qtvstream.QtvStream{}, errors.New("invalid QTV configuration")
+		return qtvstream.New(), errors.New("invalid QTV configuration")
 	}
 
 	urlParts := strings.Split(record[IndexUrl], "@")
