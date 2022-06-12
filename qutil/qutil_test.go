@@ -151,3 +151,9 @@ func BenchmarkHostnameToIp(b *testing.B) {
 		qutil.HostnameToIp("qw.foppa.dk")
 	})
 }
+
+func TestPluralize(t *testing.T) {
+	assert.Equal(t, "players", qutil.Pluralize("player", 0))
+	assert.Equal(t, "player", qutil.Pluralize("player", 1))
+	assert.Equal(t, "players", qutil.Pluralize("player", 2))
+}

@@ -9,6 +9,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qclient/slots"
 	"github.com/vikpe/serverstat/qserver/qsettings"
+	"github.com/vikpe/serverstat/qserver/qstatus"
 	"github.com/vikpe/serverstat/qserver/qteam"
 	"github.com/vikpe/serverstat/qserver/qtime"
 	"github.com/vikpe/serverstat/qtext/qstring"
@@ -22,7 +23,7 @@ type Mvdsv struct {
 	Address        string              `json:"address"`
 	Mode           qmode.Mode          `json:"mode"`
 	Title          string              `json:"title"`
-	Status         string              `json:"status"`
+	Status         qstatus.Status      `json:"status"`
 	Time           qtime.Time          `json:"time"`
 	PlayerSlots    slots.Slots         `json:"player_slots"`
 	Players        []qclient.Client    `json:"players"`

@@ -13,6 +13,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qclient/slots"
 	"github.com/vikpe/serverstat/qserver/qsettings"
+	"github.com/vikpe/serverstat/qserver/qstatus"
 	"github.com/vikpe/serverstat/qserver/qteam"
 	"github.com/vikpe/serverstat/qserver/qtime"
 	"github.com/vikpe/serverstat/qserver/qtv"
@@ -56,7 +57,10 @@ func TestToMvdsv(t *testing.T) {
 		Address: GenericServer.Address,
 		Mode:    qmode.Mode("4on4"),
 		Title:   "4on4: red (XantoM) [dm2]",
-		Status:  "Started",
+		Status: qstatus.Status{
+			Name:        "Started",
+			Description: "3 min left",
+		},
 		Time: qtime.Time{
 			Elapsed:   7,
 			Total:     10,
@@ -131,7 +135,7 @@ func TestToQwfwd(t *testing.T) {
 }
 
 func TestToJson(t *testing.T) {
-	expect := `{"address":"qw.foppa.dk:27501","mode":"4on4","title":"4on4: red (XantoM) [dm2]","status":"Started","time":{"elapsed":7,"total":10,"remaining":3},"player_slots":{"used":1,"total":8,"free":7},"players":[{"name":"XantoM","name_color":"wwwwww","team":"red","team_color":"www","skin":"","colors":[13,13],"frags":2,"ping":38,"time":4,"cc":"","is_bot":false}],"teams":[{"name":"red","name_color":"www","frags":2,"colors":[13,13],"players":[{"name":"XantoM","name_color":"wwwwww","team":"red","team_color":"www","skin":"","colors":[13,13],"frags":2,"ping":38,"time":4,"cc":"","is_bot":false}]}],"spectator_slots":{"used":1,"total":4,"free":3},"spectator_names":["[ServeMe]"],"settings":{"*gamedir":"qw","map":"dm2","maxclients":"8","maxspectators":"4","status":"3 min left","teamplay":"2","timelimit":"10"},"qtv_stream":{"title":"","url":"","id":0,"address":"","spectator_names":null,"spectator_count":0},"geo":{"cc":"","country":"","region":"","city":"","coordinates":[0,0]},"type":"mvdsv"}`
+	expect := `{"address":"qw.foppa.dk:27501","mode":"4on4","title":"4on4: red (XantoM) [dm2]","status":{"name":"Started","description":"3 min left"},"time":{"elapsed":7,"total":10,"remaining":3},"player_slots":{"used":1,"total":8,"free":7},"players":[{"name":"XantoM","name_color":"wwwwww","team":"red","team_color":"www","skin":"","colors":[13,13],"frags":2,"ping":38,"time":4,"cc":"","is_bot":false}],"teams":[{"name":"red","name_color":"www","frags":2,"colors":[13,13],"players":[{"name":"XantoM","name_color":"wwwwww","team":"red","team_color":"www","skin":"","colors":[13,13],"frags":2,"ping":38,"time":4,"cc":"","is_bot":false}]}],"spectator_slots":{"used":1,"total":4,"free":3},"spectator_names":["[ServeMe]"],"settings":{"*gamedir":"qw","map":"dm2","maxclients":"8","maxspectators":"4","status":"3 min left","teamplay":"2","timelimit":"10"},"qtv_stream":{"title":"","url":"","id":0,"address":"","spectator_names":null,"spectator_count":0},"geo":{"cc":"","country":"","region":"","city":"","coordinates":[0,0]},"type":"mvdsv"}`
 
 	assert.JSONEq(t, expect, convert.ToJson(GenericServer))
 }

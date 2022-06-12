@@ -2,6 +2,7 @@ package qutil
 
 import (
 	"bytes"
+	"fmt"
 	"net"
 	"sort"
 	"strconv"
@@ -161,4 +162,12 @@ func HostnameToIp(hostname string) string {
 	}
 
 	return hostname
+}
+
+func Pluralize(word string, count int) string {
+	if 1 == count {
+		return word
+	}
+
+	return fmt.Sprintf("%ss", word)
 }
