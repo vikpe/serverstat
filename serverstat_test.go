@@ -1,6 +1,7 @@
 package serverstat_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -82,18 +83,23 @@ func TestGetInfoFromMany(t *testing.T) {
 		responseHeader := string([]byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'})
 
 		go func() {
-			responseBody := `\maxfps\77\pm_ktjump\1\*version\MVDSV 0.35-dev
+			responseBody := `\maxfps\77\*version\MVDSV 0.35-dev
 65 -9999 16 -666 "\s\[ServeMe]" "" 12 11 "lqwc"`
 			udphelper.New(":7001").Respond([]byte((responseHeader + responseBody)))
 		}()
 
 		go func() {
-			responseBody := `\maxfps\77\pm_ktjump\1\*version\MVDSV 0.67`
+			responseBody := `\maxfps\77\*version\MVDSV 0.67`
 			udphelper.New(":7002").Respond([]byte((responseHeader + responseBody)))
+		}()
+
+		go func() {
+			responseBody := `\maxfps\77\*version\qwfwd 0.1`
+			udphelper.New(":7003").Respond([]byte((responseHeader + responseBody)))
 		}()
 		time.Sleep(10 * time.Millisecond)
 
-		servers := serverstat.GetInfoFromMany([]string{":7001", ":7002", "foo:666"})
+		servers := serverstat.GetInfoFromMany([]string{":7003", ":7001", ":7002", "foo:666"})
 
 		server1 := qserver.GenericServer{
 			Version: qversion.New("MVDSV 0.35-dev"),
@@ -110,9 +116,8 @@ func TestGetInfoFromMany(t *testing.T) {
 				},
 			},
 			Settings: map[string]string{
-				"*version":  "MVDSV 0.35-dev",
-				"maxfps":    "77",
-				"pm_ktjump": "1",
+				"*version": "MVDSV 0.35-dev",
+				"maxfps":   "77",
 			},
 			Geo: geo.Info{},
 			ExtraInfo: struct {
@@ -129,9 +134,8 @@ func TestGetInfoFromMany(t *testing.T) {
 			Address: ":7002",
 			Clients: []qclient.Client{},
 			Settings: map[string]string{
-				"*version":  "MVDSV 0.67",
-				"maxfps":    "77",
-				"pm_ktjump": "1",
+				"*version": "MVDSV 0.67",
+				"maxfps":   "77",
 			},
 			Geo: geo.Info{},
 			ExtraInfo: struct {
@@ -143,8 +147,28 @@ func TestGetInfoFromMany(t *testing.T) {
 			},
 		}
 
-		assert.Contains(t, servers, server1)
-		assert.Contains(t, servers, server2)
-		assert.Len(t, servers, 2)
+		server3 := qserver.GenericServer{
+			Version: qversion.New("qwfwd 0.1"),
+			Address: ":7003",
+			Clients: []qclient.Client{},
+			Settings: map[string]string{
+				"*version": "qwfwd 0.1",
+				"maxfps":   "77",
+			},
+			Geo: geo.Info{},
+			ExtraInfo: struct {
+				QtvStream qtvstream.QtvStream `json:"qtv_stream"`
+			}{
+				QtvStream: qtvstream.QtvStream{
+					SpectatorNames: make([]qstring.QuakeString, 0),
+				},
+			},
+		}
+
+		for _, n := range servers {
+			fmt.Println(n.Address)
+		}
+
+		assert.Equal(t, []qserver.GenericServer{server1, server2, server3}, servers)
 	})
 }

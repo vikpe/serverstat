@@ -1,6 +1,7 @@
 package serverstat
 
 import (
+	"sort"
 	"sync"
 
 	"github.com/vikpe/serverstat/qserver"
@@ -77,6 +78,10 @@ func GetInfoFromMany(addresses []string) []qserver.GenericServer {
 	for _, server := range servers {
 		server.Geo = ipToGeo.GetByAddress(server.Address)
 	}
+
+	sort.Slice(servers, func(i, j int) bool {
+		return servers[i].Address < servers[j].Address
+	})
 
 	return servers
 }
