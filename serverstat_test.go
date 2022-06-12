@@ -65,7 +65,7 @@ func TestGetInfo(t *testing.T) {
 			},
 			Geo: geo.Info{},
 			ExtraInfo: struct {
-				QtvStream qtvstream.QtvStream
+				QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 			}{
 				QtvStream: qtvstream.QtvStream{
 					SpectatorNames: make([]qstring.QuakeString, 0),
@@ -116,7 +116,7 @@ func TestGetInfoFromMany(t *testing.T) {
 			},
 			Geo: geo.Info{},
 			ExtraInfo: struct {
-				QtvStream qtvstream.QtvStream
+				QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 			}{
 				QtvStream: qtvstream.QtvStream{
 					SpectatorNames: make([]qstring.QuakeString, 0),
@@ -135,7 +135,7 @@ func TestGetInfoFromMany(t *testing.T) {
 			},
 			Geo: geo.Info{},
 			ExtraInfo: struct {
-				QtvStream qtvstream.QtvStream
+				QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 			}{
 				QtvStream: qtvstream.QtvStream{
 					SpectatorNames: make([]qstring.QuakeString, 0),

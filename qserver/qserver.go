@@ -21,7 +21,7 @@ type GenericServer struct {
 	Settings  qsettings.Settings `json:"settings"`
 	Geo       geo.Info           `json:"geo"`
 	ExtraInfo struct {
-		QtvStream qtvstream.QtvStream
+		QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 	} `json:"extra_info"`
 }
 

@@ -47,7 +47,7 @@ var GenericServer = qserver.GenericServer{
 	Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "3 min left", "timelimit": "10", "maxclients": "8", "maxspectators": "4", "teamplay": "2"},
 	Geo:      geo.Info{},
 	ExtraInfo: struct {
-		QtvStream qtvstream.QtvStream
+		QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 	}{},
 }
 
