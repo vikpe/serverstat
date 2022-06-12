@@ -99,7 +99,7 @@ func ToJson(server qserver.GenericServer) string {
 	}
 
 	value := fastjson.MustParseBytes(serverJsonBytes)
-	value.Set("Type", fastjson.MustParse(fmt.Sprintf(`"%s"`, server.Version.GetType())))
+	value.Set("type", fastjson.MustParse(fmt.Sprintf(`"%s"`, server.Version.GetType())))
 	buff := value.MarshalTo(nil)
 	return string(buff)
 }
