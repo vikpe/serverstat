@@ -9,8 +9,8 @@ const Name = "qwfwd"
 const VersionPrefix = Name
 
 type Qwfwd struct {
-	Address     string
-	ClientNames []string
-	Settings    qsettings.Settings
-	Geo         geo.Info
+	Address     string             `json:"address"`
+	ClientNames []string           `json:"client_names"`
+	Settings    qsettings.Settings `json:"settings"`
+	Geo         geo.Info           `json:"geo"`
 }

@@ -248,6 +248,6 @@ func TestTeam_MarshalJSON(t *testing.T) {
 		Players: []qclient.Client{player1, player2},
 	}
 	jsonValue, _ := json.Marshal(team)
-	expect := `{"Name":"red","NameColor":"www","Frags":20,"Colors":[4,2],"Players":[{"Name":"XantoM","NameColor":"wwwwww","Team":"","TeamColor":"","Skin":"","Colors":[4,2],"Frags":12,"Ping":0,"Time":0,"CC":"","IsBot":false},{"Name":"bps","NameColor":"www","Team":"","TeamColor":"","Skin":"","Colors":[13,5],"Frags":8,"Ping":0,"Time":0,"CC":"","IsBot":false}]}`
+	expect := `{"name":"red","name_color":"www","frags":20,"colors":[4,2],"players":[{"name":"XantoM","name_color":"wwwwww","team":"","team_color":"","skin":"","colors":[4,2],"frags":12,"ping":0,"time":0,"cc":"","is_bot":false},{"name":"bps","name_color":"www","team":"","team_color":"","skin":"","colors":[13,5],"frags":8,"ping":0,"time":0,"cc":"","is_bot":false}]}`
 	assert.Equal(t, expect, string(jsonValue))
 }

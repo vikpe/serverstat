@@ -34,7 +34,7 @@ func TestGetQtvStream(t *testing.T) {
 		expectStream := qtvstream.QtvStream{
 			Title:          "qw.foppa.dk - qtv (3)",
 			Url:            "3@qw.foppa.dk:28000",
-			Id:             3,
+			ID:             3,
 			Address:        "qw.foppa.dk:28000",
 			SpectatorCount: 0,
 			SpectatorNames: []qstring.QuakeString{},
@@ -61,7 +61,7 @@ func TestGetQtvStream(t *testing.T) {
 		expectStream := qtvstream.QtvStream{
 			Title:          "qw.foppa.dk - qtv (3)",
 			Url:            "3@qw.foppa.dk:28000",
-			Id:             3,
+			ID:             3,
 			Address:        "qw.foppa.dk:28000",
 			SpectatorCount: 2,
 			SpectatorNames: []qstring.QuakeString{

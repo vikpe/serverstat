@@ -11,16 +11,16 @@ import (
 )
 
 type Team struct {
-	Name    qstring.QuakeString
-	Players []qclient.Client
+	Name    qstring.QuakeString `json:"name"`
+	Players []qclient.Client    `json:"players"`
 }
 
 type TeamExport struct {
-	Name      qstring.QuakeString
-	NameColor string
-	Frags     int
-	Colors    [2]uint8
-	Players   []qclient.Client
+	Name      qstring.QuakeString `json:"name"`
+	NameColor string              `json:"name_color"`
+	Frags     int                 `json:"frags"`
+	Colors    [2]uint8            `json:"colors"`
+	Players   []qclient.Client    `json:"players"`
 }
 
 func Export(t Team) TeamExport {

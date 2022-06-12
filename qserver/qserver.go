@@ -15,14 +15,14 @@ import (
 )
 
 type GenericServer struct {
-	Address   string
-	Version   qversion.Version
-	Clients   []qclient.Client
-	Settings  qsettings.Settings
-	Geo       geo.Info
+	Address   string             `json:"address"`
+	Version   qversion.Version   `json:"version"`
+	Clients   []qclient.Client   `json:"clients"`
+	Settings  qsettings.Settings `json:"settings"`
+	Geo       geo.Info           `json:"geo"`
 	ExtraInfo struct {
 		QtvStream qtvstream.QtvStream
-	}
+	} `json:"extra_info"`
 }
 
 func (server GenericServer) Players() []qclient.Client {

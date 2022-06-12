@@ -19,19 +19,19 @@ const Name = "mvdsv"
 const VersionPrefix = Name
 
 type Mvdsv struct {
-	Address        string
-	Mode           qmode.Mode
-	Title          string
-	Status         string
-	Time           qtime.Time
-	PlayerSlots    slots.Slots
-	Players        []qclient.Client
-	Teams          []qteam.Team
-	SpectatorSlots slots.Slots
-	SpectatorNames []string
-	Settings       qsettings.Settings
-	QtvStream      qtvstream.QtvStream
-	Geo            geo.Info
+	Address        string              `json:"address"`
+	Mode           qmode.Mode          `json:"mode"`
+	Title          string              `json:"title"`
+	Status         string              `json:"status"`
+	Time           qtime.Time          `json:"time"`
+	PlayerSlots    slots.Slots         `json:"player_slots"`
+	Players        []qclient.Client    `json:"players"`
+	Teams          []qteam.Team        `json:"teams"`
+	SpectatorSlots slots.Slots         `json:"spectator_slots"`
+	SpectatorNames []string            `json:"spectator_names"`
+	Settings       qsettings.Settings  `json:"settings"`
+	QtvStream      qtvstream.QtvStream `json:"qtv_stream"`
+	Geo            geo.Info            `json:"geo"`
 }
 
 func GetQtvUsers(address string) ([]qstring.QuakeString, error) {

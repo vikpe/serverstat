@@ -5,10 +5,10 @@ import (
 )
 
 type QtvStream struct {
-	Title          string
-	Url            string
-	Id             int
-	Address        string
-	SpectatorNames []qstring.QuakeString
-	SpectatorCount int
+	Title          string                `json:"title"`
+	Url            string                `json:"url"`
+	ID             int                   `json:"id"`
+	Address        string                `json:"address"`
+	SpectatorNames []qstring.QuakeString `json:"spectator_names"`
+	SpectatorCount int                   `json:"spectator_count"`
 }

@@ -178,6 +178,6 @@ func TestClient_MarshalJSON(t *testing.T) {
 	}
 
 	jsonValue, _ := json.Marshal(client)
-	expect := `{"Name":"Final","NameColor":"wwwww","Team":"red","TeamColor":"www","Skin":"","Colors":[2,3],"Frags":-9999,"Ping":-68,"Time":122,"CC":"","IsBot":false}`
+	expect := `{"name":"Final","name_color":"wwwww","team":"red","team_color":"www","skin":"","colors":[2,3],"frags":-9999,"ping":-68,"time":122,"cc":"","is_bot":false}`
 	assert.Equal(t, expect, string(jsonValue))
 }

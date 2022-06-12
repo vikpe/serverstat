@@ -7,9 +7,9 @@ import (
 )
 
 type Time struct {
-	Elapsed   int
-	Total     int
-	Remaining int
+	Elapsed   int `json:"elapsed"`
+	Total     int `json:"total"`
+	Remaining int `json:"remaining"`
 }
 
 func Parse(timelimit int, status string) Time {

@@ -11,11 +11,11 @@ import (
 )
 
 type Info struct {
-	CC          string
-	Country     string
-	Region      string
-	City        string
-	Coordinates [2]float32
+	CC          string     `json:"cc"`
+	Country     string     `json:"country"`
+	Region      string     `json:"region"`
+	City        string     `json:"city"`
+	Coordinates [2]float32 `json:"coordinates"`
 }
 
 type IpToGeoMap map[string]Info

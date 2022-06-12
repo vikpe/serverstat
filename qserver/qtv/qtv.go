@@ -9,8 +9,8 @@ const Name = "qtv"
 const VersionPrefix = Name
 
 type Qtv struct {
-	Address        string
-	SpectatorNames []string
-	Settings       qsettings.Settings
-	Geo            geo.Info
+	Address        string             `json:"address"`
+	SpectatorNames []string           `json:"spectator_names"`
+	Settings       qsettings.Settings `json:"settings"`
+	Geo            geo.Info           `json:"geo"`
 }

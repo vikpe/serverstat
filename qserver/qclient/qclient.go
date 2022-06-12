@@ -13,14 +13,14 @@ import (
 )
 
 type Client struct {
-	Name   qstring.QuakeString
-	Team   qstring.QuakeString
-	Skin   string
-	Colors [2]uint8
-	Frags  int
-	Ping   int
-	Time   uint8
-	CC     string
+	Name   qstring.QuakeString `json:"name"`
+	Team   qstring.QuakeString `json:"team"`
+	Skin   string              `json:"skin"`
+	Colors [2]uint8            `json:"colors"`
+	Frags  int                 `json:"frags"`
+	Ping   int                 `json:"ping"`
+	Time   uint8               `json:"time"`
+	CC     string              `json:"cc"`
 }
 
 func (client Client) IsBot() bool {
@@ -40,17 +40,17 @@ func (client Client) MarshalJSON() ([]byte, error) {
 }
 
 type ClientExport struct {
-	Name      qstring.QuakeString
-	NameColor string
-	Team      qstring.QuakeString
-	TeamColor string
-	Skin      string
-	Colors    [2]uint8
-	Frags     int
-	Ping      int
-	Time      uint8
-	CC        string
-	IsBot     bool
+	Name      qstring.QuakeString `json:"name"`
+	NameColor string              `json:"name_color"`
+	Team      qstring.QuakeString `json:"team"`
+	TeamColor string              `json:"team_color"`
+	Skin      string              `json:"skin"`
+	Colors    [2]uint8            `json:"colors"`
+	Frags     int                 `json:"frags"`
+	Ping      int                 `json:"ping"`
+	Time      uint8               `json:"time"`
+	CC        string              `json:"cc"`
+	IsBot     bool                `json:"is_bot"`
 }
 
 func Export(client Client) ClientExport {

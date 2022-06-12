@@ -1,9 +1,9 @@
 package slots
 
 type Slots struct {
-	Used  int
-	Total int
-	Free  int
+	Used  int `json:"used"`
+	Total int `json:"total"`
+	Free  int `json:"free"`
 }
 
 func New(total int, used int) Slots {
