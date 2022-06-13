@@ -22,10 +22,12 @@ type Status struct {
 
 func New(status string, freeSlots int, mode qmode.Mode) Status {
 	if Standby == status {
-		description := "Waiting for players to ready up"
+		var description string
 
-		if 0 != freeSlots && mode.IsXonX() {
+		if freeSlots > 0 && mode.IsXonX() {
 			description = fmt.Sprintf("Waiting for %d %s", freeSlots, qutil.Pluralize("player", freeSlots))
+		} else {
+			description = "Waiting for players to ready up"
 		}
 
 		return Status{
@@ -33,9 +35,17 @@ func New(status string, freeSlots int, mode qmode.Mode) Status {
 			Description: description,
 		}
 	} else if Countdown == status || strings.Contains(status, " min left") {
+		var description string
+
+		if mode.IsCoop() {
+			description = "Game in progress"
+		} else {
+			description = status
+		}
+
 		return Status{
 			Name:        Started,
-			Description: status,
+			Description: description,
 		}
 	}
 

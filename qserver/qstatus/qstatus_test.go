@@ -73,6 +73,15 @@ func TestParse(t *testing.T) {
 			},
 		},
 		{
+			SettingsStatus:  "0 min left",
+			FreePlayerSlots: 5,
+			Mode:            "coop",
+			Expect: qstatus.Status{
+				Name:        "Started",
+				Description: "Game in progress",
+			},
+		},
+		{
 			SettingsStatus:  "foo",
 			FreePlayerSlots: 2,
 			Mode:            "1on1",
