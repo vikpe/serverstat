@@ -116,6 +116,7 @@ func TestClient_IsBot(t *testing.T) {
 	assert.True(t, qclient.Client{Name: qstring.New("XantoM"), Ping: -666}.IsBot())  // bot ping
 	assert.True(t, qclient.Client{Name: qstring.New("[ServeMe]"), Ping: 12}.IsBot()) // bot name
 	assert.False(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 12}.IsBot())   // neither
+	assert.False(t, qclient.Client{Name: qstring.New("t"), Ping: 12}.IsBot())        // neither
 }
 
 func TestSortPlayers(t *testing.T) {

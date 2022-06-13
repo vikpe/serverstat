@@ -1,7 +1,7 @@
 package bot
 
 import (
-	"strings"
+	"golang.org/x/exp/slices"
 )
 
 func IsBotName(name string) bool {
@@ -14,7 +14,7 @@ func IsBotName(name string) bool {
 		"twitch.tv/vikpe",
 	}
 
-	return strings.Contains(strings.Join(knownBotNames, "\""), name)
+	return slices.Contains(knownBotNames, name)
 }
 
 func IsBotPing(ping int) bool {
