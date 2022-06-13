@@ -35,11 +35,13 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 		teams = qteam.FromPlayers(players)
 	}
 
+	mode := qmode.Parse(server.Settings)
+
 	return mvdsv.Mvdsv{
 		Address:        server.Address,
-		Mode:           qmode.Parse(server.Settings),
+		Mode:           mode,
 		Title:          qtitle.New(server.Settings, server.Players()),
-		Status:         qstatus.New(settingsStatus, playerSlots.Free),
+		Status:         qstatus.New(settingsStatus, playerSlots.Free, mode),
 		Time:           qtime.Parse(timelimit, settingsStatus),
 		Players:        players,
 		PlayerSlots:    playerSlots,

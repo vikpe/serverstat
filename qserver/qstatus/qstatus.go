@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
 	"github.com/vikpe/serverstat/qutil"
 )
 
@@ -19,14 +20,12 @@ type Status struct {
 	Description string `json:"description"`
 }
 
-func New(status string, freeSlots int) Status {
+func New(status string, freeSlots int, mode qmode.Mode) Status {
 	if Standby == status {
-		description := ""
+		description := "Waiting for players to ready up"
 
-		if 0 == freeSlots {
-			description = fmt.Sprintf("Waiting for players to ready up.")
-		} else {
-			description = fmt.Sprintf("Waiting for %d %s.", freeSlots, qutil.Pluralize("player", freeSlots))
+		if 0 != freeSlots && mode.IsXonX() {
+			description = fmt.Sprintf("Waiting for %d %s", freeSlots, qutil.Pluralize("player", freeSlots))
 		}
 
 		return Status{
