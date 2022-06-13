@@ -6,7 +6,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/goccy/go-json v0.9.7
 	github.com/ssoroka/slice v0.0.0-20220402005549-78f0cea3df8b
-	github.com/stretchr/testify v1.7.1
+	github.com/stretchr/testify v1.7.2
 	github.com/valyala/fastjson v1.6.3
 	github.com/vikpe/udpclient v0.1.3
 	github.com/vikpe/udphelper v0.1.3
