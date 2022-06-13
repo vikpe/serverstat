@@ -43,6 +43,7 @@ func TestModeValidators(t *testing.T) {
 		"2on2":     func(m qmode.Mode) bool { return m.Is2on2() },
 		"3on3":     func(m qmode.Mode) bool { return m.Is3on3() },
 		"4on4":     func(m qmode.Mode) bool { return m.Is4on4() },
+		"10on10":   func(m qmode.Mode) bool { return m.Is10on10() },
 		"race":     func(m qmode.Mode) bool { return m.IsRace() },
 		"ffa":      func(m qmode.Mode) bool { return m.IsFfa() },
 		"ctf":      func(m qmode.Mode) bool { return m.IsCtf() },
@@ -63,4 +64,8 @@ func TestModeValidators(t *testing.T) {
 			}
 		}
 	}
+
+	assert.True(t, qmode.Mode("1on1").IsXonX())
+	assert.True(t, qmode.Mode("4on4").IsXonX())
+	assert.False(t, qmode.Mode("ffa").IsXonX())
 }

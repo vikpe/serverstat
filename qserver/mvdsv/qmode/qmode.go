@@ -13,7 +13,8 @@ const (
 	mode2on2     = "2on2"
 	mode3on3     = "3on3"
 	mode4on4     = "4on4"
-	modeRace     = "Race"
+	mode10on10   = "10on10"
+	modeRace     = "race"
 	modeFfa      = "ffa"
 	modeCtf      = "ctf"
 	modeCoop     = "coop"
@@ -30,12 +31,17 @@ func (m Mode) Is1on1() bool     { return m.Is(mode1on1) }
 func (m Mode) Is2on2() bool     { return m.Is(mode2on2) }
 func (m Mode) Is3on3() bool     { return m.Is(mode3on3) }
 func (m Mode) Is4on4() bool     { return m.Is(mode4on4) }
+func (m Mode) Is10on10() bool   { return m.Is(mode10on10) }
 func (m Mode) IsRace() bool     { return m.Is(modeRace) }
 func (m Mode) IsFfa() bool      { return m.Is(modeFfa) }
 func (m Mode) IsCtf() bool      { return m.Is(modeCtf) }
 func (m Mode) IsCoop() bool     { return m.Is(modeCoop) }
 func (m Mode) IsFortress() bool { return m.Is(modeFortress) }
 func (m Mode) IsUnknown() bool  { return m.Is(modeUnknown) }
+func (m Mode) IsXonX() bool {
+	xonxModes := []string{mode1on1, mode2on2, mode3on3, mode4on4, mode10on10}
+	return slices.Contains(xonxModes, string(m))
+}
 
 func Parse(settings qsettings.Settings) Mode {
 	gameDir := strings.ToLower(settings.Get("*gamedir", modeUnknown))
