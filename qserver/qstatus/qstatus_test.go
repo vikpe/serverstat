@@ -82,6 +82,15 @@ func TestParse(t *testing.T) {
 			},
 		},
 		{
+			SettingsStatus:  "Standby",
+			FreePlayerSlots: 5,
+			Mode:            "race",
+			Expect: qstatus.Status{
+				Name:        "Standby",
+				Description: "Racing",
+			},
+		},
+		{
 			SettingsStatus:  "foo",
 			FreePlayerSlots: 2,
 			Mode:            "1on1",

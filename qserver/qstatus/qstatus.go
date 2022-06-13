@@ -21,6 +21,13 @@ type Status struct {
 }
 
 func New(status string, freeSlots int, mode qmode.Mode) Status {
+	if mode.IsRace() {
+		return Status{
+			Name:        Standby,
+			Description: "Racing",
+		}
+	}
+
 	if Standby == status {
 		var description string
 
