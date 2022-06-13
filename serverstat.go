@@ -16,8 +16,9 @@ import (
 func GetInfo(address string) (qserver.GenericServer, error) {
 	server, err := getServerInfo(address)
 
-	if err != nil {
-		server.Geo = geo.NewIpToGeoMap().GetByAddress(server.Address)
+	if err == nil {
+		ipToGeoMap := geo.NewIpToGeoMap()
+		server.Geo = ipToGeoMap.GetByAddress(server.Address)
 	}
 
 	return server, err
@@ -83,8 +84,8 @@ func GetInfoFromMany(addresses []string) []qserver.GenericServer {
 
 	ipToGeo := geo.NewIpToGeoMap()
 
-	for _, server := range servers {
-		server.Geo = ipToGeo.GetByAddress(server.Address)
+	for index, server := range servers {
+		servers[index].Geo = ipToGeo.GetByAddress(server.Address)
 	}
 
 	sort.Slice(servers, func(i, j int) bool {
