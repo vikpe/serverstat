@@ -61,7 +61,7 @@ func (g IpToGeoMap) GetByIp(ip string) Info {
 }
 
 func getJson(url string, target interface{}) error {
-	httpClient := &http.Client{Timeout: 5 * time.Second}
+	httpClient := &http.Client{Timeout: 3 * time.Second}
 	response, err := httpClient.Get(url)
 	if err != nil {
 		return err
