@@ -1,7 +1,6 @@
 package serverstat_test
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -163,10 +162,6 @@ func TestGetInfoFromMany(t *testing.T) {
 					SpectatorNames: make([]qstring.QuakeString, 0),
 				},
 			},
-		}
-
-		for _, n := range servers {
-			fmt.Println(n.Address)
 		}
 
 		assert.Equal(t, []qserver.GenericServer{server1, server2, server3}, servers)

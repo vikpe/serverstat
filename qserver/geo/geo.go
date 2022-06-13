@@ -26,8 +26,10 @@ func NewIpToGeoMap() IpToGeoMap {
 	var result IpToGeoMap
 	err := getJson(url, &result)
 
+	timestamp := time.Now().Format(time.RFC850)
+
 	if err != nil {
-		fmt.Println("Unable to create geo ip map")
+		fmt.Println(timestamp, "Unable to create geo ip map:", err.Error())
 		return make(IpToGeoMap, 0)
 	}
 

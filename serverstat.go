@@ -14,6 +14,16 @@ import (
 )
 
 func GetInfo(address string) (qserver.GenericServer, error) {
+	server, err := getServerInfo(address)
+
+	if err != nil {
+		server.Geo = geo.NewIpToGeoMap().GetByAddress(server.Address)
+	}
+
+	return server, err
+}
+
+func getServerInfo(address string) (qserver.GenericServer, error) {
 	settings, clients, err := status87.ParseResponse(
 		udpclient.New().SendCommand(address, status87.Command),
 	)
@@ -40,8 +50,6 @@ func GetInfo(address string) (qserver.GenericServer, error) {
 		server.ExtraInfo.QtvStream = qtvstream.New()
 	}
 
-	server.Geo = geo.NewIpToGeoMap().GetByAddress(server.Address)
-
 	return server, nil
 }
 
@@ -59,7 +67,7 @@ func GetInfoFromMany(addresses []string) []qserver.GenericServer {
 		go func(address string) {
 			defer wg.Done()
 
-			server, err := GetInfo(address)
+			server, err := getServerInfo(address)
 
 			if err != nil {
 				return
