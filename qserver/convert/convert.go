@@ -9,6 +9,7 @@ import (
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
+	"github.com/vikpe/serverstat/qserver/mvdsv/score"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qclient/slots"
 	"github.com/vikpe/serverstat/qserver/qstatus"
@@ -51,6 +52,7 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 		Settings:       server.Settings,
 		QtvStream:      server.ExtraInfo.QtvStream,
 		Geo:            server.Geo,
+		Score:          score.Calculate(string(mode), clientNames(players)),
 	}
 }
 

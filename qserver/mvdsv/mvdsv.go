@@ -33,6 +33,7 @@ type Mvdsv struct {
 	Settings       qsettings.Settings  `json:"settings"`
 	QtvStream      qtvstream.QtvStream `json:"qtv_stream"`
 	Geo            geo.Info            `json:"geo"`
+	Score          int                 `json:"score"`
 }
 
 func GetQtvUsers(address string) ([]qstring.QuakeString, error) {
