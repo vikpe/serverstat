@@ -1,17 +1,25 @@
 package qscore
 
 import (
+	"math"
 	"strings"
 
 	"github.com/vikpe/serverstat/qserver/qclient"
 )
 
 func FromModeAndPlayers(mode string, players []qclient.Client) int {
-	if isAllBots(players) {
+	botCount := getBotCount(players)
+	playerCount := len(players)
+
+	if botCount == playerCount {
 		return 0
 	}
 
-	return FromModeAndPlayerNames(mode, qclient.ClientNames(players))
+	botPercentage := float64(botCount) / float64(playerCount)
+	score := FromModeAndPlayerNames(mode, qclient.ClientNames(players))
+	weightedScore := math.Round((1.0 - botPercentage) * float64(score))
+
+	return int(weightedScore)
 }
 
 func FromModeAndPlayerNames(mode string, playerNames []string) int {
@@ -46,14 +54,16 @@ func FromModeAndPlayerNames(mode string, playerNames []string) int {
 	return score
 }
 
-func isAllBots(clients []qclient.Client) bool {
+func getBotCount(clients []qclient.Client) int {
+	count := 0
+
 	for _, c := range clients {
-		if !c.IsBot() {
-			return false
+		if c.IsBot() {
+			count++
 		}
 	}
 
-	return true
+	return count
 }
 
 func getMaxScoreByMode(mode string) float64 {

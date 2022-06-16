@@ -222,7 +222,12 @@ func TestFromModeAndPlayers(t *testing.T) {
 	})
 
 	t.Run("mixed bots and humans", func(t *testing.T) {
-		score := qscore.FromModeAndPlayers("2on2", []qclient.Client{botBro, botTincan, humanXantoM})
-		assert.Equal(t, 14, score)
+		score := qscore.FromModeAndPlayers("2on2", []qclient.Client{botBro, botTincan, humanXantoM, humanXantoM})
+		assert.Equal(t, 20, score)
+	})
+
+	t.Run("only humans", func(t *testing.T) {
+		score := qscore.FromModeAndPlayers("2on2", []qclient.Client{humanXantoM, humanXantoM, humanXantoM, humanXantoM})
+		assert.Equal(t, 70, score)
 	})
 }
