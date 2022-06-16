@@ -68,7 +68,7 @@ func TestGetInfo(t *testing.T) {
 				QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 			}{
 				QtvStream: qtvstream.QtvStream{
-					SpectatorNames: make([]qstring.QuakeString, 0),
+					SpectatorNames: make([]string, 0),
 				},
 			},
 		}
@@ -123,7 +123,7 @@ func TestGetInfoFromMany(t *testing.T) {
 				QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 			}{
 				QtvStream: qtvstream.QtvStream{
-					SpectatorNames: make([]qstring.QuakeString, 0),
+					SpectatorNames: make([]string, 0),
 				},
 			},
 		}
@@ -141,7 +141,7 @@ func TestGetInfoFromMany(t *testing.T) {
 				QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 			}{
 				QtvStream: qtvstream.QtvStream{
-					SpectatorNames: make([]qstring.QuakeString, 0),
+					SpectatorNames: make([]string, 0),
 				},
 			},
 		}
@@ -159,7 +159,7 @@ func TestGetInfoFromMany(t *testing.T) {
 				QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 			}{
 				QtvStream: qtvstream.QtvStream{
-					SpectatorNames: make([]qstring.QuakeString, 0),
+					SpectatorNames: make([]string, 0),
 				},
 			},
 		}

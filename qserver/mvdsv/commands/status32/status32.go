@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
-	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/serverstat/qutil"
 	"github.com/vikpe/udpclient"
 )
@@ -50,7 +49,7 @@ func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) 
 		Url:            record[IndexUrl],
 		ID:             qutil.StringToInt(urlParts[0]),
 		Address:        urlParts[1],
-		SpectatorNames: make([]qstring.QuakeString, 0),
+		SpectatorNames: make([]string, 0),
 		SpectatorCount: qutil.StringToInt(record[IndexClientCount]),
 	}
 	return stream, nil

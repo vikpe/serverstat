@@ -12,7 +12,6 @@ import (
 	"github.com/vikpe/serverstat/qserver/qstatus"
 	"github.com/vikpe/serverstat/qserver/qteam"
 	"github.com/vikpe/serverstat/qserver/qtime"
-	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udpclient"
 )
 
@@ -36,7 +35,7 @@ type Mvdsv struct {
 	Score          int                 `json:"score"`
 }
 
-func GetQtvUsers(address string) ([]qstring.QuakeString, error) {
+func GetQtvUsers(address string) ([]string, error) {
 	return qtvusers.ParseResponse(
 		udpclient.New().SendCommand(address, qtvusers.Command),
 	)
@@ -54,7 +53,7 @@ func GetQtvStream(address string) (qtvstream.QtvStream, error) {
 			stream.SpectatorNames = spectatorNames
 		}
 	} else {
-		stream.SpectatorNames = make([]qstring.QuakeString, 0)
+		stream.SpectatorNames = make([]string, 0)
 	}
 
 	stream.SpectatorCount = len(stream.SpectatorNames)

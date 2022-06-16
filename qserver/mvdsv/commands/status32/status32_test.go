@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/status32"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
-	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
 var EmptyStream = qtvstream.QtvStream{
@@ -15,7 +14,7 @@ var EmptyStream = qtvstream.QtvStream{
 	Url:            "",
 	ID:             0,
 	Address:        "",
-	SpectatorNames: make([]qstring.QuakeString, 0),
+	SpectatorNames: make([]string, 0),
 	SpectatorCount: 0,
 }
 
@@ -48,7 +47,7 @@ func TestParseResponse(t *testing.T) {
 			ID:             3,
 			Address:        "qw.foppa.dk:28000",
 			SpectatorCount: 4,
-			SpectatorNames: make([]qstring.QuakeString, 0),
+			SpectatorNames: make([]string, 0),
 		}
 		assert.Equal(t, expect, result)
 		assert.Nil(t, err)

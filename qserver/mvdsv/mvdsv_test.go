@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
-	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udphelper"
 )
 
@@ -15,7 +14,7 @@ func TestGetQtvStream(t *testing.T) {
 	t.Run("error", func(t *testing.T) {
 		stream, err := mvdsv.GetQtvStream("foo:666")
 		assert.Equal(t, qtvstream.QtvStream{
-			SpectatorNames: make([]qstring.QuakeString, 0),
+			SpectatorNames: make([]string, 0),
 		}, stream)
 		assert.NotNil(t, err)
 	})
@@ -37,7 +36,7 @@ func TestGetQtvStream(t *testing.T) {
 			ID:             3,
 			Address:        "qw.foppa.dk:28000",
 			SpectatorCount: 0,
-			SpectatorNames: []qstring.QuakeString{},
+			SpectatorNames: []string{},
 		}
 		assert.Equal(t, expectStream, stream)
 		assert.Nil(t, err)
@@ -64,9 +63,9 @@ func TestGetQtvStream(t *testing.T) {
 			ID:             3,
 			Address:        "qw.foppa.dk:28000",
 			SpectatorCount: 2,
-			SpectatorNames: []qstring.QuakeString{
-				qstring.New("XantoM"),
-				qstring.New("valla"),
+			SpectatorNames: []string{
+				"XantoM",
+				"valla",
 			},
 		}
 
