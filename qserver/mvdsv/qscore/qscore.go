@@ -1,8 +1,20 @@
-package score
+package qscore
 
-import "strings"
+import (
+	"strings"
 
-func Calculate(mode string, playerNames []string) int {
+	"github.com/vikpe/serverstat/qserver/qclient"
+)
+
+func FromModeAndPlayers(mode string, players []qclient.Client) int {
+	if isAllBots(players) {
+		return 0
+	}
+
+	return FromModeAndPlayerNames(mode, qclient.ClientNames(players))
+}
+
+func FromModeAndPlayerNames(mode string, playerNames []string) int {
 	playerCount := len(playerNames)
 
 	if 0 == playerCount {
@@ -32,6 +44,16 @@ func Calculate(mode string, playerNames []string) int {
 	//fmt.Println(score, " .. ", mode, strings.Join(playerNames, ", "), " factor ", playerFactor)
 
 	return score
+}
+
+func isAllBots(clients []qclient.Client) bool {
+	for _, c := range clients {
+		if !c.IsBot() {
+			return false
+		}
+	}
+
+	return true
 }
 
 func getMaxScoreByMode(mode string) float64 {

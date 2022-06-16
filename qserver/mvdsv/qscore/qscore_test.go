@@ -1,4 +1,4 @@
-package score_test
+package qscore_test
 
 import (
 	"math/rand"
@@ -7,7 +7,9 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vikpe/serverstat/qserver/mvdsv/score"
+	"github.com/vikpe/serverstat/qserver/mvdsv/qscore"
+	"github.com/vikpe/serverstat/qserver/qclient"
+	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
 func TestCalculate(t *testing.T) {
@@ -140,7 +142,7 @@ func TestCalculate(t *testing.T) {
 	for _, s := range scenarios {
 		results = append(results, result{
 			title: s.title,
-			score: score.Calculate(s.mode, s.players),
+			score: qscore.FromModeAndPlayerNames(s.mode, s.players),
 		})
 	}
 
@@ -183,19 +185,44 @@ func BenchmarkCalculate(b *testing.B) {
 
 	b.Run("4on4 missing players", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			score.Calculate("4on4", []string{"xantom", "bps", "foo", "bar", "baz"})
+			qscore.FromModeAndPlayerNames("4on4", []string{"xantom", "bps", "foo", "bar", "baz"})
 		}
 	})
 
 	b.Run("1on1", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			score.Calculate("1on1", []string{"xantom", "bps"})
+			qscore.FromModeAndPlayerNames("1on1", []string{"xantom", "bps"})
 		}
 	})
 
 	b.Run("ffa", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
-			score.Calculate("ffa", []string{"xantom", "bps", "foo", "bar", "baz", "alpha", "beta", "gamma"})
+			qscore.FromModeAndPlayerNames("ffa", []string{"xantom", "bps", "foo", "bar", "baz", "alpha", "beta", "gamma"})
 		}
+	})
+}
+
+func TestFromModeAndPlayers(t *testing.T) {
+	botBro := qclient.Client{
+		Name: qstring.New("/ bro"),
+		Ping: 10,
+	}
+	botTincan := qclient.Client{
+		Name: qstring.New("/ tincan"),
+		Ping: -500,
+	}
+	humanXantoM := qclient.Client{
+		Name: qstring.New("XantoM"),
+		Ping: 12,
+	}
+
+	t.Run("only bots", func(t *testing.T) {
+		score := qscore.FromModeAndPlayers("2on2", []qclient.Client{botBro, botTincan})
+		assert.Equal(t, 0, score)
+	})
+
+	t.Run("mixed bots and humans", func(t *testing.T) {
+		score := qscore.FromModeAndPlayers("2on2", []qclient.Client{botBro, botTincan, humanXantoM})
+		assert.Equal(t, 14, score)
 	})
 }

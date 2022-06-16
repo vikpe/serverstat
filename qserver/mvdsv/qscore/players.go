@@ -1,4 +1,4 @@
-package score
+package qscore
 
 var PlayerDivs = map[string]float64{
 	// misc eu

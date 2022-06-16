@@ -4,12 +4,11 @@ import (
 	"fmt"
 
 	"github.com/goccy/go-json"
-	"github.com/ssoroka/slice"
 	"github.com/valyala/fastjson"
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
-	"github.com/vikpe/serverstat/qserver/mvdsv/score"
+	"github.com/vikpe/serverstat/qserver/mvdsv/qscore"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qclient/slots"
 	"github.com/vikpe/serverstat/qserver/qstatus"
@@ -24,7 +23,7 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 	players := server.Players()
 	qclient.SortPlayers(players)
 
-	spectatorNames := clientNames(server.Spectators())
+	spectatorNames := qclient.ClientNames(server.Spectators())
 	playerSlots := slots.New(server.Settings.GetInt("maxclients", 0), len(players))
 	spectatorSlots := slots.New(server.Settings.GetInt("maxspectators", 0), len(spectatorNames))
 	timelimit := server.Settings.GetInt("timelimit", 0)
@@ -52,14 +51,14 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 		Settings:       server.Settings,
 		QtvStream:      server.ExtraInfo.QtvStream,
 		Geo:            server.Geo,
-		Score:          score.Calculate(string(mode), clientNames(players)),
+		Score:          qscore.FromModeAndPlayers(string(mode), players),
 	}
 }
 
 func ToQtv(server qserver.GenericServer) qtv.Qtv {
 	return qtv.Qtv{
 		Address:        server.Address,
-		SpectatorNames: clientNames(server.Clients),
+		SpectatorNames: qclient.ClientNames(server.Clients),
 		Settings:       server.Settings,
 		Geo:            server.Geo,
 	}
@@ -68,20 +67,10 @@ func ToQtv(server qserver.GenericServer) qtv.Qtv {
 func ToQwfwd(server qserver.GenericServer) qwfwd.Qwfwd {
 	return qwfwd.Qwfwd{
 		Address:     server.Address,
-		ClientNames: clientNames(server.Clients),
+		ClientNames: qclient.ClientNames(server.Clients),
 		Settings:    server.Settings,
 		Geo:         server.Geo,
 	}
-}
-
-func clientNames(clients []qclient.Client) []string {
-	if 0 == len(clients) {
-		return make([]string, 0)
-	}
-
-	return slice.Map[qclient.Client, string](clients, func(client qclient.Client) string {
-		return client.Name.ToPlainString()
-	})
 }
 
 func ToJson(server qserver.GenericServer) string {

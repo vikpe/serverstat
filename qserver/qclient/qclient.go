@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/ssoroka/slice"
 	"github.com/vikpe/serverstat/qserver/qclient/bot"
 	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/serverstat/qutil"
@@ -146,6 +147,16 @@ func NewFromString(clientString string) (Client, error) {
 		Time:   uint8(qutil.StringToInt(clientRecord[IndexTime])),
 		CC:     flag,
 	}, nil
+}
+
+func ClientNames(clients []Client) []string {
+	if 0 == len(clients) {
+		return make([]string, 0)
+	}
+
+	return slice.Map[Client, string](clients, func(client Client) string {
+		return client.Name.ToPlainString()
+	})
 }
 
 func SortPlayers(players []Client) {
