@@ -10,7 +10,7 @@ require (
 	github.com/valyala/fastjson v1.6.3
 	github.com/vikpe/udpclient v0.1.3
 	github.com/vikpe/udphelper v0.1.3
-	golang.org/x/exp v0.0.0-20220609121020-a51bd0440498
+	golang.org/x/exp v0.0.0-20220613132600-b0d781184e0d
 )
 
 require (
@@ -20,7 +20,7 @@ require (
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
-	golang.org/x/sys v0.0.0-20220610221304-9f5ed59c137d // indirect
+	golang.org/x/sys v0.0.0-20220615213510-4f61da869c0c // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
