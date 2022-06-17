@@ -2,6 +2,7 @@ package qtvusers_test
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -31,12 +32,13 @@ func TestParseResponse(t *testing.T) {
 		})
 
 		t.Run("valid response body", func(t *testing.T) {
-			responseBody := []byte(`12 "XantoM" "player"`)
+			bassInRed := string([]byte{98 + 128, 97 + 128, 115 + 128, 115 + 128})
+			responseBody := []byte(fmt.Sprintf(`12 "XantoM" "%s"`, bassInRed))
 
 			result, err := qtvusers.ParseResponse(responseBody, nil)
 			expect := []string{
 				"XantoM",
-				"player",
+				"bass",
 			}
 
 			assert.Equal(t, expect, result)

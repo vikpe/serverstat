@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/udpclient"
 )
 
@@ -28,7 +29,12 @@ func ParseResponse(responseBody []byte, err error) ([]string, error) {
 	indexFirstQuote := strings.Index(fullText, QuoteChar)
 	indexLastQuote := strings.LastIndex(fullText, QuoteChar)
 	namesText := fullText[indexFirstQuote+1 : indexLastQuote]
-	spectatorNames := strings.Split(namesText, "\" \"")
+	spectatorQuakeNames := strings.Split(namesText, "\" \"")
 
-	return spectatorNames, nil
+	spectatorPlainNames := make([]string, 0)
+	for _, quakeName := range spectatorQuakeNames {
+		spectatorPlainNames = append(spectatorPlainNames, qstring.New(quakeName).ToPlainString())
+	}
+
+	return spectatorPlainNames, nil
 }

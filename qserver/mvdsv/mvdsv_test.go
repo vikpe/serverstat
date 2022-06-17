@@ -1,6 +1,7 @@
 package mvdsv_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -47,9 +48,9 @@ func TestGetQtvStream(t *testing.T) {
 			qtvHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', ' '}
 			qtvBody := []byte(`1 "qw.foppa.dk - qtv (3)" "3@qw.foppa.dk:28000" 2`)
 			qtvResponse := append(qtvHeader, qtvBody...)
-
 			qtvusersHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'q', 't', 'v', 'u', 's', 'e', 'r', 's'}
-			qtvusersBody := []byte(`12 "XantoM" "valla"`)
+			bassInRed := string([]byte{98 + 128, 97 + 128, 115 + 128, 115 + 128})
+			qtvusersBody := []byte(fmt.Sprintf(`12 "XantoM" "%s"`, bassInRed))
 			qtvusersResponse := append(qtvusersHeader, qtvusersBody...)
 
 			udphelper.New(":5002").Respond(qtvResponse, qtvusersResponse)
@@ -65,7 +66,7 @@ func TestGetQtvStream(t *testing.T) {
 			SpectatorCount: 2,
 			SpectatorNames: []string{
 				"XantoM",
-				"valla",
+				"bass",
 			},
 		}
 
