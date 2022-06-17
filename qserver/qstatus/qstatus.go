@@ -20,7 +20,14 @@ type Status struct {
 	Description string `json:"description"`
 }
 
-func New(status string, freeSlots int, mode qmode.Mode) Status {
+func New(status string, freeSlots int, mode qmode.Mode, hasFrags bool) Status {
+	if hasFrags && Standby == status && (mode.IsXonX() || mode.IsFfa()) {
+		return Status{
+			Name:        Started,
+			Description: "Score screen",
+		}
+	}
+
 	if mode.IsRace() {
 		return Status{
 			Name:        Standby,

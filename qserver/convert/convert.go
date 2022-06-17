@@ -37,11 +37,19 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 
 	mode := qmode.Parse(server.Settings)
 
+	hasFrags := false
+	for _, p := range players {
+		if p.Frags > 0 {
+			hasFrags = true
+			break
+		}
+	}
+
 	return mvdsv.Mvdsv{
 		Address:        server.Address,
 		Mode:           mode,
 		Title:          qtitle.New(server.Settings, server.Players()),
-		Status:         qstatus.New(settingsStatus, playerSlots.Free, mode),
+		Status:         qstatus.New(settingsStatus, playerSlots.Free, mode, hasFrags),
 		Time:           qtime.Parse(timelimit, settingsStatus),
 		Players:        players,
 		PlayerSlots:    playerSlots,
