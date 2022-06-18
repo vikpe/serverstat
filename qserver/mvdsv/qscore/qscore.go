@@ -1,7 +1,6 @@
 package qscore
 
 import (
-	"fmt"
 	"math"
 	"strings"
 
@@ -50,7 +49,7 @@ func FromModeAndPlayerNames(mode string, playerNames []string) int {
 	playerFactor := 1 / getAverageDiv(playerNames)
 	score := int(playerFactor * maxScore)
 
-	fmt.Println(score, " .. ", mode, strings.Join(playerNames, ", "), " factor ", playerFactor)
+	//fmt.Println(score, " .. ", mode, strings.Join(playerNames, ", "), " factor ", playerFactor)
 
 	return score
 }
