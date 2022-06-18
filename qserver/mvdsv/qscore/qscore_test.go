@@ -168,7 +168,7 @@ func TestCalculate(t *testing.T) {
 		s4on4Div1Need1,
 		s4on4Div1To2,
 		s3on3Div1,
-		s2on2Div1,
+		s2on2Div1,q
 		s4on4Mix,
 		s4on4Div2,
 		s1on1Div1,
