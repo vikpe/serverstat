@@ -22,10 +22,9 @@ func TestIsBotName(t *testing.T) {
 
 func TestIsBotPing(t *testing.T) {
 	testCases := map[int]bool{
-		10:   true,
-		-550: true,
-		12:   false,
-		255:  false,
+		10:  true,
+		12:  false,
+		255: false,
 	}
 
 	for ping, expect := range testCases {

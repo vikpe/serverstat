@@ -216,7 +216,7 @@ func TestFromModeAndPlayers(t *testing.T) {
 	}
 	botTincan := qclient.Client{
 		Name: qstring.New("/ tincan"),
-		Ping: -500,
+		Ping: 10,
 	}
 	humanXantoM := qclient.Client{
 		Name: qstring.New("XantoM"),
