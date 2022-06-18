@@ -36,9 +36,10 @@ func TestCalculate(t *testing.T) {
 	const s2on2Div1To2 = "2on2 div1-2"
 	const s1on1Div1 = "1on1 div1"
 	const s1on1Div1Need1 = "1on1 div1 need 1"
-	const sFFA = "FFA"
+	const sFFAMix = "FFA"
 	const sCoopDiv1 = "coop div1"
 	const sRaceDiv1 = "race div1"
+	const sFFAOnePlayer = "ffa one player"
 	const sUnknownMode = "unknown mode"
 	const sEmptyServer = "empty server"
 
@@ -99,9 +100,14 @@ func TestCalculate(t *testing.T) {
 			[]string{one, one, two, two},
 		},
 		{
-			sFFA,
+			sFFAMix,
 			"ffa",
 			[]string{one, two, two, null, null},
+		},
+		{
+			sFFAOnePlayer,
+			"ffa",
+			[]string{one},
 		},
 		{
 			sCoopDiv1,
@@ -169,10 +175,11 @@ func TestCalculate(t *testing.T) {
 		s2on2Div1To2,
 		s4on4Div1Need2,
 		sCoopDiv1,
-		sFFA,
+		sFFAMix,
 		sRaceDiv1,
 		s1on1Div1Need1,
 		sUnknownMode,
+		sFFAOnePlayer,
 		sEmptyServer,
 	}
 
