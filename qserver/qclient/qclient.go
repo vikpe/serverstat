@@ -28,6 +28,10 @@ func (client Client) IsBot() bool {
 	return bot.IsBotPing(client.Ping) || bot.IsBotName(client.Name.ToPlainString())
 }
 
+func (client Client) IsHuman() bool {
+	return !client.IsBot()
+}
+
 func (client Client) IsSpectator() bool {
 	return client.Ping < 0
 }

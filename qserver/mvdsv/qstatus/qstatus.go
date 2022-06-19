@@ -31,8 +31,11 @@ func New(status string, mode qmode.Mode, players []qclient.Client, freeSlots int
 
 	if Standby == status && (mode.IsXonX() || mode.IsFfa()) && hasFrags(players) {
 		if hasBots(players) {
-			return Status{Name: Standby, Description: "Score screen"}
+			if hasHumans(players) {
+				return Status{Name: Standby, Description: "Score screen"}
+			}
 
+			return Status{Name: Standby, Description: "Waiting for players"}
 		}
 
 		return Status{Name: Started, Description: "Score screen"}
@@ -93,6 +96,20 @@ func hasBots(players []qclient.Client) bool {
 
 	for _, p := range players {
 		if p.IsBot() {
+			return true
+		}
+	}
+
+	return false
+}
+
+func hasHumans(players []qclient.Client) bool {
+	if 0 == len(players) {
+		return false
+	}
+
+	for _, p := range players {
+		if p.IsHuman() {
 			return true
 		}
 	}

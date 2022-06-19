@@ -79,6 +79,16 @@ func TestParse(t *testing.T) {
 		},
 		{
 			SettingsStatus: "Standby",
+			Mode:           "ffa",
+			Players:        []qclient.Client{botWithFrags, botWithFrags},
+			FreeSlots:      4,
+			Expect: qstatus.Status{
+				Name:        "Standby",
+				Description: "Waiting for players",
+			},
+		},
+		{
+			SettingsStatus: "Standby",
 			Mode:           "1on1",
 			Players:        []qclient.Client{humanWithoutFrags},
 			FreeSlots:      1,
