@@ -20,7 +20,7 @@ type Client struct {
 	Colors [2]uint8            `json:"colors"`
 	Frags  int                 `json:"frags"`
 	Ping   int                 `json:"ping"`
-	Time   uint8               `json:"time"`
+	Time   int                 `json:"time"`
 	CC     string              `json:"cc"`
 }
 
@@ -53,7 +53,7 @@ type ClientExport struct {
 	Colors    [2]uint8            `json:"colors"`
 	Frags     int                 `json:"frags"`
 	Ping      int                 `json:"ping"`
-	Time      uint8               `json:"time"`
+	Time      int                 `json:"time"`
 	CC        string              `json:"cc"`
 	IsBot     bool                `json:"is_bot"`
 }
@@ -148,7 +148,7 @@ func NewFromString(clientString string) (Client, error) {
 		Colors: [2]uint8{uint8(colorTop), uint8(colorBottom)},
 		Frags:  qutil.StringToInt(clientRecord[IndexFrags]),
 		Ping:   ping,
-		Time:   uint8(qutil.StringToInt(clientRecord[IndexTime])),
+		Time:   qutil.StringToInt(clientRecord[IndexTime]),
 		CC:     flag,
 	}, nil
 }
