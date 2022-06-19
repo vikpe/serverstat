@@ -8,18 +8,27 @@ import (
 )
 
 func FromModeAndPlayers(mode string, players []qclient.Client) int {
-	botCount := getBotCount(players)
 	playerCount := len(players)
+
+	if 0 == playerCount {
+		return 0
+	}
+
+	botCount := getBotCount(players)
 
 	if botCount == playerCount {
 		return 0
 	}
 
-	botPercentage := float64(botCount) / float64(playerCount)
 	score := FromModeAndPlayerNames(mode, qclient.ClientNames(players))
-	weightedScore := math.Round((1.0 - botPercentage) * float64(score))
 
-	return int(weightedScore)
+	if botCount > 0 {
+		botPercentage := float64(botCount) / float64(playerCount)
+		weightedScore := math.Round((1.0 - botPercentage) * float64(score))
+		return int(weightedScore)
+	}
+
+	return score
 }
 
 func FromModeAndPlayerNames(mode string, playerNames []string) int {
