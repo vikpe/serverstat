@@ -21,6 +21,10 @@ type Status struct {
 	Description string `json:"description"`
 }
 
+func (s Status) IsStarted() bool { return Started == s.Name }
+func (s Status) IsStandby() bool { return Standby == s.Name }
+func (s Status) IsUnknown() bool { return Unknown == s.Name }
+
 func New(status string, mode qmode.Mode, players []qclient.Client, freeSlots int) Status {
 	if mode.IsRace() {
 		return Status{
