@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
-	"github.com/vikpe/serverstat/qserver/qstatus"
+	"github.com/vikpe/serverstat/qserver/mvdsv/qstatus"
 )
 
 func TestParse(t *testing.T) {
