@@ -50,7 +50,7 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 		Mode:           mode,
 		Title:          qtitle.New(server.Settings, server.Players()),
 		Status:         qstatus.New(settingsStatus, playerSlots.Free, mode, hasFrags),
-		Time:           qtime.Parse(timelimit, settingsStatus),
+		Time:           qtime.New(timelimit, settingsStatus),
 		Players:        players,
 		PlayerSlots:    playerSlots,
 		Teams:          teams,

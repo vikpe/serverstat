@@ -7,14 +7,14 @@ import (
 	"github.com/vikpe/serverstat/qserver/qtime"
 )
 
-func TestParse(t *testing.T) {
+func TestNew(t *testing.T) {
 	t.Run("Standby", func(t *testing.T) {
 		expect := qtime.Time{
 			Elapsed:   0,
 			Total:     10,
 			Remaining: 10,
 		}
-		time := qtime.Parse(10, "Standby")
+		time := qtime.New(10, "Standby")
 		assert.Equal(t, expect, time)
 	})
 
@@ -24,7 +24,7 @@ func TestParse(t *testing.T) {
 			Total:     10,
 			Remaining: 10,
 		}
-		time := qtime.Parse(10, "Countdown")
+		time := qtime.New(10, "Countdown")
 		assert.Equal(t, expect, time)
 	})
 
@@ -34,7 +34,7 @@ func TestParse(t *testing.T) {
 			Total:     10,
 			Remaining: 3,
 		}
-		time := qtime.Parse(10, "3 min left")
+		time := qtime.New(10, "3 min left")
 		assert.Equal(t, expect, time)
 	})
 }

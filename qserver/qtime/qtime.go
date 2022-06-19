@@ -12,7 +12,7 @@ type Time struct {
 	Remaining int `json:"remaining"`
 }
 
-func Parse(timelimit int, status string) Time {
+func New(timelimit int, status string) Time {
 	timeRemaining := timelimit
 
 	const minLeftNeedle = " min left"
