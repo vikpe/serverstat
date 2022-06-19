@@ -78,6 +78,7 @@ var PlayerDivs = map[string]float64{
 	// div2
 	"andeh":         2,
 	"baresi":        2,
+	"bernkaoch":     2,
 	"billy-the-kid": 2,
 	"btk":           2,
 	"conan":         2,
