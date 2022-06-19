@@ -68,4 +68,12 @@ func TestModeValidators(t *testing.T) {
 	assert.True(t, qmode.Mode("1on1").IsXonX())
 	assert.True(t, qmode.Mode("4on4").IsXonX())
 	assert.False(t, qmode.Mode("ffa").IsXonX())
+	assert.False(t, qmode.Mode("coop").IsXonX())
+	assert.False(t, qmode.Mode("race").IsXonX())
+
+	assert.False(t, qmode.Mode("1on1").IsCustom())
+	assert.False(t, qmode.Mode("4on4").IsCustom())
+	assert.False(t, qmode.Mode("ffa").IsCustom())
+	assert.True(t, qmode.Mode("coop").IsCustom())
+	assert.True(t, qmode.Mode("race").IsCustom())
 }

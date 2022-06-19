@@ -38,6 +38,7 @@ func (m Mode) IsCtf() bool      { return m.Is(modeCtf) }
 func (m Mode) IsCoop() bool     { return m.Is(modeCoop) }
 func (m Mode) IsFortress() bool { return m.Is(modeFortress) }
 func (m Mode) IsUnknown() bool  { return m.Is(modeUnknown) }
+func (m Mode) IsCustom() bool   { return !(m.IsFfa() || m.IsXonX()) }
 func (m Mode) IsXonX() bool {
 	xonxModes := []string{mode1on1, mode2on2, mode3on3, mode4on4, mode10on10}
 	return slices.Contains(xonxModes, string(m))
