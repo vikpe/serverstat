@@ -7,6 +7,7 @@ import (
 	"github.com/valyala/fastjson"
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
+	"github.com/vikpe/serverstat/qserver/mvdsv/analyze"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qscore"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qstatus"
@@ -36,8 +37,7 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 	}
 
 	mode := qmode.Parse(server.Settings)
-
-	return mvdsv.Mvdsv{
+	mvdsvServer := mvdsv.Mvdsv{
 		Address:        server.Address,
 		Mode:           mode,
 		Title:          qtitle.New(server.Settings, server.Players()),
@@ -51,8 +51,16 @@ func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
 		Settings:       server.Settings,
 		QtvStream:      server.ExtraInfo.QtvStream,
 		Geo:            server.Geo,
-		Score:          qscore.FromModeAndPlayers(string(mode), players),
 	}
+
+	// score: idle server
+	if analyze.IsIdle(mvdsvServer) {
+		mvdsvServer.Score = 0
+	} else {
+		mvdsvServer.Score = qscore.FromModeAndPlayers(string(mvdsvServer.Mode), mvdsvServer.Players)
+	}
+
+	return mvdsvServer
 }
 
 func ToQtv(server qserver.GenericServer) qtv.Qtv {
