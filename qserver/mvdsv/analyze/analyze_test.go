@@ -26,7 +26,7 @@ func TestIsIdle(t *testing.T) {
 		assert.False(t, analyze.IsIdle(server))
 	})
 
-	t.Run("not standby", func(t *testing.T) {
+	t.Run("2on2 started", func(t *testing.T) {
 		server := mvdsv.Mvdsv{
 			PlayerSlots: slots.New(4, 2),
 			Mode:        qmode.Mode("2on2"),
@@ -35,7 +35,7 @@ func TestIsIdle(t *testing.T) {
 		assert.False(t, analyze.IsIdle(server))
 	})
 
-	t.Run("standby - not full server - players high time", func(t *testing.T) {
+	t.Run("2on2 standby - not full server - players high time", func(t *testing.T) {
 		server := mvdsv.Mvdsv{
 			PlayerSlots: slots.New(4, 2),
 			Mode:        qmode.Mode("2on2"),
@@ -45,32 +45,42 @@ func TestIsIdle(t *testing.T) {
 		assert.False(t, analyze.IsIdle(server))
 	})
 
-	t.Run("standby - full server - players low time", func(t *testing.T) {
+	t.Run("1on1 standby - full server - players low time", func(t *testing.T) {
 		server := mvdsv.Mvdsv{
 			PlayerSlots: slots.New(2, 2),
 			Mode:        qmode.Mode("1on1"),
 			Status:      qstatus.Status{Name: "Standby"},
-			Players:     []qclient.Client{{Time: 3}, {Time: 9}},
+			Players:     []qclient.Client{{Time: 2}, {Time: 4}},
 		}
 		assert.False(t, analyze.IsIdle(server))
 	})
 
-	t.Run("standby - full server - players high time", func(t *testing.T) {
+	t.Run("1on1 standby - full server - players high time", func(t *testing.T) {
 		server := mvdsv.Mvdsv{
 			PlayerSlots: slots.New(2, 2),
 			Mode:        qmode.Mode("1on1"),
 			Status:      qstatus.Status{Name: "Standby"},
-			Players:     []qclient.Client{{Time: 15}, {Time: 32}},
+			Players:     []qclient.Client{{Time: 4}, {Time: 5}},
 		}
 		assert.True(t, analyze.IsIdle(server))
 	})
 
-	t.Run("standby - custom mode - player high time", func(t *testing.T) {
+	t.Run("2on2 standby - full server - players high time", func(t *testing.T) {
+		server := mvdsv.Mvdsv{
+			PlayerSlots: slots.New(4, 4),
+			Mode:        qmode.Mode("2on2"),
+			Status:      qstatus.Status{Name: "Standby"},
+			Players:     []qclient.Client{{Time: 5}, {Time: 6}},
+		}
+		assert.True(t, analyze.IsIdle(server))
+	})
+
+	t.Run("coop standby - custom mode - player high time", func(t *testing.T) {
 		server := mvdsv.Mvdsv{
 			PlayerSlots: slots.New(26, 1),
 			Mode:        qmode.Mode("coop"),
 			Status:      qstatus.Status{Name: "Standby"},
-			Players:     []qclient.Client{{Time: 32}},
+			Players:     []qclient.Client{{Time: 3}},
 		}
 		assert.True(t, analyze.IsIdle(server))
 	})

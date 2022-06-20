@@ -5,8 +5,6 @@ import (
 	"github.com/vikpe/serverstat/qserver/qclient"
 )
 
-const IdleThreshold = 15 // minutes
-
 func IsIdle(server mvdsv.Mvdsv) bool {
 	if 0 == server.PlayerSlots.Used {
 		return true
@@ -20,7 +18,11 @@ func IsIdle(server mvdsv.Mvdsv) bool {
 		return false
 	}
 
-	return MinPlayerTime(server.Players) >= IdleThreshold
+	minIdleLimit := 3
+	maxIdleLimit := 8
+	idleLimit := clampInt(server.PlayerSlots.Used, minIdleLimit, maxIdleLimit)
+
+	return MinPlayerTime(server.Players) >= idleLimit
 }
 
 func MinPlayerTime(players []qclient.Client) int {
@@ -41,4 +43,13 @@ func MinPlayerTime(players []qclient.Client) int {
 	}
 
 	return result
+}
+
+func clampInt(value int, min int, max int) int {
+	if value < min {
+		return min
+	} else if value > max {
+		return max
+	}
+	return value
 }
