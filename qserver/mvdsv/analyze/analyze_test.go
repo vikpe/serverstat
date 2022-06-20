@@ -70,7 +70,7 @@ func TestIsIdle(t *testing.T) {
 			PlayerSlots: slots.New(4, 4),
 			Mode:        qmode.Mode("2on2"),
 			Status:      qstatus.Status{Name: "Standby"},
-			Players:     []qclient.Client{{Time: 5}, {Time: 6}},
+			Players:     []qclient.Client{{Time: 6}, {Time: 7}},
 		}
 		assert.True(t, analyze.IsIdle(server))
 	})

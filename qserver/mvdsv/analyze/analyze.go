@@ -19,8 +19,8 @@ func IsIdle(server mvdsv.Mvdsv) bool {
 	}
 
 	minIdleLimit := 3
-	maxIdleLimit := 8
-	idleLimit := clampInt(server.PlayerSlots.Used, minIdleLimit, maxIdleLimit)
+	maxIdleLimit := 10
+	idleLimit := clampInt(int(float64(server.PlayerSlots.Used)*1.5), minIdleLimit, maxIdleLimit)
 
 	return MinPlayerTime(server.Players) >= idleLimit
 }
