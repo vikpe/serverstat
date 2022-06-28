@@ -7,20 +7,18 @@ import (
 	"github.com/vikpe/serverstat/qutil"
 )
 
-type QuakeString struct {
-	bytes []byte
-}
+type QuakeString string
 
 func New(str string) QuakeString {
-	return QuakeString{bytes: []byte(str)}
+	return QuakeString(str)
 }
 
 func (qs QuakeString) ToPlainString() string {
-	return ToPlainString(string(qs.bytes))
+	return ToPlainString(string(qs))
 }
 
 func (qs QuakeString) ToColorCodes() string {
-	return ToColorCodes(string(qs.bytes))
+	return ToColorCodes(string(qs))
 }
 
 func (qs QuakeString) MarshalJSON() ([]byte, error) {
