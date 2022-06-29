@@ -8,9 +8,117 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv/analyze"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qstatus"
+	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qclient/slots"
+	"github.com/vikpe/serverstat/qtext/qstring"
 )
+
+func TestListOfNamesContainsName(t *testing.T) {
+	assert.False(t, analyze.ListOfNamesContainsName(nil, "foo"))
+	assert.True(t, analyze.ListOfNamesContainsName([]string{"foo"}, "foo"))
+}
+
+func TestGetPlayerNames(t *testing.T) {
+	server := mvdsv.Mvdsv{
+		Players: []qclient.Client{
+			{Name: qstring.New("alpha")},
+			{Name: qstring.New("beta")},
+			{Name: qstring.New("gamma")},
+		},
+	}
+	expect := []string{"alpha", "beta", "gamma"}
+	assert.Equal(t, expect, analyze.GetPlayerNames(server))
+}
+
+func TestHasPlayer(t *testing.T) {
+	server := mvdsv.Mvdsv{
+		Players: []qclient.Client{
+			{Name: qstring.New("alpha")},
+			{Name: qstring.New("beta")},
+			{Name: qstring.New("gamma")},
+		},
+	}
+
+	t.Run("no", func(t *testing.T) {
+		assert.False(t, analyze.HasPlayer(server, "delta"))
+	})
+
+	t.Run("yes", func(t *testing.T) {
+		assert.True(t, analyze.HasPlayer(server, "beta"))
+	})
+}
+
+func TestHasServerSpectator(t *testing.T) {
+	server := mvdsv.Mvdsv{
+		SpectatorNames: []string{"alpha", "beta", "gamma"},
+	}
+
+	t.Run("no", func(t *testing.T) {
+		assert.False(t, analyze.HasServerSpectator(server, "delta"))
+	})
+
+	t.Run("yes", func(t *testing.T) {
+		assert.True(t, analyze.HasServerSpectator(server, "beta"))
+	})
+}
+
+func TestHasQtvSpectator(t *testing.T) {
+	server := mvdsv.Mvdsv{
+		QtvStream: qtvstream.QtvStream{
+			SpectatorNames: []string{"alpha", "beta", "gamma"},
+		},
+	}
+
+	t.Run("no", func(t *testing.T) {
+		assert.False(t, analyze.HasQtvSpectator(server, "delta"))
+	})
+
+	t.Run("yes", func(t *testing.T) {
+		assert.True(t, analyze.HasQtvSpectator(server, "beta"))
+	})
+}
+
+func TestHasSpectator(t *testing.T) {
+	server := mvdsv.Mvdsv{
+		SpectatorNames: []string{"alpha", "beta"},
+		QtvStream: qtvstream.QtvStream{
+			SpectatorNames: []string{"gamma"},
+		},
+	}
+
+	t.Run("no", func(t *testing.T) {
+		assert.False(t, analyze.HasSpectator(server, "delta"))
+	})
+
+	t.Run("yes", func(t *testing.T) {
+		assert.True(t, analyze.HasSpectator(server, "beta"))
+		assert.True(t, analyze.HasSpectator(server, "gamma"))
+	})
+}
+
+func TestHasClient(t *testing.T) {
+	server := mvdsv.Mvdsv{
+		Players: []qclient.Client{
+			{Name: qstring.New("alpha")},
+			{Name: qstring.New("beta")},
+		},
+		SpectatorNames: []string{"gamma"},
+		QtvStream: qtvstream.QtvStream{
+			SpectatorNames: []string{"delta"},
+		},
+	}
+
+	t.Run("no", func(t *testing.T) {
+		assert.False(t, analyze.HasClient(server, "kappa"))
+	})
+
+	t.Run("yes", func(t *testing.T) {
+		assert.True(t, analyze.HasClient(server, "beta"))
+		assert.True(t, analyze.HasClient(server, "gamma"))
+		assert.True(t, analyze.HasClient(server, "delta"))
+	})
+}
 
 func TestIsIdle(t *testing.T) {
 	t.Run("no players", func(t *testing.T) {
