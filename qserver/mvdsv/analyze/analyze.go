@@ -104,3 +104,21 @@ func clampInt(value int, min int, max int) int {
 	}
 	return value
 }
+
+func IsSpeccable(server mvdsv.Mvdsv) bool {
+	if len(server.QtvStream.Url) > 0 {
+		return true
+	}
+
+	return server.SpectatorSlots.Free > 0 && !RequiresPassword(server)
+}
+
+func RequiresPassword(server mvdsv.Mvdsv) bool {
+	needpass := server.Settings.GetInt("needpass", 0)
+
+	if 0 == needpass {
+		return false
+	}
+	const spectatorPasswordBit = 2
+	return (needpass & spectatorPasswordBit) > 0
+}

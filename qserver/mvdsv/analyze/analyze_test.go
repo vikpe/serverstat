@@ -1,6 +1,7 @@
 package analyze_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,6 +12,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qserver/qclient/slots"
+	"github.com/vikpe/serverstat/qserver/qsettings"
 	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
@@ -207,5 +209,53 @@ func TestMinPlayerTime(t *testing.T) {
 	t.Run("many players", func(t *testing.T) {
 		players := []qclient.Client{{Time: 3}, {Time: 15}, {Time: 7}}
 		assert.Equal(t, 3, analyze.MinPlayerTime(players))
+	})
+}
+
+func TestRequiresPassword(t *testing.T) {
+	testCases := map[string]bool{
+		"0": false,
+		"4": false,
+		"5": false,
+		"2": true,
+		"3": true,
+		"6": true,
+		"7": true,
+	}
+
+	for needpass, expect := range testCases {
+
+		t.Run(fmt.Sprintf("needpass=%s", needpass), func(t *testing.T) {
+			server := mvdsv.Mvdsv{
+				Settings: qsettings.Settings{
+					"needpass": needpass,
+				},
+			}
+			assert.Equal(t, expect, analyze.RequiresPassword(server))
+		})
+	}
+}
+
+func TestIsSpeccable(t *testing.T) {
+	t.Run("yes - has qtv stream", func(t *testing.T) {
+		server := mvdsv.Mvdsv{
+			QtvStream: qtvstream.QtvStream{Url: "2@troopers.fi:28000"},
+		}
+		assert.True(t, analyze.IsSpeccable(server))
+	})
+
+	t.Run("yes - has free spectator slots and no password", func(t *testing.T) {
+		server := mvdsv.Mvdsv{
+			SpectatorSlots: slots.New(4, 3),
+		}
+		assert.True(t, analyze.IsSpeccable(server))
+	})
+
+	t.Run("no - has free spectator slots and password", func(t *testing.T) {
+		server := mvdsv.Mvdsv{
+			SpectatorSlots: slots.New(4, 3),
+			Settings:       qsettings.Settings{"needpass": "2"},
+		}
+		assert.False(t, analyze.IsSpeccable(server))
 	})
 }
