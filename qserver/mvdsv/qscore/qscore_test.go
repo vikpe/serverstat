@@ -238,3 +238,17 @@ func TestFromModeAndPlayers(t *testing.T) {
 		assert.Equal(t, 70, score)
 	})
 }
+
+func TestGetPlayerDiv(t *testing.T) {
+	t.Run("has clan prefix", func(t *testing.T) {
+		assert.Equal(t, qscore.GetPlayerDiv("•ParadokS"), qscore.GetPlayerDiv("ParadokS"))
+	})
+
+	t.Run("has clan suffix", func(t *testing.T) {
+		assert.Equal(t, qscore.GetPlayerDiv("sniegov•dc"), qscore.GetPlayerDiv("sniegov"))
+	})
+
+	t.Run("exact match", func(t *testing.T) {
+		assert.Equal(t, 2.0, qscore.GetPlayerDiv("sniegov"))
+	})
+}

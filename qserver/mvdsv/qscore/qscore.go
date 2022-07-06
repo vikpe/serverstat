@@ -113,7 +113,7 @@ func getExpectedPlayerCountByMode(mode string) int {
 	return 0
 }
 
-func getPlayerDiv(name string) float64 {
+func GetPlayerDiv(name string) float64 {
 	strippedName := stripName(name)
 
 	if div, ok := PlayerDivs[strippedName]; ok {
@@ -127,19 +127,32 @@ func getAverageDiv(playerNames []string) float64 {
 	totalScore := float64(0)
 
 	for _, name := range playerNames {
-		totalScore += getPlayerDiv(name)
+		totalScore += GetPlayerDiv(name)
 	}
 
 	return totalScore / float64(len(playerNames))
 }
 
 func stripName(name string) string {
-	var result string
+	result := name
 
-	if strings.ContainsRune(name, '•') {
-		result = strings.ReplaceAll(name, "•", " ")
-	} else {
-		result = name
+	// strip prefixes/suffixes
+	if strings.ContainsRune(result, '•') {
+		clanSuffixes := []string{"•dc"}
+
+		for _, suffix := range clanSuffixes {
+			if strings.HasSuffix(result, suffix) {
+				result = result[0 : len(result)-len(suffix)]
+			}
+		}
+
+		clanPrefixes := []string{"•"}
+
+		for _, prefix := range clanPrefixes {
+			if strings.HasPrefix(result, prefix) {
+				result = result[len(prefix):]
+			}
+		}
 	}
 
 	return strings.ToLower(strings.TrimSpace(result))
