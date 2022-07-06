@@ -78,6 +78,7 @@ var PlayerDivs = map[string]float64{
 	"zepp":            1,
 	"zero":            1,
 	// div2
+	"airman":          2,
 	"andeh":           2,
 	"baresi":          2,
 	"bernkaoch":       2,
