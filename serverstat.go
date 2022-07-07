@@ -1,9 +1,11 @@
 package serverstat
 
 import (
+	"errors"
 	"sort"
 	"sync"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/commands/status87"
 	"github.com/vikpe/serverstat/qserver/geo"
@@ -24,7 +26,17 @@ func GetInfo(address string) (qserver.GenericServer, error) {
 	return server, err
 }
 
+func isValidServerAddress(address string) bool {
+	validate := validator.New()
+	err := validate.Var(address, "required,hostname_port")
+	return err == nil
+}
+
 func getServerInfo(address string) (qserver.GenericServer, error) {
+	if !isValidServerAddress(address) {
+		return qserver.GenericServer{}, errors.New("invalid server address")
+	}
+
 	settings, clients, err := status87.ParseResponse(
 		udpclient.New().SendCommand(address, status87.Command),
 	)

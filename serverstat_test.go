@@ -16,6 +16,18 @@ import (
 )
 
 func TestGetInfo(t *testing.T) {
+	t.Run("invalid server address", func(t *testing.T) {
+		addresses := []string{"", ":", "a:", ":a", "a:a", "qw.foppa.dk::27501", "qw.foppa.dk::27501:"}
+
+		for _, address := range addresses {
+			t.Run(address, func(t *testing.T) {
+				server, err := serverstat.GetInfo(address)
+				assert.Equal(t, qserver.GenericServer{}, server)
+				assert.ErrorContains(t, err, "invalid server address")
+			})
+		}
+	})
+
 	t.Run("Response error", func(t *testing.T) {
 		server, err := serverstat.GetInfo("foo:666")
 		assert.Equal(t, qserver.GenericServer{}, server)
