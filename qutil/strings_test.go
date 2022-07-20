@@ -15,22 +15,6 @@ func TestStringToInt(t *testing.T) {
 	assert.Equal(t, 0, qutil.StringToInt(""))
 }
 
-func TestReverseString(t *testing.T) {
-	assert.Equal(t, "321ateb", qutil.ReverseString("beta123"))
-}
-
-func TestCommonPrefix(t *testing.T) {
-	assert.Equal(t, "", qutil.CommonPrefix([]string{"alpha", "beta"}))
-	assert.Equal(t, "foo-", qutil.CommonPrefix([]string{"foo-alpha", "foo-beta"}))
-	assert.Equal(t, "dc•", qutil.CommonPrefix([]string{"dc•alpha", "dc•beta"}))
-}
-
-func TestCommonSuffix(t *testing.T) {
-	assert.Equal(t, "", qutil.CommonSuffix([]string{"foo", "bar"}))
-	assert.Equal(t, "a-foo", qutil.CommonSuffix([]string{"alpha-foo", "beta-foo"}))
-	assert.Equal(t, "a•dc", qutil.CommonSuffix([]string{"alpha•dc", "beta•dc"}))
-}
-
 func TestTrimSymbols(t *testing.T) {
 	var testCases = map[string]string{
 		"--great--":                      "great",

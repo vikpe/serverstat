@@ -1,6 +1,10 @@
 package qutil
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/jpillora/longestcommon"
+)
 
 func StripQuakeFixes(strs []string) []string {
 	// skip if few values
@@ -21,7 +25,7 @@ func StripQuakeFixes(strs []string) []string {
 	const delimiterChars = ".•_-|[]{}()"
 
 	// prefix
-	prefix := CommonPrefix(strs)
+	prefix := longestcommon.Prefix(strs)
 
 	if strings.ContainsAny(prefix, delimiterChars) {
 		lastDelimiterIndex := strings.LastIndexAny(prefix, delimiterChars)
@@ -43,7 +47,7 @@ func StripQuakeFixes(strs []string) []string {
 	}
 
 	// suffix
-	suffix := CommonSuffix(strs)
+	suffix := longestcommon.Suffix(strs)
 
 	if strings.ContainsAny(suffix, delimiterChars) {
 		firstDelimiterIndex := strings.IndexAny(suffix, delimiterChars)
