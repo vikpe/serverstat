@@ -4,26 +4,23 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qutil"
+	"github.com/vikpe/wildcard"
 )
 
-func HasSpectator(server mvdsv.Mvdsv, needle string) bool {
-	return HasQtvSpectator(server, needle) || HasServerSpectator(server, needle)
+func HasSpectator(server mvdsv.Mvdsv, pattern string) bool {
+	return HasQtvSpectator(server, pattern) || HasServerSpectator(server, pattern)
 }
 
-func HasQtvSpectator(server mvdsv.Mvdsv, needle string) bool {
-	return wildcardMatchPlayerNames(server.QtvStream.SpectatorNames, needle)
+func HasQtvSpectator(server mvdsv.Mvdsv, pattern string) bool {
+	return wildcard.MatchSliceCI(pattern, server.QtvStream.SpectatorNames)
 }
 
-func HasServerSpectator(server mvdsv.Mvdsv, needle string) bool {
-	return wildcardMatchPlayerNames(server.SpectatorNames, needle)
+func HasServerSpectator(server mvdsv.Mvdsv, pattern string) bool {
+	return wildcard.MatchSliceCI(pattern, server.SpectatorNames)
 }
 
-func HasPlayer(server mvdsv.Mvdsv, needle string) bool {
-	return wildcardMatchPlayerNames(GetPlayerPlainNames(server), needle)
-}
-
-func wildcardMatchPlayerNames(names []string, needle string) bool {
-	return qutil.WildcardMatchStringSlice(names, needle)
+func HasPlayer(server mvdsv.Mvdsv, pattern string) bool {
+	return wildcard.MatchSliceCI(pattern, GetPlayerPlainNames(server))
 }
 
 func GetPlayerPlainNames(server mvdsv.Mvdsv) []string {

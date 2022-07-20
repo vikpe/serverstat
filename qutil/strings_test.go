@@ -56,21 +56,3 @@ func TestPluralize(t *testing.T) {
 	assert.Equal(t, "player", qutil.Pluralize("player", 1))
 	assert.Equal(t, "players", qutil.Pluralize("player", 2))
 }
-
-func TestWildcardMatchStringSlice(t *testing.T) {
-	assert.False(t, qutil.WildcardMatchStringSlice(nil, "foo"))
-	assert.False(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "gamma"}, "foo"))
-	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "foo"))
-	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "FOO"))
-	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "foo"))
-	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "*amma"))
-	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "gamm*"))
-	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "*amm*"))
-}
-
-func BenchmarkWildcardMatchStringSlice(b *testing.B) {
-	b.ReportAllocs()
-	for i := 0; i < b.N; i++ {
-		qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "foo")
-	}
-}

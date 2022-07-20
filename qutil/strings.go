@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
-
-	"github.com/IGLOU-EU/go-wildcard"
 )
 
 func StringToInt(value string) int {
@@ -45,18 +43,4 @@ func Pluralize(word string, count int) string {
 	}
 
 	return fmt.Sprintf("%ss", word)
-}
-
-func WildcardMatchStringSlice(haystack []string, pattern string) bool {
-	if 0 == len(haystack) {
-		return false
-	}
-
-	for _, value := range haystack {
-		if wildcard.MatchSimple(strings.ToLower(pattern), strings.ToLower(value)) {
-			return true
-		}
-	}
-
-	return false
 }

@@ -3,15 +3,15 @@ module github.com/vikpe/serverstat
 go 1.18
 
 require (
-	github.com/IGLOU-EU/go-wildcard v1.0.3
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/goccy/go-json v0.9.10
 	github.com/jpillora/longestcommon v0.0.0-20161227235612-adb9d91ee629
 	github.com/ssoroka/slice v0.0.0-20220402005549-78f0cea3df8b
-	github.com/stretchr/testify v1.7.2
+	github.com/stretchr/testify v1.8.0
 	github.com/valyala/fastjson v1.6.3
 	github.com/vikpe/udpclient v0.1.3
 	github.com/vikpe/udphelper v0.1.3
+	github.com/vikpe/wildcard v0.1.0
 	golang.org/x/exp v0.0.0-20220713135740-79cabaa25d75
 )
 
