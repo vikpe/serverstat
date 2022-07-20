@@ -157,3 +157,45 @@ func TestPluralize(t *testing.T) {
 	assert.Equal(t, "player", qutil.Pluralize("player", 1))
 	assert.Equal(t, "players", qutil.Pluralize("player", 2))
 }
+
+func TestWildcardMatchStringSlice(t *testing.T) {
+	const wildcard = "@"
+	assert.False(t, qutil.WildcardMatchStringSlice(nil, "foo", wildcard))
+	assert.False(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "gamma"}, "foo", wildcard))
+	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "foo", wildcard))
+	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "FOO", wildcard))
+	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "foo", wildcard))
+}
+
+func BenchmarkContainsNeedle(b *testing.B) {
+	b.ReportAllocs()
+	const wildcard = "@"
+
+	for i := 0; i < b.N; i++ {
+		qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "foo", wildcard)
+	}
+}
+
+func TestNeedleMatchesName(t *testing.T) {
+	const wildcard = "@"
+	assert.False(t, qutil.WildcardMatchString("", "beta", wildcard))
+	assert.False(t, qutil.WildcardMatchString("alpha", "", wildcard))
+	assert.False(t, qutil.WildcardMatchString("alpha", "beta", wildcard))
+
+	assert.True(t, qutil.WildcardMatchString("alpha", "alpha", wildcard))
+	assert.True(t, qutil.WildcardMatchString("ALPHA", "alpha", wildcard))
+	assert.True(t, qutil.WildcardMatchString("alpha", "ALPHA", wildcard))
+	assert.True(t, qutil.WildcardMatchString("ALPHA", "ALPHA", wildcard))
+
+	// prefix wildcard
+	assert.True(t, qutil.WildcardMatchString("alphabetic", "@betic", wildcard))
+	assert.True(t, qutil.WildcardMatchString("betic", "@betic", wildcard))
+
+	// suffix wilcard
+	assert.True(t, qutil.WildcardMatchString("alphabetic", "alpha@", wildcard))
+	assert.True(t, qutil.WildcardMatchString("alpha", "alpha@", wildcard))
+
+	// suffix and prefix wildcard
+	assert.True(t, qutil.WildcardMatchString("alphabetic", "@lphabeti@", wildcard))
+	assert.True(t, qutil.WildcardMatchString("alphabetic", "@alphabetic@", wildcard))
+}

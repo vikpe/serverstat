@@ -171,3 +171,49 @@ func Pluralize(word string, count int) string {
 
 	return fmt.Sprintf("%ss", word)
 }
+
+func WildcardMatchStringSlice(haystack []string, needle string, wildcard string) bool {
+	if 0 == len(haystack) {
+		return false
+	}
+
+	for _, value := range haystack {
+		if WildcardMatchString(needle, value, wildcard) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func WildcardMatchString(haystack, needle, wildcard string) bool {
+	if strings.Contains(needle, wildcard) {
+		hasWildcardPrefix := strings.HasPrefix(needle, wildcard)
+		hasWildCardSuffix := strings.HasSuffix(needle, wildcard)
+		haystackLower := strings.ToLower(haystack)
+		needleLower := strings.ToLower(needle)
+
+		if hasWildcardPrefix && hasWildCardSuffix {
+			return strings.Contains(haystackLower, needleLower[1:len(needleLower)-1])
+		} else if hasWildcardPrefix {
+			return strings.HasSuffix(haystackLower, needleLower[1:])
+		} else { // hasWildcardPrefix
+			return strings.HasPrefix(haystackLower, needleLower[:len(needleLower)-1])
+		}
+	}
+
+	if len(needle) != len(haystack) {
+		return false
+	}
+
+	return strings.EqualFold(needle, haystack)
+}
+
+func ClampInt(value int, min int, max int) int {
+	if value < min {
+		return min
+	} else if value > max {
+		return max
+	}
+	return value
+}
