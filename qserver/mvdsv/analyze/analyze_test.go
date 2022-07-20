@@ -16,11 +16,6 @@ import (
 	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
-func TestListOfNamesContainsName(t *testing.T) {
-	assert.False(t, analyze.ListOfNamesContainsName(nil, "foo"))
-	assert.True(t, analyze.ListOfNamesContainsName([]string{"foo"}, "foo"))
-}
-
 func TestGetPlayerNames(t *testing.T) {
 	server := mvdsv.Mvdsv{
 		Players: []qclient.Client{
@@ -30,7 +25,7 @@ func TestGetPlayerNames(t *testing.T) {
 		},
 	}
 	expect := []string{"alpha", "beta", "gamma"}
-	assert.Equal(t, expect, analyze.GetPlayerNames(server))
+	assert.Equal(t, expect, analyze.GetPlayerPlainNames(server))
 }
 
 func TestHasPlayer(t *testing.T) {
@@ -48,6 +43,11 @@ func TestHasPlayer(t *testing.T) {
 
 	t.Run("yes", func(t *testing.T) {
 		assert.True(t, analyze.HasPlayer(server, "beta"))
+
+		// wildcard matches
+		assert.True(t, analyze.HasPlayer(server, "@eta"))
+		assert.True(t, analyze.HasPlayer(server, "bet@"))
+		assert.True(t, analyze.HasPlayer(server, "@et@"))
 	})
 }
 
@@ -62,6 +62,11 @@ func TestHasServerSpectator(t *testing.T) {
 
 	t.Run("yes", func(t *testing.T) {
 		assert.True(t, analyze.HasServerSpectator(server, "beta"))
+
+		// wildcard matches
+		assert.True(t, analyze.HasServerSpectator(server, "@eta"))
+		assert.True(t, analyze.HasServerSpectator(server, "bet@"))
+		assert.True(t, analyze.HasServerSpectator(server, "@et@"))
 	})
 }
 
@@ -78,6 +83,11 @@ func TestHasQtvSpectator(t *testing.T) {
 
 	t.Run("yes", func(t *testing.T) {
 		assert.True(t, analyze.HasQtvSpectator(server, "beta"))
+
+		// wildcard matches
+		assert.True(t, analyze.HasQtvSpectator(server, "@eta"))
+		assert.True(t, analyze.HasQtvSpectator(server, "bet@"))
+		assert.True(t, analyze.HasQtvSpectator(server, "@et@"))
 	})
 }
 

@@ -1,30 +1,34 @@
 package analyze
 
 import (
-	"strings"
-
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/qclient"
-	"golang.org/x/exp/slices"
+	"github.com/vikpe/serverstat/qutil"
 )
 
-func HasSpectator(server mvdsv.Mvdsv, name string) bool {
-	return HasQtvSpectator(server, name) || HasServerSpectator(server, name)
+const WildcardChar = "@"
+
+func HasSpectator(server mvdsv.Mvdsv, needle string) bool {
+	return HasQtvSpectator(server, needle) || HasServerSpectator(server, needle)
 }
 
-func HasQtvSpectator(server mvdsv.Mvdsv, name string) bool {
-	return ListOfNamesContainsName(server.QtvStream.SpectatorNames, name)
+func HasQtvSpectator(server mvdsv.Mvdsv, needle string) bool {
+	return wildcardMatchPlayerNames(server.QtvStream.SpectatorNames, needle)
 }
 
-func HasServerSpectator(server mvdsv.Mvdsv, name string) bool {
-	return ListOfNamesContainsName(server.SpectatorNames, name)
+func HasServerSpectator(server mvdsv.Mvdsv, needle string) bool {
+	return wildcardMatchPlayerNames(server.SpectatorNames, needle)
 }
 
-func HasPlayer(server mvdsv.Mvdsv, name string) bool {
-	return ListOfNamesContainsName(GetPlayerNames(server), name)
+func HasPlayer(server mvdsv.Mvdsv, needle string) bool {
+	return wildcardMatchPlayerNames(GetPlayerPlainNames(server), needle)
 }
 
-func GetPlayerNames(server mvdsv.Mvdsv) []string {
+func wildcardMatchPlayerNames(names []string, needle string) bool {
+	return qutil.WildcardMatchStringSlice(names, needle, WildcardChar)
+}
+
+func GetPlayerPlainNames(server mvdsv.Mvdsv) []string {
 	playerNames := make([]string, 0)
 
 	for _, player := range server.Players {
@@ -36,24 +40,6 @@ func GetPlayerNames(server mvdsv.Mvdsv) []string {
 
 func HasClient(server mvdsv.Mvdsv, name string) bool {
 	return HasPlayer(server, name) || HasSpectator(server, name)
-}
-
-func ListOfNamesContainsName(playerNames []string, name string) bool {
-	if 0 == len(playerNames) {
-		return false
-	}
-
-	normalizeNames := make([]string, 0)
-
-	for _, playerName := range playerNames {
-		normalizeNames = append(normalizeNames, normalizeName(playerName))
-	}
-
-	return slices.Contains(normalizeNames, name)
-}
-
-func normalizeName(name string) string {
-	return strings.ToLower(name)
 }
 
 func IsIdle(server mvdsv.Mvdsv) bool {
@@ -71,7 +57,7 @@ func IsIdle(server mvdsv.Mvdsv) bool {
 
 	minIdleLimit := 3
 	maxIdleLimit := 10
-	idleLimit := clampInt(int(float64(server.PlayerSlots.Used)*1.5), minIdleLimit, maxIdleLimit)
+	idleLimit := qutil.ClampInt(int(float64(server.PlayerSlots.Used)*1.5), minIdleLimit, maxIdleLimit)
 
 	return MinPlayerTime(server.Players) >= idleLimit
 }
@@ -94,15 +80,6 @@ func MinPlayerTime(players []qclient.Client) int {
 	}
 
 	return result
-}
-
-func clampInt(value int, min int, max int) int {
-	if value < min {
-		return min
-	} else if value > max {
-		return max
-	}
-	return value
 }
 
 func IsSpeccable(server mvdsv.Mvdsv) bool {
