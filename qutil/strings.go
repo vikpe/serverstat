@@ -1,15 +1,11 @@
 package qutil
 
 import (
-	"bytes"
 	"fmt"
-	"net"
 	"sort"
 	"strconv"
 	"strings"
 	"unicode"
-
-	"github.com/goccy/go-json"
 )
 
 func StringToInt(value string) int {
@@ -55,76 +51,6 @@ func CommonSuffix(strs []string) string {
 	return ReverseString(CommonPrefix(reversedStrings))
 }
 
-func StripQuakeFixes(strs []string) []string {
-	// skip if few values
-	if len(strs) < 2 {
-		return strs
-	}
-
-	// minimum fix to strip
-	minFixLength := 2
-
-	// skip if any value is equal to or shorter than min fix length
-	for _, value := range strs {
-		if len(value) <= minFixLength {
-			return strs
-		}
-	}
-
-	const delimiterChars = ".•_-|[]{}()"
-
-	// prefix
-	prefix := CommonPrefix(strs)
-
-	if strings.ContainsAny(prefix, delimiterChars) {
-		lastDelimiterIndex := strings.LastIndexAny(prefix, delimiterChars)
-		prefixRuneCount := len([]rune(prefix))
-
-		// utf8 runes have length > 1
-		if lastDelimiterIndex > prefixRuneCount {
-			lastDelimiterIndex = prefixRuneCount - 1
-		}
-
-		prefixLength := lastDelimiterIndex + 1
-
-		if prefixLength >= minFixLength {
-			for index := range strs {
-				runes := []rune(strs[index])
-				strs[index] = string(runes[prefixLength:])
-			}
-		}
-	}
-
-	// suffix
-	suffix := CommonSuffix(strs)
-
-	if strings.ContainsAny(suffix, delimiterChars) {
-		firstDelimiterIndex := strings.IndexAny(suffix, delimiterChars)
-		suffixLength := len([]rune(suffix)) - firstDelimiterIndex
-
-		if suffixLength >= minFixLength {
-			for index := range strs {
-				runes := []rune(strs[index])
-				newLastIndex := len(runes) - suffixLength
-				strs[index] = string(runes[0:newLastIndex])
-			}
-		}
-	}
-
-	return strs
-}
-
-func MarshalNoEscapeHtml(value any) ([]byte, error) {
-	var dst bytes.Buffer
-	enc := json.NewEncoder(&dst)
-	enc.SetEscapeHTML(false)
-	err := enc.Encode(value)
-	if err != nil {
-		return nil, err
-	}
-	return dst.Bytes(), nil
-}
-
 func TrimSymbols(value string) string {
 	result := strings.Builder{}
 
@@ -148,20 +74,6 @@ func TrimSymbols(value string) string {
 	}
 
 	return strings.TrimRight(result.String(), " ")
-}
-
-func HostnameToIp(hostname string) string {
-	ips, err := net.LookupIP(hostname)
-
-	if err == nil {
-		for _, ip := range ips {
-			if ipv4 := ip.To4(); ipv4 != nil {
-				return ipv4.String()
-			}
-		}
-	}
-
-	return hostname
 }
 
 func Pluralize(word string, count int) string {
@@ -207,13 +119,4 @@ func WildcardMatchString(haystack, needle, wildcard string) bool {
 	}
 
 	return strings.EqualFold(needle, haystack)
-}
-
-func ClampInt(value int, min int, max int) int {
-	if value < min {
-		return min
-	} else if value > max {
-		return max
-	}
-	return value
 }
