@@ -3,6 +3,7 @@ module github.com/vikpe/serverstat
 go 1.18
 
 require (
+	github.com/IGLOU-EU/go-wildcard v1.0.3
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/goccy/go-json v0.9.10
 	github.com/jpillora/longestcommon v0.0.0-20161227235612-adb9d91ee629

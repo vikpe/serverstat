@@ -58,46 +58,19 @@ func TestPluralize(t *testing.T) {
 }
 
 func TestWildcardMatchStringSlice(t *testing.T) {
-	const wildcard = "@"
-	assert.False(t, qutil.WildcardMatchStringSlice(nil, "foo", wildcard))
-	assert.False(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "gamma"}, "foo", wildcard))
-	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "foo", wildcard))
-	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "FOO", wildcard))
-	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "foo", wildcard))
-	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "@amma", wildcard))
-	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "gamm@", wildcard))
-	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "@amm@", wildcard))
+	assert.False(t, qutil.WildcardMatchStringSlice(nil, "foo"))
+	assert.False(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "gamma"}, "foo"))
+	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "foo"))
+	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "FOO"))
+	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "foo"))
+	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "*amma"))
+	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "gamm*"))
+	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "*amm*"))
 }
 
 func BenchmarkWildcardMatchStringSlice(b *testing.B) {
 	b.ReportAllocs()
-	const wildcard = "@"
-
 	for i := 0; i < b.N; i++ {
-		qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "foo", wildcard)
+		qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "foo")
 	}
-}
-
-func TestWildcardMatchString(t *testing.T) {
-	const wildcard = "@"
-	assert.False(t, qutil.WildcardMatchString("", "beta", wildcard))
-	assert.False(t, qutil.WildcardMatchString("alpha", "", wildcard))
-	assert.False(t, qutil.WildcardMatchString("alpha", "beta", wildcard))
-
-	assert.True(t, qutil.WildcardMatchString("alpha", "alpha", wildcard))
-	assert.True(t, qutil.WildcardMatchString("ALPHA", "alpha", wildcard))
-	assert.True(t, qutil.WildcardMatchString("alpha", "ALPHA", wildcard))
-	assert.True(t, qutil.WildcardMatchString("ALPHA", "ALPHA", wildcard))
-
-	// prefix wildcard
-	assert.True(t, qutil.WildcardMatchString("alphabetic", "@betic", wildcard))
-	assert.True(t, qutil.WildcardMatchString("betic", "@betic", wildcard))
-
-	// suffix wilcard
-	assert.True(t, qutil.WildcardMatchString("alphabetic", "alpha@", wildcard))
-	assert.True(t, qutil.WildcardMatchString("alpha", "alpha@", wildcard))
-
-	// suffix and prefix wildcard
-	assert.True(t, qutil.WildcardMatchString("alphabetic", "@lphabeti@", wildcard))
-	assert.True(t, qutil.WildcardMatchString("alphabetic", "@alphabetic@", wildcard))
 }

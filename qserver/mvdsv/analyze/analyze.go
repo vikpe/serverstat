@@ -6,8 +6,6 @@ import (
 	"github.com/vikpe/serverstat/qutil"
 )
 
-const WildcardChar = "@"
-
 func HasSpectator(server mvdsv.Mvdsv, needle string) bool {
 	return HasQtvSpectator(server, needle) || HasServerSpectator(server, needle)
 }
@@ -25,7 +23,7 @@ func HasPlayer(server mvdsv.Mvdsv, needle string) bool {
 }
 
 func wildcardMatchPlayerNames(names []string, needle string) bool {
-	return qutil.WildcardMatchStringSlice(names, needle, WildcardChar)
+	return qutil.WildcardMatchStringSlice(names, needle)
 }
 
 func GetPlayerPlainNames(server mvdsv.Mvdsv) []string {
