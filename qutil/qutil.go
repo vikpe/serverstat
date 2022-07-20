@@ -178,7 +178,7 @@ func WildcardMatchStringSlice(haystack []string, needle string, wildcard string)
 	}
 
 	for _, value := range haystack {
-		if WildcardMatchString(needle, value, wildcard) {
+		if WildcardMatchString(value, needle, wildcard) {
 			return true
 		}
 	}

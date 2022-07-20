@@ -165,9 +165,12 @@ func TestWildcardMatchStringSlice(t *testing.T) {
 	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "foo", wildcard))
 	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "foo", "gamma"}, "FOO", wildcard))
 	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "foo", wildcard))
+	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "@amma", wildcard))
+	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "gamm@", wildcard))
+	assert.True(t, qutil.WildcardMatchStringSlice([]string{"alpha", "beta", "FOO", "gamma"}, "@amm@", wildcard))
 }
 
-func BenchmarkContainsNeedle(b *testing.B) {
+func BenchmarkWildcardMatchStringSlice(b *testing.B) {
 	b.ReportAllocs()
 	const wildcard = "@"
 
@@ -176,7 +179,7 @@ func BenchmarkContainsNeedle(b *testing.B) {
 	}
 }
 
-func TestNeedleMatchesName(t *testing.T) {
+func TestWildcardMatchString(t *testing.T) {
 	const wildcard = "@"
 	assert.False(t, qutil.WildcardMatchString("", "beta", wildcard))
 	assert.False(t, qutil.WildcardMatchString("alpha", "", wildcard))
