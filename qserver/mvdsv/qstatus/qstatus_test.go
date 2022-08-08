@@ -174,7 +174,17 @@ func TestParse(t *testing.T) {
 			FreeSlots:      16,
 			Expect: qstatus.Status{
 				Name:        "Standby",
-				Description: "4 players",
+				Description: "Waiting for players to ready up",
+			},
+		},
+		{
+			SettingsStatus: "27 min left",
+			Mode:           "clan arena",
+			Players:        []qclient.Client{humanWithoutFrags, humanWithoutFrags, humanWithoutFrags, humanWithoutFrags},
+			FreeSlots:      16,
+			Expect: qstatus.Status{
+				Name:        "Started",
+				Description: "Game in progress",
 			},
 		},
 	}

@@ -31,11 +31,6 @@ func New(status string, mode qmode.Mode, players []qclient.Client, freeSlots int
 			Name:        Standby,
 			Description: "Racing",
 		}
-	} else if mode.IsClanArena() {
-		return Status{
-			Name:        status,
-			Description: fmt.Sprintf("%d %s", len(players), qutil.Pluralize("player", len(players))),
-		}
 	}
 
 	if Standby == status && (mode.IsXonX() || mode.IsFfa()) && hasFrags(players) {
@@ -66,7 +61,7 @@ func New(status string, mode qmode.Mode, players []qclient.Client, freeSlots int
 	} else if Countdown == status || strings.Contains(status, " min left") {
 		var description string
 
-		if mode.IsCoop() {
+		if mode.IsCoop() || mode.IsClanArena() {
 			description = "Game in progress"
 		} else {
 			description = status
