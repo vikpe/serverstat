@@ -19,6 +19,7 @@ func TestParse(t *testing.T) {
 		{"1on1", qsettings.Settings{"*gamedir": "qw", "maxclients": "2"}},
 		{"2on2", qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2"}},
 		{"4on4", qsettings.Settings{"*gamedir": "qw", "maxclients": "8", "teamplay": "2"}},
+		{"clan arena", qsettings.Settings{"*gamedir": "qw", "deathmatch": "5", "teamplay": "4"}},
 		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "12"}},
 		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "24"}},
 		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "26"}},
@@ -39,17 +40,18 @@ func TestParse(t *testing.T) {
 
 func TestModeValidators(t *testing.T) {
 	testCases := map[string]func(m qmode.Mode) bool{
-		"1on1":     func(m qmode.Mode) bool { return m.Is1on1() },
-		"2on2":     func(m qmode.Mode) bool { return m.Is2on2() },
-		"3on3":     func(m qmode.Mode) bool { return m.Is3on3() },
-		"4on4":     func(m qmode.Mode) bool { return m.Is4on4() },
-		"10on10":   func(m qmode.Mode) bool { return m.Is10on10() },
-		"race":     func(m qmode.Mode) bool { return m.IsRace() },
-		"ffa":      func(m qmode.Mode) bool { return m.IsFfa() },
-		"ctf":      func(m qmode.Mode) bool { return m.IsCtf() },
-		"coop":     func(m qmode.Mode) bool { return m.IsCoop() },
-		"fortress": func(m qmode.Mode) bool { return m.IsFortress() },
-		"unknown":  func(m qmode.Mode) bool { return m.IsUnknown() },
+		"10on10":     func(m qmode.Mode) bool { return m.Is10on10() },
+		"1on1":       func(m qmode.Mode) bool { return m.Is1on1() },
+		"2on2":       func(m qmode.Mode) bool { return m.Is2on2() },
+		"3on3":       func(m qmode.Mode) bool { return m.Is3on3() },
+		"4on4":       func(m qmode.Mode) bool { return m.Is4on4() },
+		"clan arena": func(m qmode.Mode) bool { return m.IsClanArena() },
+		"coop":       func(m qmode.Mode) bool { return m.IsCoop() },
+		"ctf":        func(m qmode.Mode) bool { return m.IsCtf() },
+		"ffa":        func(m qmode.Mode) bool { return m.IsFfa() },
+		"fortress":   func(m qmode.Mode) bool { return m.IsFortress() },
+		"race":       func(m qmode.Mode) bool { return m.IsRace() },
+		"unknown":    func(m qmode.Mode) bool { return m.IsUnknown() },
 	}
 
 	for currentModeName, currentValidator := range testCases {
