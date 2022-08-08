@@ -36,6 +36,7 @@ func TestCalculate(t *testing.T) {
 	const s2on2Div1To2 = "2on2 div1-2"
 	const s1on1Div1 = "1on1 div1"
 	const s1on1Div1Need1 = "1on1 div1 need 1"
+	const sClanArenaDiv1 = "clan arena div1"
 	const sFFAMix = "FFA"
 	const sCoopDiv1 = "coop div1"
 	const sRaceDiv1 = "race div1"
@@ -98,6 +99,11 @@ func TestCalculate(t *testing.T) {
 			s2on2Div1To2,
 			"2on2",
 			[]string{one, one, two, two},
+		},
+		{
+			sClanArenaDiv1,
+			"clan arena",
+			[]string{one, one, one, one},
 		},
 		{
 			sFFAMix,
@@ -173,6 +179,7 @@ func TestCalculate(t *testing.T) {
 		s4on4Div2,
 		s1on1Div1,
 		s2on2Div1To2,
+		sClanArenaDiv1,
 		s4on4Div1Need2,
 		sCoopDiv1,
 		sFFAMix,

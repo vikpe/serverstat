@@ -85,6 +85,8 @@ func getMaxScoreByMode(mode string) float64 {
 		return 130
 	case "ffa":
 		return 35
+	case "clan arena":
+		return 40
 	case "coop":
 		return 20
 	case "race":
@@ -108,6 +110,8 @@ func getExpectedPlayerCountByMode(mode string) int {
 		return 8
 	case "ffa":
 		return 2
+	case "clan arena":
+		return 4
 	}
 
 	return 0
