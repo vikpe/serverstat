@@ -167,6 +167,16 @@ func TestParse(t *testing.T) {
 				Description: "foo",
 			},
 		},
+		{
+			SettingsStatus: "Standby",
+			Mode:           "clan arena",
+			Players:        []qclient.Client{humanWithoutFrags, humanWithoutFrags, humanWithoutFrags, humanWithoutFrags},
+			FreeSlots:      16,
+			Expect: qstatus.Status{
+				Name:        "Standby",
+				Description: "4 players",
+			},
+		},
 	}
 
 	for _, tc := range testCases {
