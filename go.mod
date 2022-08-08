@@ -12,7 +12,7 @@ require (
 	github.com/vikpe/udpclient v0.1.3
 	github.com/vikpe/udphelper v0.1.3
 	github.com/vikpe/wildcard v0.1.0
-	golang.org/x/exp v0.0.0-20220713135740-79cabaa25d75
+	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e
 )
 
 require (
@@ -21,8 +21,8 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
-	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
+	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
+	golang.org/x/sys v0.0.0-20220804214406-8e32c043e418 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
