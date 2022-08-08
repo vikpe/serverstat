@@ -16,17 +16,17 @@ func TestParse(t *testing.T) {
 	}
 
 	testCases := []testCase{
-		{"fortress", qsettings.Settings{"*gamedir": "fortress"}},
-		{"race", qsettings.Settings{"*gamedir": "qw", "ktxmode": "race"}},
-		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "26"}},
-		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "24"}},
-		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "12"}},
 		{"1on1", qsettings.Settings{"*gamedir": "qw", "maxclients": "2"}},
 		{"2on2", qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2"}},
 		{"4on4", qsettings.Settings{"*gamedir": "qw", "maxclients": "8", "teamplay": "2"}},
+		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "12"}},
+		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "24"}},
+		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "26"}},
 		{"ctf", qsettings.Settings{"*gamedir": "qw", "maxclients": "16", "teamplay": "4"}},
-		{"ffa", qsettings.Settings{"*gamedir": "qw", "maxclients": "8"}},
 		{"ffa", qsettings.Settings{"*gamedir": "ktx-ffa"}},
+		{"ffa", qsettings.Settings{"*gamedir": "qw", "maxclients": "8"}},
+		{"fortress", qsettings.Settings{"*gamedir": "fortress"}},
+		{"race", qsettings.Settings{"*gamedir": "qw", "ktxmode": "race"}},
 	}
 
 	for _, tc := range testCases {
