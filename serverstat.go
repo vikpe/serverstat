@@ -15,12 +15,15 @@ import (
 	"github.com/vikpe/udpclient"
 )
 
+func getIpToGeoMap() geo.IpToGeoMap {
+	return geo.NewIpToGeoMap("https://raw.githubusercontent.com/vikpe/qw-servers-geoip/main/ip_to_geo.json")
+}
+
 func GetInfo(address string) (qserver.GenericServer, error) {
 	server, err := getServerInfo(address)
 
 	if err == nil {
-		ipToGeoMap := geo.NewIpToGeoMap("https://raw.githubusercontent.com/vikpe/qw-servers-geoip/main/ip_to_geo.json")
-		server.Geo = ipToGeoMap.GetByAddress(server.Address)
+		server.Geo = getIpToGeoMap().GetByAddress(server.Address)
 	}
 
 	return server, err
@@ -98,7 +101,7 @@ func GetInfoFromMany(addresses []string) []qserver.GenericServer {
 		return servers
 	}
 
-	ipToGeo := geo.NewIpToGeoMap("https://raw.githubusercontent.com/vikpe/qw-servers-geoip/main/ip_to_geo.json")
+	ipToGeo := getIpToGeoMap()
 
 	for index, server := range servers {
 		servers[index].Geo = ipToGeo.GetByAddress(server.Address)
