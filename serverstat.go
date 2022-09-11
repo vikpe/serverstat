@@ -19,7 +19,7 @@ func GetInfo(address string) (qserver.GenericServer, error) {
 	server, err := getServerInfo(address)
 
 	if err == nil {
-		ipToGeoMap := geo.NewIpToGeoMap()
+		ipToGeoMap := geo.NewIpToGeoMap("https://raw.githubusercontent.com/vikpe/qw-servers-geoip/main/ip_to_geo.json")
 		server.Geo = ipToGeoMap.GetByAddress(server.Address)
 	}
 
@@ -94,7 +94,11 @@ func GetInfoFromMany(addresses []string) []qserver.GenericServer {
 
 	wg.Wait()
 
-	ipToGeo := geo.NewIpToGeoMap()
+	if len(servers) == 0 {
+		return servers
+	}
+
+	ipToGeo := geo.NewIpToGeoMap("https://raw.githubusercontent.com/vikpe/qw-servers-geoip/main/ip_to_geo.json")
 
 	for index, server := range servers {
 		servers[index].Geo = ipToGeo.GetByAddress(server.Address)

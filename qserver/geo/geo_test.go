@@ -9,7 +9,7 @@ import (
 )
 
 func TestIpGeoMap(t *testing.T) {
-	ipToGeo := geo.NewIpToGeoMap()
+	ipToGeo := geo.NewIpToGeoMap("https://raw.githubusercontent.com/vikpe/qw-servers-geoip/main/ip_to_geo.json")
 	assert.True(t, len(ipToGeo) > 100)
 
 	// test methods

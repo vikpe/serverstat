@@ -20,15 +20,12 @@ type Info struct {
 
 type IpToGeoMap map[string]Info
 
-func NewIpToGeoMap() IpToGeoMap {
-	url := "https://raw.githubusercontent.com/vikpe/qw-servers-geoip/main/ip_to_geo.json"
-
+func NewIpToGeoMap(url string) IpToGeoMap {
 	var result IpToGeoMap
 	err := getJson(url, &result)
 
-	timestamp := time.Now().Format(time.RFC850)
-
 	if err != nil {
+		timestamp := time.Now().Format(time.RFC850)
 		fmt.Println(timestamp, "Unable to create geo ip map:", err.Error())
 		return make(IpToGeoMap, 0)
 	}
