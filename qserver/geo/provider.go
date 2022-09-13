@@ -10,6 +10,12 @@ type Provider interface {
 	ByIp(ip string) Location
 }
 
+func NewDefaultProvider() Provider {
+	geoDataUrl := "https://raw.githubusercontent.com/vikpe/qw-servers-geoip/main/ip_to_geo.json"
+	cacheDuration := time.Hour * 6
+	return NewMemcachedProvider(geoDataUrl, cacheDuration)
+}
+
 type MemcachedProvider struct {
 	store          Store
 	dataUrl        string
