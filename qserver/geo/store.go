@@ -1,12 +1,12 @@
 package geo
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/goccy/go-json"
 	"github.com/vikpe/serverstat/qutil"
 )
 
@@ -18,25 +18,25 @@ func NewStoreFromUrl(geoDataUrl string) Store {
 
 	if err != nil {
 		timestamp := time.Now().Format(time.RFC850)
-		fmt.Println(timestamp, "Unable to create geo ip map:", err.Error())
+		fmt.Println(timestamp, "Unable to create geo store:", err.Error())
 		return make(Store, 0)
 	}
 
 	return result
 }
 
-func (g Store) ByAddress(address string) Location {
+func (s Store) ByAddress(address string) Location {
 	hostname := strings.SplitN(address, ":", 2)[0]
-	return g.ByHostname(hostname)
+	return s.ByHostname(hostname)
 }
 
-func (g Store) ByHostname(hostname string) Location {
+func (s Store) ByHostname(hostname string) Location {
 	ip := qutil.HostnameToIp(hostname)
-	return g.ByIp(ip)
+	return s.ByIp(ip)
 }
 
-func (g Store) ByIp(ip string) Location {
-	if info, ok := g[ip]; ok {
+func (s Store) ByIp(ip string) Location {
+	if info, ok := s[ip]; ok {
 		return info
 	}
 
