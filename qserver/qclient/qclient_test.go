@@ -1,6 +1,7 @@
 package qclient_test
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"testing"
 
@@ -115,8 +116,13 @@ func TestClient_IsPlayer(t *testing.T) {
 func TestClient_IsBot(t *testing.T) {
 	assert.True(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 10}.IsBot())    // bot ping
 	assert.True(t, qclient.Client{Name: qstring.New("[ServeMe]"), Ping: 12}.IsBot()) // bot name
-	assert.False(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 12}.IsBot())   // neither
-	assert.False(t, qclient.Client{Name: qstring.New("t"), Ping: 12}.IsBot())        // neither
+	assert.False(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 12}.IsBot())   // human name and ping
+}
+
+func TestClient_IsHuman(t *testing.T) {
+	assert.False(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 10}.IsHuman())    // bot ping
+	assert.False(t, qclient.Client{Name: qstring.New("[ServeMe]"), Ping: 12}.IsHuman()) // bot name
+	assert.True(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 12}.IsHuman())     // human name and ping
 }
 
 func TestSortPlayers(t *testing.T) {
@@ -124,11 +130,22 @@ func TestSortPlayers(t *testing.T) {
 	bps := qclient.Client{Name: qstring.New("bps"), Frags: 8}
 	valla := qclient.Client{Name: qstring.New("valla"), Frags: 6}
 	xantom := qclient.Client{Name: qstring.New("XantoM"), Frags: 12}
-	players := []qclient.Client{milton, bps, valla, xantom}
-	qclient.SortPlayers(players)
 
-	expect := []qclient.Client{xantom, bps, milton, valla}
-	assert.Equal(t, expect, players)
+	t.Run("many players", func(t *testing.T) {
+		players := []qclient.Client{milton, bps, valla, xantom}
+		qclient.SortPlayers(players)
+
+		expect := []qclient.Client{xantom, bps, milton, valla}
+		assert.Equal(t, expect, players)
+	})
+
+	t.Run("few players", func(t *testing.T) {
+		players := []qclient.Client{milton}
+		qclient.SortPlayers(players)
+
+		expect := []qclient.Client{milton}
+		assert.Equal(t, expect, players)
+	})
 }
 
 func BenchmarkSortPlayers(b *testing.B) {
@@ -181,4 +198,27 @@ func TestClient_MarshalJSON(t *testing.T) {
 	jsonValue, _ := json.Marshal(client)
 	expect := `{"name":"Final","name_color":"wwwww","team":"red","team_color":"www","skin":"","colors":[2,3],"frags":-9999,"ping":-68,"time":122,"cc":"","is_bot":false}`
 	assert.Equal(t, expect, string(jsonValue))
+}
+
+func TestClientNames(t *testing.T) {
+	encodedNames := []string{
+		"HCBtYXplcg==", // "• mazer",
+		"EXNyEA==",     // "]sr[",
+		"4uHz8w==",     // "bass",
+	}
+
+	names := make([]string, 0)
+
+	for _, encodedString := range encodedNames {
+		strBytes, _ := base64.StdEncoding.DecodeString(encodedString)
+		names = append(names, string(strBytes))
+	}
+
+	clients := []qclient.Client{
+		{Name: qstring.QuakeString(names[0])},
+		{Name: qstring.QuakeString(names[1])},
+		{Name: qstring.QuakeString(names[2])},
+	}
+
+	assert.Equal(t, []string{"• mazer", "]sr[", "bass"}, qclient.ClientNames(clients))
 }

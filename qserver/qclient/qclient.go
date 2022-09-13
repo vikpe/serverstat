@@ -154,10 +154,6 @@ func NewFromString(clientString string) (Client, error) {
 }
 
 func ClientNames(clients []Client) []string {
-	if 0 == len(clients) {
-		return make([]string, 0)
-	}
-
 	return slice.Map[Client, string](clients, func(client Client) string {
 		return client.Name.ToPlainString()
 	})
