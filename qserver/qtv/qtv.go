@@ -12,5 +12,5 @@ type Qtv struct {
 	Address        string             `json:"address"`
 	SpectatorNames []string           `json:"spectator_names"`
 	Settings       qsettings.Settings `json:"settings"`
-	Geo            geo.Info           `json:"geo"`
+	Geo            geo.Location       `json:"geo"`
 }

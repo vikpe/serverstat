@@ -5,38 +5,38 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/commands/status87"
 	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qversion"
+	"github.com/vikpe/serverstat/qutil"
 	"github.com/vikpe/udpclient"
 )
 
-func getIpToGeoMap() geo.IpToGeoMap {
-	return geo.NewIpToGeoMap("https://raw.githubusercontent.com/vikpe/qw-servers-geoip/main/ip_to_geo.json")
+type Client struct {
+	geoProvider geo.Provider
 }
 
-func GetInfo(address string) (qserver.GenericServer, error) {
+func NewClient() *Client {
+	return &Client{
+		geoProvider: geo.NewDefaultProvider(),
+	}
+}
+
+func (c *Client) GetInfo(address string) (qserver.GenericServer, error) {
 	server, err := getServerInfo(address)
 
 	if err == nil {
-		server.Geo = getIpToGeoMap().GetByAddress(server.Address)
+		server.Geo = c.geoProvider.ByAddress(server.Address)
 	}
 
 	return server, err
 }
 
-func isValidServerAddress(address string) bool {
-	validate := validator.New()
-	err := validate.Var(address, "required,hostname_port")
-	return err == nil
-}
-
 func getServerInfo(address string) (qserver.GenericServer, error) {
-	if !isValidServerAddress(address) {
+	if !qutil.IsValidServerAddress(address) {
 		return qserver.GenericServer{}, errors.New("invalid server address")
 	}
 
@@ -69,7 +69,7 @@ func getServerInfo(address string) (qserver.GenericServer, error) {
 	return server, nil
 }
 
-func GetInfoFromMany(addresses []string) []qserver.GenericServer {
+func (c *Client) GetInfoFromMany(addresses []string) []qserver.GenericServer {
 	var (
 		wg    sync.WaitGroup
 		mutex sync.Mutex
@@ -101,10 +101,8 @@ func GetInfoFromMany(addresses []string) []qserver.GenericServer {
 		return servers
 	}
 
-	ipToGeo := getIpToGeoMap()
-
 	for index, server := range servers {
-		servers[index].Geo = ipToGeo.GetByAddress(server.Address)
+		servers[index].Geo = c.geoProvider.ByAddress(server.Address)
 	}
 
 	sort.Slice(servers, func(i, j int) bool {
