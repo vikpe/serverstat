@@ -47,13 +47,8 @@ func GetQtvStream(address string) (qtvstream.QtvStream, error) {
 	)
 
 	if err == nil && stream.SpectatorCount > 0 {
-		spectatorNames, err := GetQtvUsers(address)
-
-		if err == nil {
-			stream.SpectatorNames = spectatorNames
-		}
-	} else {
-		stream.SpectatorNames = make([]string, 0)
+		spectatorNames, _ := GetQtvUsers(address)
+		stream.SpectatorNames = spectatorNames
 	}
 
 	stream.SpectatorCount = len(stream.SpectatorNames)
