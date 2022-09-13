@@ -21,7 +21,7 @@ func TestGetInfo(t *testing.T) {
 
 		for _, address := range addresses {
 			t.Run(address, func(t *testing.T) {
-				server, err := serverstat.GetInfo(address)
+				server, err := serverstat.GetInfoIncludingGeo(address)
 				assert.Equal(t, qserver.GenericServer{}, server)
 				assert.ErrorContains(t, err, "invalid server address")
 			})
@@ -29,7 +29,7 @@ func TestGetInfo(t *testing.T) {
 	})
 
 	t.Run("Response error", func(t *testing.T) {
-		server, err := serverstat.GetInfo("foo:666")
+		server, err := serverstat.GetInfoIncludingGeo("foo:666")
 		assert.Equal(t, qserver.GenericServer{}, server)
 		assert.NotNil(t, err)
 	})
@@ -44,7 +44,7 @@ func TestGetInfo(t *testing.T) {
 		}()
 		time.Sleep(10 * time.Millisecond)
 
-		server, err := serverstat.GetInfo(":8001")
+		server, err := serverstat.GetInfoIncludingGeo(":8001")
 		expectedServer := qserver.GenericServer{
 			Version: qversion.New("MVDSV 0.35-dev"),
 			Address: ":8001",
@@ -75,7 +75,7 @@ func TestGetInfo(t *testing.T) {
 				"maxfps":          "77",
 				"pm_ktjump":       "1",
 			},
-			Geo: geo.Info{},
+			Geo: geo.Location{},
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 			}{
@@ -130,7 +130,7 @@ func TestGetInfoFromMany(t *testing.T) {
 				"*version": "MVDSV 0.35-dev",
 				"maxfps":   "77",
 			},
-			Geo: geo.Info{},
+			Geo: geo.Location{},
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 			}{
@@ -148,7 +148,7 @@ func TestGetInfoFromMany(t *testing.T) {
 				"*version": "MVDSV 0.67",
 				"maxfps":   "77",
 			},
-			Geo: geo.Info{},
+			Geo: geo.Location{},
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 			}{
@@ -166,7 +166,7 @@ func TestGetInfoFromMany(t *testing.T) {
 				"*version": "qwfwd 0.1",
 				"maxfps":   "77",
 			},
-			Geo: geo.Info{},
+			Geo: geo.Location{},
 			ExtraInfo: struct {
 				QtvStream qtvstream.QtvStream `json:"qtv_stream"`
 			}{

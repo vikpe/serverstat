@@ -31,7 +31,7 @@ type Mvdsv struct {
 	SpectatorNames []string            `json:"spectator_names"`
 	Settings       qsettings.Settings  `json:"settings"`
 	QtvStream      qtvstream.QtvStream `json:"qtv_stream"`
-	Geo            geo.Info            `json:"geo"`
+	Geo            geo.Location        `json:"geo"`
 	Score          int                 `json:"score"`
 }
 
