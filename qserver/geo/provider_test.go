@@ -11,6 +11,12 @@ import (
 	"github.com/vikpe/serverstat/qserver/geo"
 )
 
+func TestNewDefaultProvider(t *testing.T) {
+	provider := geo.NewDefaultProvider()
+	assert.Equal(t, "Denmark", provider.ByHostname("qw.foppa.dk").Country)
+	assert.Equal(t, "Finland", provider.ByHostname("troopers.fi").Country)
+}
+
 func TestMemcachedProvider(t *testing.T) {
 	// mock server
 	requestCount := 0
