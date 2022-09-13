@@ -1,6 +1,10 @@
 package qutil
 
-import "net"
+import (
+	"net"
+
+	"github.com/go-playground/validator/v10"
+)
 
 func HostnameToIp(hostname string) string {
 	ips, err := net.LookupIP(hostname)
@@ -14,4 +18,10 @@ func HostnameToIp(hostname string) string {
 	}
 
 	return hostname
+}
+
+func IsValidServerAddress(address string) bool {
+	validate := validator.New()
+	err := validate.Var(address, "required,hostname_port")
+	return err == nil
 }

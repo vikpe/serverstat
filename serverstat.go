@@ -5,13 +5,13 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/vikpe/serverstat/qserver"
 	"github.com/vikpe/serverstat/qserver/commands/status87"
 	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qversion"
+	"github.com/vikpe/serverstat/qutil"
 	"github.com/vikpe/udpclient"
 )
 
@@ -29,14 +29,8 @@ func GetInfo(address string) (qserver.GenericServer, error) {
 	return server, err
 }
 
-func isValidServerAddress(address string) bool {
-	validate := validator.New()
-	err := validate.Var(address, "required,hostname_port")
-	return err == nil
-}
-
 func getServerInfo(address string) (qserver.GenericServer, error) {
-	if !isValidServerAddress(address) {
+	if !qutil.IsValidServerAddress(address) {
 		return qserver.GenericServer{}, errors.New("invalid server address")
 	}
 
