@@ -10,52 +10,52 @@ type Provider interface {
 	ByIp(ip string) Location
 }
 
-type CachedProvider struct {
+type MemcachedProvider struct {
 	store          Store
 	dataUrl        string
 	cacheDuration  time.Duration
 	cacheTimestamp time.Time
 }
 
-func NewCachedProvider(geoDataUrl string, cacheDuration time.Duration) *CachedProvider {
-	return &CachedProvider{
+func NewMemcachedProvider(geoDataUrl string, cacheDuration time.Duration) *MemcachedProvider {
+	return &MemcachedProvider{
 		cacheDuration: cacheDuration,
 		dataUrl:       geoDataUrl,
 		store:         nil,
 	}
 }
 
-func (p *CachedProvider) validate() {
+func (p *MemcachedProvider) validate() {
 	if !p.isUpToDate() {
 		p.update()
 	}
 }
 
-func (p *CachedProvider) isUpToDate() bool {
+func (p *MemcachedProvider) isUpToDate() bool {
 	if p.store == nil {
-		return true
+		return false
 	}
 
 	age := time.Now().Sub(p.cacheTimestamp).Seconds()
-	return age > p.cacheDuration.Seconds()
+	return age < p.cacheDuration.Seconds()
 }
 
-func (p *CachedProvider) update() {
+func (p *MemcachedProvider) update() {
 	p.store = NewStoreFromUrl(p.dataUrl)
 	p.cacheTimestamp = time.Now()
 }
 
-func (p *CachedProvider) ByAddress(address string) Location {
+func (p *MemcachedProvider) ByAddress(address string) Location {
 	p.validate()
-	return p.store.ByIp(address)
+	return p.store.ByAddress(address)
 }
 
-func (p *CachedProvider) ByHostname(hostname string) Location {
+func (p *MemcachedProvider) ByHostname(hostname string) Location {
 	p.validate()
 	return p.store.ByHostname(hostname)
 }
 
-func (p *CachedProvider) ByIp(ip string) Location {
+func (p *MemcachedProvider) ByIp(ip string) Location {
 	p.validate()
 	return p.store.ByIp(ip)
 }
