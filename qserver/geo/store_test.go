@@ -2,29 +2,45 @@ package geo_test
 
 import (
 	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/geo"
 )
 
-func TestNewGeoStoreFromUrl(t *testing.T) {
-	store := geo.NewStoreFromUrl("https://raw.githubusercontent.com/vikpe/qw-servers-geoip/main/ip_to_geo.json")
-	assert.True(t, len(store) > 100)
+func TestNewStoreFromUrl(t *testing.T) {
+	// mock server
+	mockedResponseBody := `{
+		  "100.11.123.208": {
+			"cc": "US",
+			"country": "United States",
+			"region": "North America",
+			"city": "Lansdale",
+			"coordinates": [ 40.2363, -75.296 ]
+          }
+	}`
+
+	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, mockedResponseBody)
+	}))
+	defer mockServer.Close()
 
 	// test methods
-	var ip string
-	var info geo.Location
+	store := geo.NewStoreFromUrl(mockServer.URL)
 
-	for ip_, info_ := range store {
-		ip = ip_
-		info = info_
-		break
+	expectedLocation := geo.Location{
+		CC:          "US",
+		Country:     "United States",
+		Region:      "North America",
+		City:        "Lansdale",
+		Coordinates: [2]float32{40.2363, -75.296},
 	}
 
 	t.Run("ByIp", func(t *testing.T) {
 		t.Run("known", func(t *testing.T) {
-			assert.Equal(t, info, store.ByIp(ip))
+			assert.Equal(t, expectedLocation, store.ByIp("100.11.123.208"))
 		})
 
 		t.Run("unknown", func(t *testing.T) {
@@ -40,6 +56,6 @@ func TestNewGeoStoreFromUrl(t *testing.T) {
 	})
 
 	t.Run("ByAddress", func(t *testing.T) {
-		assert.Equal(t, info, store.ByAddress(fmt.Sprintf("%s:%d", ip, 28000)))
+		assert.Equal(t, expectedLocation, store.ByAddress("100.11.123.208:28000"))
 	})
 }

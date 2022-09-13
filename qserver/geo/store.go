@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/vikpe/gonet"
+	"github.com/vikpe/serverstat/qutil"
 )
 
 type Store map[string]Location
@@ -31,7 +31,7 @@ func (g Store) ByAddress(address string) Location {
 }
 
 func (g Store) ByHostname(hostname string) Location {
-	ip, _ := gonet.ToIpV4(hostname)
+	ip := qutil.HostnameToIp(hostname)
 	return g.ByIp(ip)
 }
 
