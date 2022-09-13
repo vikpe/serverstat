@@ -15,26 +15,28 @@ import (
 	"github.com/vikpe/udphelper"
 )
 
-func TestGetInfo(t *testing.T) {
+func TestClient_GetInfo(t *testing.T) {
+	client := serverstat.NewClient()
+
 	t.Run("invalid server address", func(t *testing.T) {
 		addresses := []string{"", ":", "a:", ":a", "a:a", "qw.foppa.dk::27501", "qw.foppa.dk::27501:"}
 
 		for _, address := range addresses {
 			t.Run(address, func(t *testing.T) {
-				server, err := serverstat.GetInfoIncludingGeo(address)
+				server, err := client.GetInfo(address)
 				assert.Equal(t, qserver.GenericServer{}, server)
 				assert.ErrorContains(t, err, "invalid server address")
 			})
 		}
 	})
 
-	t.Run("Response error", func(t *testing.T) {
-		server, err := serverstat.GetInfoIncludingGeo("foo:666")
+	t.Run("response error", func(t *testing.T) {
+		server, err := client.GetInfo("foo:666")
 		assert.Equal(t, qserver.GenericServer{}, server)
 		assert.NotNil(t, err)
 	})
 
-	t.Run("Success", func(t *testing.T) {
+	t.Run("successful responses", func(t *testing.T) {
 		go func() {
 			responseHeader := string([]byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'})
 			responseBody := `\hostname\troopers.fi:28501\maxfps\77\pm_ktjump\1\*version\MVDSV 0.35-dev
@@ -44,7 +46,7 @@ func TestGetInfo(t *testing.T) {
 		}()
 		time.Sleep(10 * time.Millisecond)
 
-		server, err := serverstat.GetInfoIncludingGeo(":8001")
+		server, err := client.GetInfo(":8001")
 		expectedServer := qserver.GenericServer{
 			Version: qversion.New("MVDSV 0.35-dev"),
 			Address: ":8001",
@@ -89,8 +91,15 @@ func TestGetInfo(t *testing.T) {
 	})
 }
 
-func TestGetInfoFromMany(t *testing.T) {
-	t.Run("Success", func(t *testing.T) {
+func TestClient_GetInfoFromMany(t *testing.T) {
+	client := serverstat.NewClient()
+
+	t.Run("no valid responses", func(t *testing.T) {
+		server := client.GetInfoFromMany([]string{"foo:666", "bar:666"})
+		assert.Equal(t, qserver.GenericServer{}, server)
+	})
+
+	t.Run("mixed responses", func(t *testing.T) {
 		responseHeader := string([]byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'})
 
 		go func() {
@@ -110,7 +119,7 @@ func TestGetInfoFromMany(t *testing.T) {
 		}()
 		time.Sleep(10 * time.Millisecond)
 
-		servers := serverstat.GetInfoFromMany([]string{":7003", ":7001", ":7002", "foo:666"})
+		servers := client.GetInfoFromMany([]string{":7003", ":7001", ":7002", "foo:666"})
 
 		server1 := qserver.GenericServer{
 			Version: qversion.New("MVDSV 0.35-dev"),
