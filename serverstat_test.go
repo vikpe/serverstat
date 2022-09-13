@@ -96,7 +96,7 @@ func TestClient_GetInfoFromMany(t *testing.T) {
 
 	t.Run("no valid responses", func(t *testing.T) {
 		server := client.GetInfoFromMany([]string{"foo:666", "bar:666"})
-		assert.Equal(t, qserver.GenericServer{}, server)
+		assert.Equal(t, []qserver.GenericServer{}, server)
 	})
 
 	t.Run("mixed responses", func(t *testing.T) {
