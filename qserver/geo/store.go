@@ -40,13 +40,7 @@ func (s Store) ByIp(ip string) Location {
 		return info
 	}
 
-	return Location{
-		CC:          "",
-		Country:     "",
-		Region:      "",
-		City:        "",
-		Coordinates: [2]float32{0, 0},
-	}
+	return Location{}
 }
 
 func getJson(url string, target interface{}) error {

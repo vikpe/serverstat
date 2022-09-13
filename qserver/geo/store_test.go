@@ -10,10 +10,41 @@ import (
 	"github.com/vikpe/serverstat/qserver/geo"
 )
 
+var ip = "100.11.123.208"
+var location = geo.Location{
+	CC:          "US",
+	Country:     "United States",
+	Region:      "North America",
+	City:        "Lansdale",
+	Coordinates: [2]float32{40.2363, -75.296},
+}
+var store = geo.Store{ip: location}
+var nullLocation = geo.Location{}
+
+func TestStore_ByIp(t *testing.T) {
+	t.Run("known", func(t *testing.T) {
+		assert.Equal(t, location, store.ByIp(ip))
+	})
+
+	t.Run("unknown", func(t *testing.T) {
+		assert.Equal(t, nullLocation, store.ByIp("1.1.1.1"))
+	})
+}
+
+func TestStore_ByAddress(t *testing.T) {
+	t.Run("known", func(t *testing.T) {
+		assert.Equal(t, location, store.ByAddress(fmt.Sprintf("%s:28000", ip)))
+	})
+
+	t.Run("unknown", func(t *testing.T) {
+		assert.Equal(t, nullLocation, store.ByAddress("foo:28000"))
+	})
+}
+
 func TestNewStoreFromUrl(t *testing.T) {
 	t.Run("error", func(t *testing.T) {
-		store := geo.NewStoreFromUrl("foo")
-		assert.Equal(t, geo.Store{}, store)
+		storeFromUrl := geo.NewStoreFromUrl("foo")
+		assert.Equal(t, geo.Store{}, storeFromUrl)
 	})
 
 	t.Run("success", func(t *testing.T) {
@@ -33,37 +64,7 @@ func TestNewStoreFromUrl(t *testing.T) {
 		}))
 		defer mockServer.Close()
 
-		// test methods
-		store := geo.NewStoreFromUrl(mockServer.URL)
-
-		expectedLocation := geo.Location{
-			CC:          "US",
-			Country:     "United States",
-			Region:      "North America",
-			City:        "Lansdale",
-			Coordinates: [2]float32{40.2363, -75.296},
-		}
-
-		t.Run("ByIp", func(t *testing.T) {
-			t.Run("known", func(t *testing.T) {
-				assert.Equal(t, expectedLocation, store.ByIp("100.11.123.208"))
-			})
-
-			t.Run("unknown", func(t *testing.T) {
-				expect := geo.Location{
-					CC:          "",
-					Country:     "",
-					Region:      "",
-					City:        "",
-					Coordinates: [2]float32{0, 0},
-				}
-				assert.Equal(t, expect, store.ByIp("zzz"))
-			})
-		})
-
-		t.Run("ByAddress", func(t *testing.T) {
-			assert.Equal(t, expectedLocation, store.ByAddress("100.11.123.208:28000"))
-		})
+		storeFromUrl := geo.NewStoreFromUrl(mockServer.URL)
+		assert.Equal(t, store, storeFromUrl)
 	})
-
 }

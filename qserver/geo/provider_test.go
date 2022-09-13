@@ -11,7 +11,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/geo"
 )
 
-func TestNewMemcachedProvider(t *testing.T) {
+func TestMemcachedProvider(t *testing.T) {
 	// mock server
 	requestCount := 0
 	mockedResponseBody := `{
