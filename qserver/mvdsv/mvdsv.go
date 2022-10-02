@@ -42,9 +42,13 @@ func GetQtvUsers(address string) ([]string, error) {
 }
 
 func GetQtvStream(address string) (qtvstream.QtvStream, error) {
-	stream, err := status32.ParseResponse(
-		udpclient.New().SendCommand(address, status32.Command),
-	)
+	response, err := udpclient.New().SendCommand(address, status32.Command)
+
+	if err != nil {
+		return qtvstream.New(), err
+	}
+
+	stream, err := status32.ParseResponse(address, response)
 
 	if err == nil && stream.SpectatorCount > 0 {
 		spectatorNames, _ := GetQtvUsers(address)
