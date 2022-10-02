@@ -7,6 +7,7 @@ import (
 
 const Name = "qtv"
 const VersionPrefix = Name
+const PortNumber = 28000
 
 type Qtv struct {
 	Address        string             `json:"address"`
