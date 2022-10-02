@@ -53,3 +53,33 @@ func TestParseResponse(t *testing.T) {
 		assert.Nil(t, err)
 	})
 }
+
+func TestStreamNumberFromTitle(t *testing.T) {
+	t.Run("unable to parse stream number", func(t *testing.T) {
+		t.Run("no number or braces present", func(t *testing.T) {
+			number, err := status32.StreamNumberFromTitle("qw.foppa.dk")
+			assert.Equal(t, 0, number)
+			assert.ErrorContains(t, err, "unable to parse stream number from title")
+		})
+
+		t.Run("empty braces present", func(t *testing.T) {
+			number, err := status32.StreamNumberFromTitle("qw.foppa.dk - qtv ()")
+			assert.Equal(t, 0, number)
+			assert.ErrorContains(t, err, "unable to parse stream number from title")
+		})
+	})
+
+	t.Run("able to parse stream number", func(t *testing.T) {
+		t.Run("single digit", func(t *testing.T) {
+			number, err := status32.StreamNumberFromTitle("DuelMania FRANCE Qtv (1)")
+			assert.Equal(t, 1, number)
+			assert.Nil(t, err)
+		})
+
+		t.Run("double digit", func(t *testing.T) {
+			number, err := status32.StreamNumberFromTitle("qw.foppa.dk - qtv (13)")
+			assert.Equal(t, 13, number)
+			assert.Nil(t, err)
+		})
+	})
+}

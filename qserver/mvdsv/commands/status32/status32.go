@@ -54,3 +54,21 @@ func ParseResponse(responseBody []byte, err error) (qtvstream.QtvStream, error) 
 	}
 	return stream, nil
 }
+
+func StreamNumberFromTitle(title string) (int, error) {
+	indexOpenBrace := strings.LastIndex(title, "(")
+	indexCloseBrace := strings.LastIndex(title, ")")
+	err := errors.New("unable to parse stream number from title")
+
+	if -1 == indexOpenBrace || -1 == indexCloseBrace {
+		return 0, err
+	}
+
+	numberAsString := title[indexOpenBrace+1 : indexCloseBrace]
+
+	if 0 == len(numberAsString) {
+		return 0, err
+	}
+
+	return qutil.StringToInt(numberAsString), nil
+}
