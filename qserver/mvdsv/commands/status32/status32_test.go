@@ -62,7 +62,7 @@ func TestStreamNumberFromTitle(t *testing.T) {
 			assert.ErrorContains(t, err, "unable to parse stream number from title")
 		})
 
-		t.Run("empty braces present", func(t *testing.T) {
+		t.Run("braces but no number", func(t *testing.T) {
 			number, err := status32.StreamNumberFromTitle("qw.foppa.dk - qtv ()")
 			assert.Equal(t, 0, number)
 			assert.ErrorContains(t, err, "unable to parse stream number from title")
