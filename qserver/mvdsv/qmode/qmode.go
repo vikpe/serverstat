@@ -58,9 +58,13 @@ func Parse(settings qsettings.Settings) Mode {
 		return Mode(modeName)
 	}
 
-	// check ktx mode
 	if "qw" != gameDir {
 		return Mode(gameDir)
+	}
+
+	// check mode and ktx mode
+	if settingsMode, ok := settings["mode"]; ok {
+		return Mode(strings.ToLower(settingsMode))
 	}
 
 	if ktxMode, ok := settings["ktxmode"]; ok {

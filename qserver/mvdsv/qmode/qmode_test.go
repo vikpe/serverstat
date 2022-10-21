@@ -28,6 +28,7 @@ func TestParse(t *testing.T) {
 		{"ffa", qsettings.Settings{"*gamedir": "qw", "maxclients": "8"}},
 		{"fortress", qsettings.Settings{"*gamedir": "fortress"}},
 		{"race", qsettings.Settings{"*gamedir": "qw", "ktxmode": "race"}},
+		{"2on2", qsettings.Settings{"*gamedir": "qw", "mode": "2on2"}},
 	}
 
 	for _, tc := range testCases {
