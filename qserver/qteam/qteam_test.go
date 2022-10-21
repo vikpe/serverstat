@@ -22,6 +22,38 @@ func TestTeam_Frags(t *testing.T) {
 	assert.Equal(t, 3, team.Frags())
 }
 
+func TestTeam_Ping(t *testing.T) {
+	t.Run("no players", func(t *testing.T) {
+		team := qteam.Team{
+			Name:    qstring.New("red"),
+			Players: []qclient.Client{},
+		}
+		assert.Equal(t, 0, team.Ping())
+	})
+
+	t.Run("single player", func(t *testing.T) {
+		team := qteam.Team{
+			Name: qstring.New("red"),
+			Players: []qclient.Client{
+				{Ping: 5},
+			},
+		}
+		assert.Equal(t, 5, team.Ping())
+	})
+
+	t.Run("multiple players/bots", func(t *testing.T) {
+		team := qteam.Team{
+			Name: qstring.New("red"),
+			Players: []qclient.Client{
+				{Ping: 12},
+				{Ping: 10}, // bot
+				{Ping: 24},
+			},
+		}
+		assert.Equal(t, 18, team.Ping())
+	})
+}
+
 func TestTeam_Colors(t *testing.T) {
 	t.Run("no players", func(t *testing.T) {
 		team := qteam.Team{
@@ -222,9 +254,9 @@ func BenchmarkFromPlayers(b *testing.B) {
 }
 
 func TestExport(t *testing.T) {
-	player1 := qclient.Client{Name: qstring.New("XantoM"), Colors: [2]uint8{4, 2}, Frags: 12}
-	player2 := qclient.Client{Name: qstring.New("Milton"), Colors: [2]uint8{4, 2}, Frags: 8}
-	player3 := qclient.Client{Name: qstring.New("bps"), Colors: [2]uint8{13, 5}, Frags: 8}
+	player1 := qclient.Client{Name: qstring.New("XantoM"), Colors: [2]uint8{4, 2}, Frags: 12, Ping: 12}
+	player2 := qclient.Client{Name: qstring.New("Milton"), Colors: [2]uint8{4, 2}, Frags: 8, Ping: 14}
+	player3 := qclient.Client{Name: qstring.New("bps"), Colors: [2]uint8{13, 5}, Frags: 8, Ping: 16}
 
 	team := qteam.Team{
 		Name:    qstring.New("red"),
@@ -234,6 +266,7 @@ func TestExport(t *testing.T) {
 		Name:      qstring.New("red"),
 		NameColor: "www",
 		Frags:     28,
+		Ping:      14,
 		Colors:    [2]uint8{4, 2},
 		Players:   []qclient.Client{player1, player3, player2},
 	}
@@ -241,13 +274,13 @@ func TestExport(t *testing.T) {
 }
 
 func TestTeam_MarshalJSON(t *testing.T) {
-	player1 := qclient.Client{Name: qstring.New("XantoM"), Colors: [2]uint8{4, 2}, Frags: 12}
-	player2 := qclient.Client{Name: qstring.New("bps"), Colors: [2]uint8{13, 5}, Frags: 8}
+	player1 := qclient.Client{Name: qstring.New("XantoM"), Colors: [2]uint8{4, 2}, Frags: 12, Ping: 30}
+	player2 := qclient.Client{Name: qstring.New("bps"), Colors: [2]uint8{13, 5}, Frags: 8, Ping: 20}
 	team := qteam.Team{
 		Name:    qstring.New("red"),
 		Players: []qclient.Client{player1, player2},
 	}
 	jsonValue, _ := json.Marshal(team)
-	expect := `{"name":"red","name_color":"www","frags":20,"colors":[4,2],"players":[{"name":"XantoM","name_color":"wwwwww","team":"","team_color":"","skin":"","colors":[4,2],"frags":12,"ping":0,"time":0,"cc":"","is_bot":false},{"name":"bps","name_color":"www","team":"","team_color":"","skin":"","colors":[13,5],"frags":8,"ping":0,"time":0,"cc":"","is_bot":false}]}`
+	expect := `{"name":"red","name_color":"www","frags":20,"ping":25,"colors":[4,2],"players":[{"name":"XantoM","name_color":"wwwwww","team":"","team_color":"","skin":"","colors":[4,2],"frags":12,"ping":30,"time":0,"cc":"","is_bot":false},{"name":"bps","name_color":"www","team":"","team_color":"","skin":"","colors":[13,5],"frags":8,"ping":20,"time":0,"cc":"","is_bot":false}]}`
 	assert.Equal(t, expect, string(jsonValue))
 }

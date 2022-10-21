@@ -2,6 +2,7 @@ package qteam
 
 import (
 	"fmt"
+	"math"
 	"sort"
 	"strings"
 
@@ -19,6 +20,7 @@ type TeamExport struct {
 	Name      qstring.QuakeString `json:"name"`
 	NameColor string              `json:"name_color"`
 	Frags     int                 `json:"frags"`
+	Ping      int                 `json:"ping"`
 	Colors    [2]uint8            `json:"colors"`
 	Players   []qclient.Client    `json:"players"`
 }
@@ -31,6 +33,7 @@ func Export(t Team) TeamExport {
 		NameColor: t.Name.ToColorCodes(),
 		Colors:    t.Colors(),
 		Frags:     t.Frags(),
+		Ping:      t.Ping(),
 		Players:   t.Players,
 	}
 }
@@ -47,6 +50,28 @@ func (t Team) Frags() int {
 	}
 
 	return frags
+}
+
+func (t Team) Ping() int {
+	if 0 == len(t.Players) {
+		return 0
+	}
+
+	playerCount := 0
+	playerTotalPing := 0
+
+	for _, p := range t.Players {
+		if p.IsHuman() {
+			playerCount++
+			playerTotalPing += p.Ping
+		}
+	}
+
+	if 0 == playerCount {
+		return 0
+	}
+
+	return int(math.Round(float64(playerTotalPing / playerCount)))
 }
 
 func (t Team) Colors() [2]uint8 {
