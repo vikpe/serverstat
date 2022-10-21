@@ -186,15 +186,14 @@ func TestFromPlayers(t *testing.T) {
 		Frags:  9,
 	}
 	players := []qclient.Client{xantom, xterm, bps, valla, teamless}
-	teams := qteam.FromPlayers(players)
-
 	expect := []qteam.Team{
 		{Name: qstring.New(""), Players: []qclient.Client{teamless}},
 		{Name: qstring.New("-s-"), Players: []qclient.Client{bps}},
 		{Name: qstring.New("f0m"), Players: []qclient.Client{xterm, valla, xantom}},
 	}
 
-	assert.Equal(t, expect, teams)
+	assert.Equal(t, expect, qteam.FromPlayers(players))
+	assert.Equal(t, []qclient.Client{xantom, xterm, bps, valla, teamless}, players) // ensure players slice is unchanged
 }
 
 func BenchmarkFromPlayers(b *testing.B) {

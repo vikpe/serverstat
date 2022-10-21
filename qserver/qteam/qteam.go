@@ -26,15 +26,13 @@ type TeamExport struct {
 }
 
 func Export(t Team) TeamExport {
-	qclient.SortPlayers(t.Players)
-
 	return TeamExport{
 		Name:      t.Name,
 		NameColor: t.Name.ToColorCodes(),
 		Colors:    t.Colors(),
 		Frags:     t.Frags(),
 		Ping:      t.Ping(),
-		Players:   t.Players,
+		Players:   qclient.SortPlayers(t.Players),
 	}
 }
 
@@ -136,15 +134,11 @@ func FromPlayers(players []qclient.Client) []Team {
 		}}
 	}
 
-	sort.Slice(players, func(i, j int) bool {
-		return players[i].Team.ToPlainString() < players[j].Team.ToPlainString()
-	})
-
 	teams := make([]Team, 0)
 	currentTeamIndex := -1
 	currentTeamName := "____________________"
 
-	for _, player := range players {
+	for _, player := range qclient.SortPlayersByTeamName(players) {
 		playerTeamName := player.Team.ToPlainString()
 
 		if currentTeamName != playerTeamName {
@@ -159,8 +153,8 @@ func FromPlayers(players []qclient.Client) []Team {
 		}
 	}
 
-	for _, team := range teams {
-		qclient.SortPlayers(team.Players)
+	for teamIndex, team := range teams {
+		teams[teamIndex].Players = qclient.SortPlayers(team.Players)
 	}
 
 	return teams

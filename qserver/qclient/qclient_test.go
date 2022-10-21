@@ -130,21 +130,18 @@ func TestSortPlayers(t *testing.T) {
 	bps := qclient.Client{Name: qstring.New("bps"), Frags: 8}
 	valla := qclient.Client{Name: qstring.New("valla"), Frags: 6}
 	xantom := qclient.Client{Name: qstring.New("XantoM"), Frags: 12}
+	xterm := qclient.Client{Name: qstring.New("Xterm"), Frags: 12}
 
 	t.Run("many players", func(t *testing.T) {
-		players := []qclient.Client{milton, bps, valla, xantom}
-		qclient.SortPlayers(players)
-
-		expect := []qclient.Client{xantom, bps, milton, valla}
-		assert.Equal(t, expect, players)
+		players := []qclient.Client{milton, bps, xterm, valla, xantom}
+		expect := []qclient.Client{xantom, xterm, bps, milton, valla}
+		assert.Equal(t, expect, qclient.SortPlayers(players))
 	})
 
 	t.Run("few players", func(t *testing.T) {
 		players := []qclient.Client{milton}
-		qclient.SortPlayers(players)
-
 		expect := []qclient.Client{milton}
-		assert.Equal(t, expect, players)
+		assert.Equal(t, expect, qclient.SortPlayers(players))
 	})
 }
 

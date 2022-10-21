@@ -21,9 +21,7 @@ import (
 )
 
 func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
-	players := server.Players()
-	qclient.SortPlayers(players)
-
+	players := qclient.SortPlayers(server.Players())
 	spectatorNames := qclient.ClientNames(server.Spectators())
 	playerSlots := slots.New(server.Settings.GetInt("maxclients", 0), len(players))
 	spectatorSlots := slots.New(server.Settings.GetInt("maxspectators", 0), len(spectatorNames))

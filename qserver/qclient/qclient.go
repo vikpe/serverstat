@@ -159,16 +159,51 @@ func ClientNames(clients []Client) []string {
 	})
 }
 
-func SortPlayers(players []Client) {
-	if len(players) < 2 {
-		return
+func SortPlayersByFrags(players []Client) []Client {
+	var _players []Client
+	_players = append(_players, players...)
+
+	if len(_players) < 2 {
+		return _players
 	}
 
-	sort.Slice(players, func(i, j int) bool {
-		if players[i].Frags == players[j].Frags {
-			return strings.ToLower(players[i].Name.ToPlainString()) < strings.ToLower(players[j].Name.ToPlainString())
-		} else {
-			return players[i].Frags > players[j].Frags
-		}
+	sort.Slice(_players, func(i, j int) bool {
+		return _players[i].Frags > _players[j].Frags
 	})
+
+	return _players
+}
+
+func SortPlayersByName(players []Client) []Client {
+	var _players []Client
+	_players = append(_players, players...)
+
+	if len(_players) < 2 {
+		return _players
+	}
+
+	sort.Slice(_players, func(i, j int) bool {
+		return strings.ToLower(_players[i].Name.ToPlainString()) < strings.ToLower(_players[j].Name.ToPlainString())
+	})
+
+	return _players
+}
+
+func SortPlayersByTeamName(players []Client) []Client {
+	var _players []Client
+	_players = append(_players, players...)
+
+	if len(_players) < 2 {
+		return _players
+	}
+
+	sort.Slice(_players, func(i, j int) bool {
+		return strings.ToLower(_players[i].Team.ToPlainString()) < strings.ToLower(_players[j].Team.ToPlainString())
+	})
+
+	return _players
+}
+
+func SortPlayers(players []Client) []Client {
+	return SortPlayersByFrags(SortPlayersByName(players))
 }
