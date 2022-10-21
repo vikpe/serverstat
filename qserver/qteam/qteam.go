@@ -157,5 +157,9 @@ func FromPlayers(players []qclient.Client) []Team {
 		teams[teamIndex].Players = qclient.SortPlayers(team.Players)
 	}
 
+	sort.Slice(teams, func(i, j int) bool {
+		return teams[i].Frags() > teams[j].Frags()
+	})
+
 	return teams
 }

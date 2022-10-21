@@ -156,7 +156,7 @@ func TestTeam_String(t *testing.T) {
 
 func TestFromPlayers(t *testing.T) {
 	teamless := qclient.Client{
-		Name:   qstring.New("XantoM"),
+		Name:   qstring.New("player"),
 		Team:   qstring.New(""),
 		Colors: [2]uint8{0, 0},
 		Frags:  10,
@@ -187,9 +187,9 @@ func TestFromPlayers(t *testing.T) {
 	}
 	players := []qclient.Client{xantom, xterm, bps, valla, teamless}
 	expect := []qteam.Team{
+		{Name: qstring.New("f0m"), Players: []qclient.Client{xterm, valla, xantom}},
 		{Name: qstring.New(""), Players: []qclient.Client{teamless}},
 		{Name: qstring.New("-s-"), Players: []qclient.Client{bps}},
-		{Name: qstring.New("f0m"), Players: []qclient.Client{xterm, valla, xantom}},
 	}
 
 	assert.Equal(t, expect, qteam.FromPlayers(players))
