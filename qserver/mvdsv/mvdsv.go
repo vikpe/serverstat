@@ -59,3 +59,36 @@ func GetQtvStream(address string) (qtvstream.QtvStream, error) {
 
 	return stream, err
 }
+
+// todo
+/*func GetLastStats(address string) ([]laststats.Entry, error) {
+	bytes, err := ioutil.ReadFile("commands/laststats/test_files/entry.json")
+
+	if err != nil {
+		fmt.Println("error reading json", err)
+	}
+
+	var entry laststats.Entry
+
+	err = json.Unmarshal(bytes, &entry)
+	if err != nil {
+		fmt.Println("error unmarshal", err)
+		return nil, err
+	}
+
+	return []laststats.Entry{entry}, nil
+}
+
+func GetLastScores(address string) ([]lastscores.Entry, error) {
+	stats, err := GetLastStats(address)
+	if err != nil {
+		return make([]lastscores.Entry, 0), err
+	}
+
+	result := make([]lastscores.Entry, 0)
+	for _, entry := range stats {
+		result = append(result, lastscores.NewFromLastStatsEntry(entry))
+	}
+
+	return result, nil
+}*/
