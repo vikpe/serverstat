@@ -9,10 +9,10 @@ require (
 	github.com/ssoroka/slice v0.0.0-20220402005549-78f0cea3df8b
 	github.com/stretchr/testify v1.8.0
 	github.com/valyala/fastjson v1.6.3
-	github.com/vikpe/udpclient v0.1.3
+	github.com/vikpe/udpclient v0.2.0
 	github.com/vikpe/udphelper v0.1.3
 	github.com/vikpe/wildcard v0.1.0
-	golang.org/x/exp v0.0.0-20221019170559-20944726eadf
+	golang.org/x/exp v0.0.0-20221031165847-c99f073a8326
 )
 
 require (
