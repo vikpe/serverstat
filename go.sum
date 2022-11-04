@@ -41,6 +41,8 @@ github.com/stretchr/testify v1.8.0 h1:pSgiaMZlXftHpm5L7V1+rVB+AZJydKsMxsQBIJw4PK
 github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
 github.com/valyala/fastjson v1.6.3 h1:tAKFnnwmeMGPbwJ7IwxcTPCNr3uIzoIj3/Fh90ra4xc=
 github.com/valyala/fastjson v1.6.3/go.mod h1:CLCAqky6SMuOcxStkYQvblddUtoRxhYMGLrsQns1aXY=
+github.com/vikpe/qw-hub-api v0.1.3 h1:1dokdfGvut1/5kgSn+Mpym/zwHgGQOSTHWhDfOCbLmY=
+github.com/vikpe/qw-hub-api v0.1.3/go.mod h1:LwQnahnyc2GpxwzgMaI/OlnavBda6EjB5/H06nHfRtI=
 github.com/vikpe/udpclient v0.2.0 h1:vke1MObE6gV8ppjMeqJfC+t/dJar2SivDMg7Pxo4cLk=
 github.com/vikpe/udpclient v0.2.0/go.mod h1:visFAJMzrT6Ns/G4NCq+GS65DcmePYNX/z9z8UrruL4=
 github.com/vikpe/udphelper v0.1.3 h1:BAU/BuOIgJxk3ZmtWOJ39lfsmAr2l8cAMdDI1K2GD8s=
