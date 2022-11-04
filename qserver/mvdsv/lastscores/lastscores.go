@@ -1,6 +1,9 @@
 package lastscores
 
 import (
+	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/vikpe/qw-hub-api/pkg/qdemo"
@@ -15,6 +18,37 @@ type Entry struct {
 	Players   []qclient.Client `json:"players"`
 	Teams     []qteam.Team     `json:"teams"`
 	Map       string           `json:"map"`
+}
+
+func (e Entry) String() string {
+	timestampStr := e.Timestamp.Format("2006-01-02 15:04")
+
+	if "ffa" == e.Mode {
+		return fmt.Sprintf("%s - %s [%s]", timestampStr, e.Mode, e.Map)
+	}
+
+	participants := make([]string, 0)
+	frags := make([]string, 0)
+
+	if len(e.Teams) > 0 {
+		for _, team := range e.Teams {
+			participants = append(participants, team.Name.ToPlainString())
+			frags = append(frags, strconv.Itoa(team.Frags()))
+		}
+	} else {
+		for _, player := range e.Players {
+			participants = append(participants, player.Name.ToPlainString())
+			frags = append(frags, strconv.Itoa(player.Frags))
+		}
+	}
+
+	return fmt.Sprintf("%s - %s: %s [%s] %s",
+		timestampStr,
+		e.Mode,
+		strings.Join(participants, " vs "),
+		e.Map,
+		strings.Join(frags, ":"),
+	)
 }
 
 func NewFromLastStatsEntry(entry laststats.Entry) Entry {

@@ -21,6 +21,8 @@ var clientBps = qclient.NewFromLastStatsPlayer(playerBps)
 var clientCara = qclient.NewFromLastStatsPlayer(playerCara)
 
 func TestNewFromLastStatsEntry(t *testing.T) {
+	expectTimestamp, _ := time.Parse("2006-01-02 15:04:05 -0700", "2022-10-31 19:59:46 +0100")
+
 	t.Run("duel", func(t *testing.T) {
 		laststatsEntry := laststats.Entry{
 			Date:    "2022-10-31 19:59:46 +0100",
@@ -31,7 +33,6 @@ func TestNewFromLastStatsEntry(t *testing.T) {
 			Players: []laststats.Player{playerXantoM, playerXterm},
 		}
 
-		expectTimestamp, _ := time.Parse("2006-01-02 15:04:05 -0700", "2022-10-31 19:59:46 +0100")
 		expect := lastscores.Entry{
 			Timestamp: expectTimestamp,
 			Mode:      "duel",
@@ -53,7 +54,6 @@ func TestNewFromLastStatsEntry(t *testing.T) {
 			Players: []laststats.Player{playerXantoM, playerXterm, playerBps, playerCara},
 		}
 
-		expectTimestamp, _ := time.Parse("2006-01-02 15:04:05 -0700", "2022-10-31 19:59:46 +0100")
 		expect := lastscores.Entry{
 			Timestamp: expectTimestamp,
 			Mode:      "2on2",
@@ -75,7 +75,6 @@ func TestNewFromLastStatsEntry(t *testing.T) {
 			Players: []laststats.Player{playerXantoM, playerXterm},
 		}
 
-		expectTimestamp, _ := time.Parse("2006-01-02 15:04:05 -0700", "2022-10-31 19:59:46 +0100")
 		expect := lastscores.Entry{
 			Timestamp: expectTimestamp,
 			Mode:      "ffa",
@@ -85,5 +84,44 @@ func TestNewFromLastStatsEntry(t *testing.T) {
 		}
 
 		assert.Equal(t, expect, lastscores.NewFromLastStatsEntry(laststatsEntry))
+	})
+}
+
+func TestEntry_String(t *testing.T) {
+	expectTimestamp, _ := time.Parse("2006-01-02 15:04:05 -0700", "2022-10-31 19:59:46 +0100")
+
+	t.Run("duel", func(t *testing.T) {
+		entry := lastscores.Entry{
+			Timestamp: expectTimestamp,
+			Mode:      "duel",
+			Teams:     make([]qteam.Team, 0),
+			Players:   []qclient.Client{clientXantoM, clientXterm},
+			Map:       "dm6",
+		}
+
+		assert.Equal(t, "2022-10-31 19:59 - duel: XantoM vs Xterm [dm6] 6:4", entry.String())
+	})
+
+	t.Run("teamplay", func(t *testing.T) {
+		entry := lastscores.Entry{
+			Timestamp: expectTimestamp,
+			Mode:      "2on2",
+			Teams:     qteam.FromPlayers([]qclient.Client{clientXantoM, clientXterm, clientBps, clientCara}),
+			Players:   []qclient.Client{},
+			Map:       "dm6",
+		}
+
+		assert.Equal(t, "2022-10-31 19:59 - 2on2: -s- vs f0m [dm6] 30:10", entry.String())
+	})
+
+	t.Run("ffa", func(t *testing.T) {
+		entry := lastscores.Entry{
+			Timestamp: expectTimestamp,
+			Mode:      "ffa",
+			Teams:     make([]qteam.Team, 0),
+			Players:   []qclient.Client{clientXantoM, clientXterm},
+			Map:       "dm6",
+		}
+		assert.Equal(t, "2022-10-31 19:59 - ffa [dm6]", entry.String())
 	})
 }
