@@ -5,55 +5,40 @@ import (
 
 	"github.com/vikpe/qw-hub-api/pkg/qdemo"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/laststats"
+	"github.com/vikpe/serverstat/qserver/qclient"
+	"github.com/vikpe/serverstat/qserver/qteam"
 )
 
 type Entry struct {
-	Timestamp    time.Time     `json:"timestamp"`
-	Mode         string        `json:"mode"`
-	Participants []Participant `json:"players"`
-	Map          string        `json:"map"`
+	Timestamp time.Time        `json:"timestamp"`
+	Mode      string           `json:"mode"`
+	Players   []qclient.Client `json:"players"`
+	Teams     []qteam.Team     `json:"teams"`
+	Map       string           `json:"map"`
 }
 
-type Participant struct {
-	Name  string
-	Frags int
-}
+func NewFromLastStatsEntry(entry laststats.Entry) Entry {
+	clients := make([]qclient.Client, 0)
+	for _, p := range entry.Players {
+		clients = append(clients, qclient.NewFromLastStatsPlayer(p))
+	}
 
-func FromLastStatsEntry(entry laststats.Entry) Entry {
-	participants := make([]Participant, 0)
+	teams := make([]qteam.Team, 0)
+	players := make([]qclient.Client, 0)
 
-	switch entry.Mode {
-	case "team":
-		fragsPerTeam := make(map[string]int, 0)
-
-		for _, p := range entry.Players {
-			if _, ok := fragsPerTeam[p.Team]; !ok {
-				fragsPerTeam[p.Team] = 0
-			}
-			fragsPerTeam[p.Team] += p.Stats.Frags
-		}
-
-		for name, frags := range fragsPerTeam {
-			participants = append(participants, Participant{
-				Name:  name,
-				Frags: frags,
-			})
-		}
-	default:
-		for _, p := range entry.Players {
-			participants = append(participants, Participant{
-				Name:  p.Name,
-				Frags: p.Stats.Frags,
-			})
-		}
+	if "team" == entry.Mode {
+		teams = qteam.FromPlayers(clients)
+	} else {
+		players = clients
 	}
 
 	timestamp, _ := time.Parse("2006-01-02 15:04:05 -0700", entry.Date)
 
 	return Entry{
-		Timestamp:    timestamp,
-		Mode:         qdemo.Filename(entry.Demo).Mode(),
-		Participants: participants,
-		Map:          entry.Map,
+		Timestamp: timestamp,
+		Mode:      qdemo.Filename(entry.Demo).Mode(),
+		Teams:     teams,
+		Players:   players,
+		Map:       entry.Map,
 	}
 }
