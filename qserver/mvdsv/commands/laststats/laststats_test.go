@@ -10,7 +10,6 @@ import (
 	"github.com/vikpe/udpclient"
 )
 
-// todo
 func TestGetCommand(t *testing.T) {
 	expect := udpclient.Command{
 		RequestPacket:  []byte{0xff, 0xff, 0xff, 0xff, 'l', 'a', 's', 't', 's', 't', 'a', 't', 's', ' ', byte(5), 0x0a},
