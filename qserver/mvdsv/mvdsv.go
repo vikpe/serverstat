@@ -2,8 +2,10 @@ package mvdsv
 
 import (
 	"github.com/vikpe/serverstat/qserver/geo"
+	"github.com/vikpe/serverstat/qserver/mvdsv/commands/laststats"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/qtvusers"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/status32"
+	"github.com/vikpe/serverstat/qserver/mvdsv/lastscores"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qstatus"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
@@ -35,6 +37,27 @@ type Mvdsv struct {
 	Score          int                 `json:"score"`
 }
 
+func GetLastScores(address string, limit int) ([]lastscores.Entry, error) {
+	stats, err := GetLastStats(address, limit)
+
+	if err != nil {
+		return make([]lastscores.Entry, 0), err
+	}
+
+	result := make([]lastscores.Entry, 0)
+	for _, entry := range stats {
+		result = append(result, lastscores.NewFromLastStatsEntry(entry))
+	}
+
+	return result, nil
+}
+
+func GetLastStats(address string, limit int) ([]laststats.Entry, error) {
+	return laststats.ParseResponseBody(
+		udpclient.New().SendCommand(address, laststats.GetCommand(limit)),
+	)
+}
+
 func GetQtvUsers(address string) ([]string, error) {
 	return qtvusers.ParseResponse(
 		udpclient.New().SendCommand(address, qtvusers.Command),
@@ -59,36 +82,3 @@ func GetQtvStream(address string) (qtvstream.QtvStream, error) {
 
 	return stream, err
 }
-
-// todo
-/*func GetLastStats(address string) ([]laststats.Entry, error) {
-	bytes, err := ioutil.ReadFile("commands/laststats/test_files/entry.json")
-
-	if err != nil {
-		fmt.Println("error reading json", err)
-	}
-
-	var entry laststats.Entry
-
-	err = json.Unmarshal(bytes, &entry)
-	if err != nil {
-		fmt.Println("error unmarshal", err)
-		return nil, err
-	}
-
-	return []laststats.Entry{entry}, nil
-}
-
-func GetLastScores(address string) ([]lastscores.Entry, error) {
-	stats, err := GetLastStats(address)
-	if err != nil {
-		return make([]lastscores.Entry, 0), err
-	}
-
-	result := make([]lastscores.Entry, 0)
-	for _, entry := range stats {
-		result = append(result, lastscores.NewFromLastStatsEntry(entry))
-	}
-
-	return result, nil
-}*/
