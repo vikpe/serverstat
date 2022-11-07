@@ -15,8 +15,7 @@ type Entry struct {
 	Duration int      `json:"duration"`
 	Demo     string   `json:"demo"`
 	Teams    []string `json:"teams"`
-
-	Players []Player `json:"players"`
+	Players  []Player `json:"players"`
 }
 
 type Player struct {
