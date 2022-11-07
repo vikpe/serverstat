@@ -41,6 +41,16 @@ func TestTeam_Ping(t *testing.T) {
 		assert.Equal(t, 5, team.Ping())
 	})
 
+	t.Run("only bots", func(t *testing.T) {
+		team := qteam.Team{
+			Name: qstring.New("red"),
+			Players: []qclient.Client{
+				{Ping: 10}, // bot
+			},
+		}
+		assert.Equal(t, 0, team.Ping())
+	})
+
 	t.Run("multiple players/bots", func(t *testing.T) {
 		team := qteam.Team{
 			Name: qstring.New("red"),
@@ -185,15 +195,27 @@ func TestFromPlayers(t *testing.T) {
 		Colors: [2]uint8{4, 2},
 		Frags:  9,
 	}
-	players := []qclient.Client{xantom, xterm, bps, valla, teamless}
-	expect := []qteam.Team{
-		{Name: qstring.New("f0m"), Players: []qclient.Client{xterm, valla, xantom}},
-		{Name: qstring.New(""), Players: []qclient.Client{teamless}},
-		{Name: qstring.New("-s-"), Players: []qclient.Client{bps}},
-	}
 
-	assert.Equal(t, expect, qteam.FromPlayers(players))
-	assert.Equal(t, []qclient.Client{xantom, xterm, bps, valla, teamless}, players) // ensure players slice is unchanged
+	t.Run("no players", func(t *testing.T) {
+		assert.Equal(t, []qteam.Team{}, qteam.FromPlayers([]qclient.Client{}))
+	})
+
+	t.Run("single player", func(t *testing.T) {
+		expect := []qteam.Team{{Name: qstring.New("f0m"), Players: []qclient.Client{xantom}}}
+		assert.Equal(t, expect, qteam.FromPlayers([]qclient.Client{xantom}))
+	})
+
+	t.Run("multiple players", func(t *testing.T) {
+		players := []qclient.Client{xantom, xterm, bps, valla, teamless}
+		expect := []qteam.Team{
+			{Name: qstring.New("f0m"), Players: []qclient.Client{xterm, valla, xantom}},
+			{Name: qstring.New(""), Players: []qclient.Client{teamless}},
+			{Name: qstring.New("-s-"), Players: []qclient.Client{bps}},
+		}
+
+		assert.Equal(t, expect, qteam.FromPlayers(players))
+		assert.Equal(t, []qclient.Client{xantom, xterm, bps, valla, teamless}, players) // ensure players slice is unchanged
+	})
 }
 
 func BenchmarkFromPlayers(b *testing.B) {
