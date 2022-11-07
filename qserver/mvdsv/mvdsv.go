@@ -2,8 +2,10 @@ package mvdsv
 
 import (
 	"github.com/vikpe/serverstat/qserver/geo"
+	"github.com/vikpe/serverstat/qserver/mvdsv/commands/laststats"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/qtvusers"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/status32"
+	"github.com/vikpe/serverstat/qserver/mvdsv/lastscores"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qstatus"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
@@ -33,6 +35,27 @@ type Mvdsv struct {
 	QtvStream      qtvstream.QtvStream `json:"qtv_stream"`
 	Geo            geo.Location        `json:"geo"`
 	Score          int                 `json:"score"`
+}
+
+func GetLastScores(address string, limit int) ([]lastscores.Entry, error) {
+	stats, err := GetLastStats(address, limit)
+
+	if err != nil {
+		return make([]lastscores.Entry, 0), err
+	}
+
+	result := make([]lastscores.Entry, 0)
+	for _, entry := range stats {
+		result = append(result, lastscores.NewFromLastStatsEntry(entry))
+	}
+
+	return result, nil
+}
+
+func GetLastStats(address string, limit int) ([]laststats.Entry, error) {
+	return laststats.ParseResponseBody(
+		udpclient.New().SendCommand(address, laststats.GetCommand(limit)),
+	)
 }
 
 func GetQtvUsers(address string) ([]string, error) {

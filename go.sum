@@ -41,8 +41,10 @@ github.com/stretchr/testify v1.8.0 h1:pSgiaMZlXftHpm5L7V1+rVB+AZJydKsMxsQBIJw4PK
 github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
 github.com/valyala/fastjson v1.6.3 h1:tAKFnnwmeMGPbwJ7IwxcTPCNr3uIzoIj3/Fh90ra4xc=
 github.com/valyala/fastjson v1.6.3/go.mod h1:CLCAqky6SMuOcxStkYQvblddUtoRxhYMGLrsQns1aXY=
-github.com/vikpe/udpclient v0.1.3 h1:VwNkvdGA5Kr2I4ynzEYJ3z2wIDshEPJXPP9DA68FPjU=
-github.com/vikpe/udpclient v0.1.3/go.mod h1:O6nNBpajBwgy6Uc8ewk5pbI5oMU1BhjNhxYpas174o4=
+github.com/vikpe/qw-hub-api v0.1.3 h1:1dokdfGvut1/5kgSn+Mpym/zwHgGQOSTHWhDfOCbLmY=
+github.com/vikpe/qw-hub-api v0.1.3/go.mod h1:LwQnahnyc2GpxwzgMaI/OlnavBda6EjB5/H06nHfRtI=
+github.com/vikpe/udpclient v0.2.0 h1:vke1MObE6gV8ppjMeqJfC+t/dJar2SivDMg7Pxo4cLk=
+github.com/vikpe/udpclient v0.2.0/go.mod h1:visFAJMzrT6Ns/G4NCq+GS65DcmePYNX/z9z8UrruL4=
 github.com/vikpe/udphelper v0.1.3 h1:BAU/BuOIgJxk3ZmtWOJ39lfsmAr2l8cAMdDI1K2GD8s=
 github.com/vikpe/udphelper v0.1.3/go.mod h1:v77bdIsRHNsY6UWDXEZzJXKcxj7CjezZfiYihPRmO1U=
 github.com/vikpe/wildcard v0.1.0 h1:tdxmeeZAFtGJy+pGMz1A7NawdclY9SC+L8d0hOCp+J8=
@@ -50,8 +52,8 @@ github.com/vikpe/wildcard v0.1.0/go.mod h1:68ZRgRpcnlRwA4vei4pKZRu3AUgsyq1k7qPmh
 golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3/go.mod h1:IxCIyHEi3zRg3s0A5j5BB6A9Jmi73HwBIUl50j+osU4=
 golang.org/x/crypto v0.1.0 h1:MDRAIl0xIo9Io2xV565hzXHw3zVseKrJKodhohM5CjU=
 golang.org/x/crypto v0.1.0/go.mod h1:RecgLatLF4+eUMCP1PoPZQb+cVrJcOPbHkTkbkB9sbw=
-golang.org/x/exp v0.0.0-20221019170559-20944726eadf h1:nFVjjKDgNY37+ZSYCJmtYf7tOlfQswHqplG2eosjOMg=
-golang.org/x/exp v0.0.0-20221019170559-20944726eadf/go.mod h1:cyybsKvd6eL0RnXn6p/Grxp8F5bW7iYuBgsNCOHpMYE=
+golang.org/x/exp v0.0.0-20221031165847-c99f073a8326 h1:QfTh0HpN6hlw6D3vu8DAwC8pBIwikq0AI1evdm+FksE=
+golang.org/x/exp v0.0.0-20221031165847-c99f073a8326/go.mod h1:CxIveKay+FTh1D0yPZemJVgC/95VzuuOLq5Qi4xnoYc=
 golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
 golang.org/x/sys v0.0.0-20201119102817-f84b799fce68/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20210423082822-04245dca01da/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
