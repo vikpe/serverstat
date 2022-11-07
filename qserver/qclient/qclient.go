@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/ssoroka/slice"
+	"github.com/vikpe/serverstat/qserver/mvdsv/commands/laststats"
 	"github.com/vikpe/serverstat/qserver/qclient/bot"
 	"github.com/vikpe/serverstat/qtext/qstring"
 	"github.com/vikpe/serverstat/qutil"
@@ -151,6 +152,16 @@ func NewFromString(clientString string) (Client, error) {
 		Time:   qutil.StringToInt(clientRecord[IndexTime]),
 		CC:     flag,
 	}, nil
+}
+
+func NewFromLastStatsPlayer(player laststats.Player) Client {
+	return Client{
+		Name:   qstring.QuakeString(player.Name),
+		Team:   qstring.QuakeString(player.Team),
+		Colors: [2]uint8{uint8(player.TopColor), uint8(player.BottomColor)},
+		Frags:  player.Stats.Frags,
+		Ping:   player.Ping,
+	}
 }
 
 func ClientNames(clients []Client) []string {

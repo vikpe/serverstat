@@ -1,0 +1,42 @@
+[
+  {
+    "version": 3,
+    "date": "2022-10-31 19:59:46 +0100",
+    "map": "dm4",
+    "hostname": "ENVY:28501",
+    "ip": "127.0.1.1",
+    "port": 28501,
+    "mode": "team",
+    "tl": 10,
+    "fl": 10,
+    "dm": 3,
+    "tp": 2,
+    "duration": 72,
+    "demo": "duel_foo_vs_bar[dm4]20221031-1958.mvd",
+    "teams": [
+      "milf",
+      "red"
+    ],
+    "players": []
+  },
+  {
+    "version": 3,
+    "date": "2022-10-31 20:01:46 +0100",
+    "map": "dm4",
+    "hostname": "ENVY:28501",
+    "ip": "127.0.1.1",
+    "port": 28501,
+    "mode": "team",
+    "tl": 10,
+    "fl": 10,
+    "dm": 3,
+    "tp": 2,
+    "duration": 72,
+    "demo": "4on4_sr_vs_tvs[dm3]20221031-2001.mvd",
+    "teams": [
+      "sr",
+      "tvs"
+    ],
+    "players": []
+  }
+]

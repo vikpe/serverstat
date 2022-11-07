@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/vikpe/serverstat/qserver/mvdsv/commands/laststats"
 	"github.com/vikpe/serverstat/qserver/qclient"
 	"github.com/vikpe/serverstat/qtext/qstring"
 )
@@ -101,6 +102,12 @@ func TestFromStrings(t *testing.T) {
 	actual := qclient.NewFromStrings(clientStrings)
 
 	assert.Equal(t, expect, actual)
+}
+
+func TestNewFromLastStatsPlayer(t *testing.T) {
+	lastStatsPlayer := laststats.Player{Name: "XantoM", Team: "f0m", Ping: 25, TopColor: 4, BottomColor: 2, Stats: laststats.PlayerStats{Frags: 6}}
+	expect := qclient.Client{Name: "XantoM", Team: "f0m", Ping: 25, Colors: [2]uint8{4, 2}, Frags: 6}
+	assert.Equal(t, expect, qclient.NewFromLastStatsPlayer(lastStatsPlayer))
 }
 
 func TestClient_IsSpectator(t *testing.T) {
