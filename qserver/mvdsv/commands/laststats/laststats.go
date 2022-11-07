@@ -1,34 +1,57 @@
 package laststats
 
 // todo
-/*import (
-	"fmt"
+import (
+	"bytes"
+	"errors"
 
-	"github.com/vikpe/serverstat/qtext/qstring"
+	"github.com/goccy/go-json"
 	"github.com/vikpe/udpclient"
 )
 
-var Command = udpclient.Command{
-	RequestPacket:  []byte{0xff, 0xff, 0xff, 0xff, 'l', 'a', 's', 't', 's', 'c', 'o', 'r', 'e', 's', ' ', '2', 0x0a},
-	ResponseHeader: []byte{0xff, 0xff, 0xff, 0xff, 'n', 'L', 'i', 's', 't', ' ', 'o', 'f', ' ', '2', ' ', 'l', 'a', 's', 't', ' ', 'd', 'e', 'm', 'o', 's', ':'},
+var frameDelimiter = []byte{0xff, 0xff, 0xff, 0xff, 'n'}
+
+func GetCommand(limit int) udpclient.Command {
+	return udpclient.Command{
+		RequestPacket:  []byte{0xff, 0xff, 0xff, 0xff, 'l', 'a', 's', 't', 's', 't', 'a', 't', 's', ' ', byte(limit), 0x0a},
+		ResponseHeader: []byte{0xff, 0xff, 0xff, 0xff, 'n', 'l', 'a', 's', 't', 's', 't', 'a', 't', 's', ' '},
+	}
 }
 
-func ParseResponse(responseBody []byte, err error) ([]Entry, error) {
+func ParseResponseBody(responseBody []byte, err error) ([]Entry, error) {
+	// example: "2\n[json..]\n"
 	if err != nil {
-		fmt.Print("ParseResponse err", string(responseBody))
-		return make([]Entry, 0), err
+		return []Entry{}, err
 	}
 
-	fmt.Println(qstring.New(string(responseBody)).ToPlainString())
+	// remove frame delimiters
+	responseBody = bytes.ReplaceAll(responseBody, frameDelimiter, []byte{})
 
-	/*rows := strings.Split(string(responseBody), "\n")
-	//fmt.Println(rows)
+	// validate body
+	jsonError := errors.New("invalid json in response body")
+	jsonIndexBegin := bytes.Index(responseBody, []byte("["))
+	jsonIndexEnd := bytes.LastIndex(responseBody, []byte("]"))
 
-	for _, r := range rows {
-		fmt.Println(qstring.New(r).ToPlainString())
+	if -1 == jsonIndexBegin || -1 == jsonIndexEnd || jsonIndexBegin > jsonIndexEnd {
+		return []Entry{}, jsonError
 	}
 
-	spectatorPlainNames := make([]Entry, 0)
+	// parse body
+	if jsonIndexBegin+1 == jsonIndexEnd {
+		return []Entry{}, nil
+	}
 
-	return spectatorPlainNames, nil
-}*/
+	jsonBody := responseBody[jsonIndexBegin : jsonIndexEnd+1]
+	var stats []Entry
+
+	err = json.Unmarshal(jsonBody, &stats)
+	if err != nil {
+		return []Entry{}, jsonError
+	}
+
+	if len(stats) > 0 && 0 == len(stats[0].Date) {
+		return []Entry{}, jsonError
+	}
+
+	return stats, nil
+}
