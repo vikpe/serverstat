@@ -10,7 +10,7 @@ require (
 	github.com/stretchr/testify v1.8.0
 	github.com/valyala/fastjson v1.6.3
 	github.com/vikpe/qw-hub-api v0.1.3
-	github.com/vikpe/udpclient v0.2.0
+	github.com/vikpe/udpclient v0.2.1
 	github.com/vikpe/udphelper v0.1.3
 	github.com/vikpe/wildcard v0.1.0
 	golang.org/x/exp v0.0.0-20221106115401-f9659909a136
