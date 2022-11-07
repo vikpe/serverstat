@@ -9,7 +9,7 @@ import (
 	"github.com/vikpe/udpclient"
 )
 
-var frameDelimiter = []byte{0xff, 0xff, 0xff, 0xff, 'n'}
+var FrameDelimiter = []byte{0xff, 0xff, 0xff, 0xff, 'n'}
 
 func GetCommand(limit int) udpclient.Command {
 	return udpclient.Command{
@@ -25,7 +25,7 @@ func ParseResponseBody(responseBody []byte, err error) ([]Entry, error) {
 	}
 
 	// remove frame delimiters
-	responseBody = bytes.ReplaceAll(responseBody, frameDelimiter, []byte{})
+	responseBody = bytes.ReplaceAll(responseBody, FrameDelimiter, []byte{})
 
 	// validate body
 	jsonError := errors.New("invalid json in response body")

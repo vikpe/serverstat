@@ -1,6 +1,7 @@
 package laststats_test
 
 import (
+	"bytes"
 	"errors"
 	"io/ioutil"
 	"testing"
@@ -84,12 +85,28 @@ func TestParseResponseBody(t *testing.T) {
 				responseBodyHeader := []byte("2\n")
 				responseBodyContent, _ := ioutil.ReadFile("test_files/laststats.json")
 				responseBody := append(responseBodyHeader, responseBodyContent...)
-				stats, err := laststats.ParseResponseBody(responseBody, nil)
 
-				assert.Len(t, stats, 2)
-				assert.Equal(t, "2022-10-31 19:59:46 +0100", stats[0].Date)
-				assert.Equal(t, "2022-10-31 20:01:46 +0100", stats[1].Date)
-				assert.Nil(t, err)
+				t.Run("single frame response", func(t *testing.T) {
+					stats, err := laststats.ParseResponseBody(responseBody, nil)
+					assert.Len(t, stats, 2)
+					assert.Equal(t, "2022-10-31 19:59:46 +0100", stats[0].Date)
+					assert.Equal(t, "2022-10-31 20:01:46 +0100", stats[1].Date)
+					assert.Nil(t, err)
+				})
+
+				t.Run("multi frame response", func(t *testing.T) {
+					frameResponseBody := bytes.Join([][]byte{
+						responseBody[0:10],
+						responseBody[10:20],
+						responseBody[20:],
+					}, laststats.FrameDelimiter)
+
+					stats, err := laststats.ParseResponseBody(frameResponseBody, nil)
+					assert.Len(t, stats, 2)
+					assert.Equal(t, "2022-10-31 19:59:46 +0100", stats[0].Date)
+					assert.Equal(t, "2022-10-31 20:01:46 +0100", stats[1].Date)
+					assert.Nil(t, err)
+				})
 			})
 		})
 	})
