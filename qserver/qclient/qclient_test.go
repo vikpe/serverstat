@@ -139,6 +139,12 @@ func TestSortPlayers(t *testing.T) {
 	xantom := qclient.Client{Name: qstring.New("XantoM"), Frags: 12}
 	xterm := qclient.Client{Name: qstring.New("Xterm"), Frags: 12}
 
+	t.Run("no players", func(t *testing.T) {
+		players := make([]qclient.Client, 0)
+		expect := make([]qclient.Client, 0)
+		assert.Equal(t, expect, qclient.SortPlayers(players))
+	})
+
 	t.Run("many players", func(t *testing.T) {
 		players := []qclient.Client{milton, bps, xterm, valla, xantom}
 		expect := []qclient.Client{xantom, xterm, bps, milton, valla}

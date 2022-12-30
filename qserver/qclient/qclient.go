@@ -171,7 +171,7 @@ func ClientNames(clients []Client) []string {
 }
 
 func SortPlayersByFrags(players []Client) []Client {
-	var _players []Client
+	_players := make([]Client, 0)
 	_players = append(_players, players...)
 
 	if len(_players) < 2 {
@@ -186,7 +186,7 @@ func SortPlayersByFrags(players []Client) []Client {
 }
 
 func SortPlayersByName(players []Client) []Client {
-	var _players []Client
+	_players := make([]Client, 0)
 	_players = append(_players, players...)
 
 	if len(_players) < 2 {
@@ -201,7 +201,7 @@ func SortPlayersByName(players []Client) []Client {
 }
 
 func SortPlayersByTeamName(players []Client) []Client {
-	var _players []Client
+	_players := make([]Client, 0)
 	_players = append(_players, players...)
 
 	if len(_players) < 2 {
