@@ -6,14 +6,14 @@ import (
 	"github.com/jpillora/longestcommon"
 )
 
+const delimiterChars = `."_-|[]{}()`
+const minFixLength = 2
+
 func StripQuakeFixes(strs []string) []string {
 	// skip if few values
 	if len(strs) < 2 {
 		return strs
 	}
-
-	// minimum fix to strip
-	minFixLength := 2
 
 	// skip if any value is equal to or shorter than min fix length
 	for _, value := range strs {
@@ -22,45 +22,73 @@ func StripQuakeFixes(strs []string) []string {
 		}
 	}
 
-	const delimiterChars = ".•_-|[]{}()"
+	// replace utf8
+	for index := range strs {
+		strs[index] = strings.ReplaceAll(strs[index], "•", `"`)
+	}
 
 	// prefix
-	prefix := longestcommon.Prefix(strs)
+	prefix := getPrefix(strs)
 
-	if strings.ContainsAny(prefix, delimiterChars) {
-		lastDelimiterIndex := strings.LastIndexAny(prefix, delimiterChars)
-		prefixRuneCount := len([]rune(prefix))
-
-		// utf8 runes have length > 1
-		if lastDelimiterIndex > prefixRuneCount {
-			lastDelimiterIndex = prefixRuneCount - 1
-		}
-
-		prefixLength := lastDelimiterIndex + 1
-
-		if prefixLength >= minFixLength {
-			for index := range strs {
-				runes := []rune(strs[index])
-				strs[index] = string(runes[prefixLength:])
-			}
+	if len(prefix) >= minFixLength {
+		for index := range strs {
+			strs[index] = strings.TrimPrefix(strs[index], prefix)
 		}
 	}
 
 	// suffix
-	suffix := longestcommon.Suffix(strs)
+	suffix := getSuffix(strs)
 
-	if strings.ContainsAny(suffix, delimiterChars) {
-		firstDelimiterIndex := strings.IndexAny(suffix, delimiterChars)
-		suffixLength := len([]rune(suffix)) - firstDelimiterIndex
-
-		if suffixLength >= minFixLength {
-			for index := range strs {
-				runes := []rune(strs[index])
-				newLastIndex := len(runes) - suffixLength
-				strs[index] = string(runes[0:newLastIndex])
-			}
+	if len(suffix) >= minFixLength {
+		for index := range strs {
+			strs[index] = strings.TrimSuffix(strs[index], suffix)
 		}
 	}
 
+	// restore utf8
+	for index := range strs {
+		strs[index] = strings.ReplaceAll(strs[index], `"`, "•")
+	}
+
 	return strs
+}
+
+func getPrefix(strs []string) string {
+	fullPrefix := longestcommon.Prefix(strs)
+
+	if !strings.ContainsAny(fullPrefix, delimiterChars) {
+		return ""
+	}
+
+	lastDelimiterIndex := strings.LastIndexAny(fullPrefix, delimiterChars)
+	prefix := fullPrefix[0 : lastDelimiterIndex+1]
+	prefixLength := len(prefix)
+
+	for index := range strs {
+		if len(strs[index]) <= prefixLength {
+			return ""
+		}
+	}
+
+	return prefix
+}
+
+func getSuffix(strs []string) string {
+	fullSuffix := longestcommon.Suffix(strs)
+
+	if !strings.ContainsAny(fullSuffix, delimiterChars) {
+		return ""
+	}
+
+	firstDelimiterIndex := strings.IndexAny(fullSuffix, delimiterChars)
+	suffix := fullSuffix[firstDelimiterIndex:]
+	suffixLength := len(suffix)
+
+	for index := range strs {
+		if len(strs[index]) <= suffixLength {
+			return ""
+		}
+	}
+
+	return suffix
 }
