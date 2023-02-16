@@ -8,8 +8,8 @@ import (
 )
 
 func TestHostnameToIp(t *testing.T) {
-	assert.Equal(t, "91.102.91.59", qutil.HostnameToIp("qw.foppa.dk"))
-	assert.Equal(t, "91.102.91.59", qutil.HostnameToIp("91.102.91.59"))
+	assert.Equal(t, "46.227.68.148", qutil.HostnameToIp("quake.se"))
+	assert.Equal(t, "46.227.68.148", qutil.HostnameToIp("46.227.68.148"))
 	assert.Equal(t, "foo", qutil.HostnameToIp("foo"))
 }
 
