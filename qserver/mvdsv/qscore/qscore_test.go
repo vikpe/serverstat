@@ -21,7 +21,7 @@ func TestCalculate(t *testing.T) {
 
 	star := "Milton"
 	one := "• zero"
-	two := "elguapo"
+	two := "effie"
 	null := "unknown"
 
 	const s4on4Div0To1 = "4on4 div0-1"
