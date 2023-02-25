@@ -177,9 +177,9 @@ func TestCalculate(t *testing.T) {
 	expect := []string{
 		s4on4Div0To1,
 		s4on4Div1,
+		sCtfDiv1,
 		s4on4Div1Need1,
 		s4on4Div1To2,
-		sCtfDiv1,
 		s3on3Div1,
 		s2on2Div1,
 		s4on4Mix,

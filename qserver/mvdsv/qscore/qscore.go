@@ -90,7 +90,7 @@ func getMaxScoreByMode(mode string) float64 {
 	case "clan arena":
 		return 40
 	case "ctf":
-		return 75
+		return 100
 	case "coop":
 		return 20
 	case "race":
