@@ -64,6 +64,10 @@ func Parse(settings qsettings.Settings) Mode {
 
 	// check mode and ktx mode
 	if settingsMode, ok := settings["mode"]; ok {
+		if strings.HasSuffix(settingsMode, modeRace) {
+			return modeRace
+		}
+
 		return Mode(strings.ToLower(settingsMode))
 	}
 
