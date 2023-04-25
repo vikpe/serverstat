@@ -1,6 +1,6 @@
 module github.com/vikpe/serverstat
 
-go 1.18
+go 1.20
 
 require (
 	github.com/go-playground/validator/v10 v10.12.0
