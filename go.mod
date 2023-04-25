@@ -9,11 +9,11 @@ require (
 	github.com/ssoroka/slice v0.0.0-20220402005549-78f0cea3df8b
 	github.com/stretchr/testify v1.8.2
 	github.com/valyala/fastjson v1.6.4
-	github.com/vikpe/qw-hub-api v0.2.1
+	github.com/vikpe/qw-hub-api v0.2.2
 	github.com/vikpe/udpclient v0.2.1
 	github.com/vikpe/udphelper v0.1.3
 	github.com/vikpe/wildcard v0.1.0
-	golang.org/x/exp v0.0.0-20230321023759-10a507213a29
+	golang.org/x/exp v0.0.0-20230425010034-47ecfdc1ba53
 )
 
 require (
