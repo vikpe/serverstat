@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/goccy/go-json"
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/laststats"
 	"github.com/vikpe/serverstat/qserver/mvdsv/lastscores"
@@ -124,4 +125,18 @@ func TestEntry_String(t *testing.T) {
 		}
 		assert.Equal(t, "2022-10-31 19:59 - ffa [dm6]", entry.String())
 	})
+}
+
+func TestEntry_MarshalJSON(t *testing.T) {
+	timestamp, _ := time.Parse("2006-01-02 15:04:05 -0700", "2022-10-31 19:59:46 +0100")
+	entry := lastscores.Entry{
+		Timestamp: timestamp,
+		Mode:      "2on2",
+		Teams:     qteam.FromPlayers([]qclient.Client{clientXantoM, clientXterm, clientBps, clientCara}),
+		Players:   []qclient.Client{},
+		Map:       "dm6",
+	}
+	entryAsJson, err := json.Marshal(entry)
+	assert.Contains(t, string(entryAsJson), `"title":"2022-10-31 19:59 - 2on2: -s- vs f0m [dm6] 30:10"`)
+	assert.Nil(t, err)
 }

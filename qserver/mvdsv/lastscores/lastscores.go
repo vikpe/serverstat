@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/goccy/go-json"
 	"github.com/vikpe/qw-hub-api/pkg/qdemo"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/laststats"
 	"github.com/vikpe/serverstat/qserver/qclient"
@@ -13,11 +14,37 @@ import (
 )
 
 type Entry struct {
-	Timestamp time.Time        `json:"timestamp"`
-	Mode      string           `json:"mode"`
-	Players   []qclient.Client `json:"players"`
-	Teams     []qteam.Team     `json:"teams"`
-	Map       string           `json:"map"`
+	Timestamp time.Time
+	Mode      string
+	Players   []qclient.Client
+	Teams     []qteam.Team
+	Map       string
+}
+
+func NewFromLastStatsEntry(entry laststats.Entry) Entry {
+	clients := make([]qclient.Client, 0)
+	for _, p := range entry.Players {
+		clients = append(clients, qclient.NewFromLastStatsPlayer(p))
+	}
+
+	teams := make([]qteam.Team, 0)
+	players := make([]qclient.Client, 0)
+
+	if "team" == entry.Mode {
+		teams = qteam.FromPlayers(clients)
+	} else {
+		players = clients
+	}
+
+	timestamp, _ := time.Parse("2006-01-02 15:04:05 -0700", entry.Date)
+
+	return Entry{
+		Timestamp: timestamp,
+		Mode:      qdemo.Filename(entry.Demo).Mode(),
+		Teams:     teams,
+		Players:   players,
+		Map:       entry.Map,
+	}
 }
 
 func (e Entry) String() string {
@@ -51,28 +78,22 @@ func (e Entry) String() string {
 	)
 }
 
-func NewFromLastStatsEntry(entry laststats.Entry) Entry {
-	clients := make([]qclient.Client, 0)
-	for _, p := range entry.Players {
-		clients = append(clients, qclient.NewFromLastStatsPlayer(p))
+func (e Entry) MarshalJSON() ([]byte, error) {
+	type entryJson struct {
+		Title     string           `json:"title"`
+		Timestamp time.Time        `json:"timestamp"`
+		Mode      string           `json:"mode"`
+		Players   []qclient.Client `json:"players"`
+		Teams     []qteam.Team     `json:"teams"`
+		Map       string           `json:"map"`
 	}
 
-	teams := make([]qteam.Team, 0)
-	players := make([]qclient.Client, 0)
-
-	if "team" == entry.Mode {
-		teams = qteam.FromPlayers(clients)
-	} else {
-		players = clients
-	}
-
-	timestamp, _ := time.Parse("2006-01-02 15:04:05 -0700", entry.Date)
-
-	return Entry{
-		Timestamp: timestamp,
-		Mode:      qdemo.Filename(entry.Demo).Mode(),
-		Teams:     teams,
-		Players:   players,
-		Map:       entry.Map,
-	}
+	return json.Marshal(&entryJson{
+		Title:     e.String(),
+		Timestamp: e.Timestamp,
+		Mode:      e.Mode,
+		Players:   e.Players,
+		Teams:     e.Teams,
+		Map:       e.Map,
+	})
 }
