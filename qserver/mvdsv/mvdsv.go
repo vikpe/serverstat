@@ -55,7 +55,9 @@ func GetLastScores(address string, limit int) ([]lastscores.Entry, error) {
 func GetLastStats(address string, limit int) ([]laststats.Entry, error) {
 	udpClient := udpclient.New()
 	udpClient.Config.BufferSize = 100 * 8192
-	return laststats.ParseResponseBody(udpClient.SendCommand(address, laststats.GetCommand(limit)))
+	command := laststats.GetCommand(limit)
+	return laststats.ParseResponseBody(udpClient.SendCommand(address, command))
+
 }
 
 func GetQtvUsers(address string) ([]string, error) {

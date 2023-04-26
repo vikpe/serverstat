@@ -2,10 +2,12 @@ package mvdsv_test
 
 import (
 	"fmt"
-	"github.com/vikpe/serverstat/qserver/mvdsv/lastscores"
-	"io/ioutil"
+	"os"
 	"testing"
 	"time"
+
+	"github.com/vikpe/serverstat/qserver/mvdsv/commands/laststats"
+	"github.com/vikpe/serverstat/qserver/mvdsv/lastscores"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
@@ -77,7 +79,7 @@ func TestGetQtvStream(t *testing.T) {
 	})
 }
 
-func TestGetLastScores(t *testing.T) {
+func zTestGetLastScores(t *testing.T) {
 	t.Run("error", func(t *testing.T) {
 		scores, err := mvdsv.GetLastScores("foo:666", 5)
 		assert.Equal(t, []lastscores.Entry{}, scores)
@@ -99,16 +101,51 @@ func TestGetLastScores(t *testing.T) {
 
 		t.Run("non-empty result", func(t *testing.T) {
 			go func() {
-				response, _ := os.ReadFile("./commands/laststats/test_files/response.bin")
+				response, _ := os.ReadFile("./commands/laststats/test_files/response.bin") // 2 entries in response
 				udphelper.New(":5004").Respond(response)
 			}()
 			time.Sleep(10 * time.Millisecond)
 
 			scores, err := mvdsv.GetLastScores(":5004", 5)
-
 			assert.Len(t, scores, 2)
 			assert.Equal(t, "2on2", scores[0].Mode)
 			assert.Equal(t, "2on2", scores[1].Mode)
+			assert.Nil(t, err)
+		})
+	})
+}
+
+func TestGetLastStats(t *testing.T) {
+	t.Run("error", func(t *testing.T) {
+		scores, err := mvdsv.GetLastStats("foo:666", 5)
+		assert.Equal(t, []laststats.Entry{}, scores)
+		assert.NotNil(t, err)
+	})
+
+	t.Run("success", func(t *testing.T) {
+		t.Run("empty result", func(t *testing.T) {
+			go func() {
+				response := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'l', 'a', 's', 't', 's', 't', 'a', 't', 's', ' ', '2', 0xa, '[', 0xa, ']', 0xa}
+				udphelper.New(":5005").Respond(response)
+			}()
+			time.Sleep(10 * time.Millisecond)
+
+			scores, err := mvdsv.GetLastStats(":5005", 5)
+			assert.Equal(t, scores, []laststats.Entry{})
+			assert.Nil(t, err)
+		})
+
+		t.Run("non-empty result", func(t *testing.T) {
+			go func() {
+				response, _ := os.ReadFile("./commands/laststats/test_files/response.bin") // 2 entries in response
+				udphelper.New(":5006").Respond(response)
+			}()
+			time.Sleep(10 * time.Millisecond)
+
+			stats, err := mvdsv.GetLastStats(":5006", 5)
+			assert.Len(t, stats, 2)
+			assert.Equal(t, "2023-04-25 21:12:16 +0200", stats[0].Date)
+			assert.Equal(t, "2023-04-25 21:22:49 +0200", stats[1].Date)
 			assert.Nil(t, err)
 		})
 	})

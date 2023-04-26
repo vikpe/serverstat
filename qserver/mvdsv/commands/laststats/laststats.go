@@ -4,6 +4,8 @@ package laststats
 import (
 	"bytes"
 	"errors"
+	"fmt"
+
 	"github.com/goccy/go-json"
 	"github.com/vikpe/serverstat/qutil"
 	"github.com/vikpe/udpclient"
@@ -13,8 +15,8 @@ var FrameDelimiter = []byte{0xff, 0xff, 0xff, 0xff, 'n'}
 
 func GetCommand(limit int) udpclient.Command {
 	return udpclient.Command{
-		RequestPacket:  []byte{0xff, 0xff, 0xff, 0xff, 'l', 'a', 's', 't', 's', 't', 'a', 't', 's', ' ', byte(limit), 0x0a},
-		ResponseHeader: []byte{0xff, 0xff, 0xff, 0xff, 'n', 'l', 'a', 's', 't', 's', 't', 'a', 't', 's', ' '},
+		RequestPacket:  append([]byte{0xff, 0xff, 0xff, 0xff}, []byte(fmt.Sprintf("laststats %d\n", limit))...),
+		ResponseHeader: append([]byte{0xff, 0xff, 0xff, 0xff}, []byte("nlaststats ")...),
 	}
 }
 

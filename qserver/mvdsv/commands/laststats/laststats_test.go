@@ -2,20 +2,17 @@ package laststats_test
 
 import (
 	"errors"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/laststats"
-	"github.com/vikpe/udpclient"
 )
 
 func TestGetCommand(t *testing.T) {
-	expect := udpclient.Command{
-		RequestPacket:  []byte{0xff, 0xff, 0xff, 0xff, 'l', 'a', 's', 't', 's', 't', 'a', 't', 's', ' ', byte(5), 0x0a},
-		ResponseHeader: []byte{0xff, 0xff, 0xff, 0xff, 'n', 'l', 'a', 's', 't', 's', 't', 'a', 't', 's', ' '},
-	}
-	assert.Equal(t, expect, laststats.GetCommand(5))
+	command := laststats.GetCommand(5)
+	assert.Equal(t, "\xff\xff\xff\xfflaststats 5\n", string(command.RequestPacket))
+	assert.Equal(t, "\xff\xff\xff\xffnlaststats ", string(command.ResponseHeader))
 }
 
 func TestParseResponseBody(t *testing.T) {
