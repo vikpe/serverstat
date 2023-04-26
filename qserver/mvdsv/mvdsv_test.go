@@ -99,7 +99,7 @@ func TestGetLastScores(t *testing.T) {
 
 		t.Run("non-empty result", func(t *testing.T) {
 			go func() {
-				response, _ := ioutil.ReadFile("./commands/laststats/test_files/response.bin")
+				response, _ := os.ReadFile("./commands/laststats/test_files/response.bin")
 				udphelper.New(":5004").Respond(response)
 			}()
 			time.Sleep(10 * time.Millisecond)
