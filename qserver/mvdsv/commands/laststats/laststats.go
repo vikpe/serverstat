@@ -4,8 +4,8 @@ package laststats
 import (
 	"bytes"
 	"errors"
-
 	"github.com/goccy/go-json"
+	"github.com/vikpe/serverstat/qutil"
 	"github.com/vikpe/udpclient"
 )
 
@@ -19,7 +19,7 @@ func GetCommand(limit int) udpclient.Command {
 }
 
 func ParseResponseBody(responseBody []byte, err error) ([]Entry, error) {
-	// example: "2\n[json..]\n"
+	// example: "����nlaststats 2\n[json..]\n"
 	if err != nil {
 		return []Entry{}, err
 	}
@@ -28,30 +28,32 @@ func ParseResponseBody(responseBody []byte, err error) ([]Entry, error) {
 	responseBody = bytes.ReplaceAll(responseBody, FrameDelimiter, []byte{})
 
 	// validate body
-	jsonError := errors.New("invalid json in response body")
 	jsonIndexBegin := bytes.Index(responseBody, []byte("["))
 	jsonIndexEnd := bytes.LastIndex(responseBody, []byte("]"))
 
 	if -1 == jsonIndexBegin || -1 == jsonIndexEnd || jsonIndexBegin > jsonIndexEnd {
-		return []Entry{}, jsonError
+		return []Entry{}, errors.New("malformed json")
 	}
 
-	// parse body
+	// empty body
 	if jsonIndexBegin+1 == jsonIndexEnd {
 		return []Entry{}, nil
 	}
 
+	// non empty body
 	jsonBody := responseBody[jsonIndexBegin : jsonIndexEnd+1]
-	var stats []Entry
+	cleanJsonBody := []byte(qutil.StripControlCharacters(string(jsonBody)))
 
-	err = json.Unmarshal(jsonBody, &stats)
+	var entries []Entry
+	err = json.Unmarshal(cleanJsonBody, &entries)
+
 	if err != nil {
-		return []Entry{}, jsonError
+		return []Entry{}, err
 	}
 
-	if len(stats) > 0 && 0 == len(stats[0].Date) {
-		return []Entry{}, jsonError
+	if len(entries) > 0 && 0 == len(entries[0].Date) {
+		return []Entry{}, errors.New("invalid fields, date is missing")
 	}
 
-	return stats, nil
+	return entries, nil
 }

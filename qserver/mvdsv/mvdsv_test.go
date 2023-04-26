@@ -2,13 +2,13 @@ package mvdsv_test
 
 import (
 	"fmt"
+	"github.com/vikpe/serverstat/qserver/mvdsv/lastscores"
 	"io/ioutil"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
-	"github.com/vikpe/serverstat/qserver/mvdsv/lastscores"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/udphelper"
 )
@@ -87,7 +87,7 @@ func TestGetLastScores(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		t.Run("empty result", func(t *testing.T) {
 			go func() {
-				response := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'l', 'a', 's', 't', 's', 't', 'a', 't', 's', ' ', '2', 0xa, '[', ']'}
+				response := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'l', 'a', 's', 't', 's', 't', 'a', 't', 's', ' ', '2', 0xa, '[', 0xa, ']', 0xa}
 				udphelper.New(":5003").Respond(response)
 			}()
 			time.Sleep(10 * time.Millisecond)
@@ -99,20 +99,16 @@ func TestGetLastScores(t *testing.T) {
 
 		t.Run("non-empty result", func(t *testing.T) {
 			go func() {
-				responseHeader := []byte{0xff, 0xff, 0xff, 0xff, 'n', 'l', 'a', 's', 't', 's', 't', 'a', 't', 's', ' ', '2', 0xa}
-				responseBody, _ := ioutil.ReadFile("./commands/laststats/test_files/laststats.json")
-				response := append(responseHeader, responseBody...)
+				response, _ := ioutil.ReadFile("./commands/laststats/test_files/response.bin")
 				udphelper.New(":5004").Respond(response)
 			}()
 			time.Sleep(10 * time.Millisecond)
 
 			scores, err := mvdsv.GetLastScores(":5004", 5)
 
-			fmt.Println("err", err)
-
 			assert.Len(t, scores, 2)
-			assert.Equal(t, "duel", scores[0].Mode)
-			assert.Equal(t, "4on4", scores[1].Mode)
+			assert.Equal(t, "2on2", scores[0].Mode)
+			assert.Equal(t, "2on2", scores[1].Mode)
 			assert.Nil(t, err)
 		})
 	})
