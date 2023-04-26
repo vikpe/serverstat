@@ -56,3 +56,10 @@ func TestPluralize(t *testing.T) {
 	assert.Equal(t, "player", qutil.Pluralize("player", 1))
 	assert.Equal(t, "players", qutil.Pluralize("player", 2))
 }
+
+func TestStripControlCharacters(t *testing.T) {
+	input := string("\tfoo\fbar\n\a\b \vbaz")
+	expected := string("foobar baz")
+	actual := qutil.StripControlCharacters(input)
+	assert.Equal(t, expected, actual)
+}
