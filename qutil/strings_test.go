@@ -63,3 +63,8 @@ func TestStripControlCharacters(t *testing.T) {
 	actual := qutil.StripControlCharacters(input)
 	assert.Equal(t, expected, actual)
 }
+
+func TestUnicodeToAscii(t *testing.T) {
+	assert.Equal(t, "XantoM", qutil.UnicodeToAscii("XantoM"))
+	assert.Equal(t, "nigve", qutil.UnicodeToAscii("\u00EE\u00E9\u00E7\u00F6\u00E5"))
+}

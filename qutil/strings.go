@@ -53,3 +53,18 @@ func StripControlCharacters(str string) string {
 		return -1
 	}, str)
 }
+
+func UnicodeToAscii(str string) string {
+	result := strings.Builder{}
+	const AsciiMax = 128
+
+	for _, r := range str {
+		if r >= AsciiMax {
+			result.WriteRune(r - AsciiMax)
+		} else {
+			result.WriteRune(r)
+		}
+	}
+
+	return result.String()
+}
