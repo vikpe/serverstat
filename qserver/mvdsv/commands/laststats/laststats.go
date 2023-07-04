@@ -57,5 +57,17 @@ func ParseResponseBody(responseBody []byte, err error) ([]Entry, error) {
 		return []Entry{}, errors.New("invalid fields, date is missing")
 	}
 
+	// convert player/team names from unicode to ascii
+	for entryIndex, entry := range entries {
+		for playerIndex, player := range entry.Players {
+			entries[entryIndex].Players[playerIndex].Name = qutil.UnicodeToAscii(player.Name)
+			entries[entryIndex].Players[playerIndex].Team = qutil.UnicodeToAscii(player.Team)
+		}
+
+		for teamIndex, teamName := range entry.Teams {
+			entries[entryIndex].Teams[teamIndex] = qutil.UnicodeToAscii(teamName)
+		}
+	}
+
 	return entries, nil
 }

@@ -143,9 +143,10 @@ func TestGetLastStats(t *testing.T) {
 			time.Sleep(10 * time.Millisecond)
 
 			stats, err := mvdsv.GetLastStats(":5006", 5)
-			assert.Len(t, stats, 2)
-			assert.Equal(t, "2023-04-25 21:12:16 +0200", stats[0].Date)
-			assert.Equal(t, "2023-04-25 21:22:49 +0200", stats[1].Date)
+			assert.Len(t, stats, 1)
+			assert.Equal(t, "2023-07-04 11:57:28 +0200", stats[0].Date)
+			assert.Equal(t, "nigve", stats[0].Players[1].Name)
+			assert.Equal(t, "oeks", stats[0].Players[1].Team)
 			assert.Nil(t, err)
 		})
 	})

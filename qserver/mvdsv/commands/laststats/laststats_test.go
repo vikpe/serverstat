@@ -80,9 +80,10 @@ func TestParseResponseBody(t *testing.T) {
 			t.Run("non-empty stats", func(t *testing.T) {
 				responseBody, _ := os.ReadFile("./test_files/response.bin")
 				stats, err := laststats.ParseResponseBody(responseBody, nil)
-				assert.Len(t, stats, 2, err)
-				assert.Equal(t, "2023-04-25 21:12:16 +0200", stats[0].Date)
-				assert.Equal(t, "2023-04-25 21:22:49 +0200", stats[1].Date)
+				assert.Len(t, stats, 1, err)
+				assert.Equal(t, "2023-07-04 11:57:28 +0200", stats[0].Date)
+				assert.Equal(t, "nigve", stats[0].Players[1].Name)
+				assert.Equal(t, "oeks", stats[0].Players[1].Team)
 				assert.Nil(t, err)
 			})
 		})
