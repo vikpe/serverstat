@@ -45,6 +45,7 @@ func ParseResponseBody(responseBody []byte, err error) ([]Entry, error) {
 	// non empty body
 	jsonBody := responseBody[jsonIndexBegin : jsonIndexEnd+1]
 	cleanJsonBody := []byte(qutil.StripControlCharacters(string(jsonBody)))
+	cleanJsonBody = bytes.ReplaceAll(cleanJsonBody, []byte(",]"), []byte("]")) // fix invalid JSON char sequences
 
 	var entries []Entry
 	err = json.Unmarshal(cleanJsonBody, &entries)
