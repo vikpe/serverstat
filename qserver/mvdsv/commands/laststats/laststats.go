@@ -73,5 +73,6 @@ func ParseResponseBody(responseBody []byte, err error) ([]Entry, error) {
 func cleanJson(value []byte) []byte {
 	result := []byte(qutil.StripControlCharacters(string(value)))
 	result = bytes.ReplaceAll(result, []byte(",]"), []byte("]"))
+	result = bytes.ReplaceAll(result, []byte("},,"), []byte("},"))
 	return bytes.ReplaceAll(result, []byte("[,"), []byte("["))
 }
