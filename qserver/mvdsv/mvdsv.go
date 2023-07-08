@@ -46,6 +46,7 @@ func GetLastScores(address string, limit int) ([]lastscores.Entry, error) {
 
 	result := make([]lastscores.Entry, 0)
 	for _, entry := range stats {
+		// TODO: filter by port used in address
 		result = append(result, lastscores.NewFromLastStatsEntry(entry))
 	}
 
