@@ -15,6 +15,7 @@ import (
 
 type Entry struct {
 	Timestamp time.Time
+	Demo      string
 	Mode      string
 	Players   []qclient.Client
 	Teams     []qteam.Team
@@ -40,6 +41,7 @@ func NewFromLastStatsEntry(entry laststats.Entry) Entry {
 
 	return Entry{
 		Timestamp: timestamp,
+		Demo:      entry.Demo,
 		Mode:      qdemo.Filename(entry.Demo).Mode(),
 		Teams:     teams,
 		Players:   players,
@@ -54,46 +56,71 @@ func (e Entry) String() string {
 		return fmt.Sprintf("%s - %s [%s]", timestampStr, e.Mode, e.Map)
 	}
 
+	return fmt.Sprintf("%s - %s: %s [%s] %s",
+		timestampStr,
+		e.Mode,
+		e.Participants(),
+		e.Map,
+		e.Scores(),
+	)
+}
+
+func (e Entry) Participants() string {
 	participants := make([]string, 0)
-	frags := make([]string, 0)
 
 	if len(e.Teams) > 0 {
 		for _, team := range e.Teams {
 			participants = append(participants, team.Name.ToPlainString())
-			frags = append(frags, strconv.Itoa(team.Frags()))
 		}
 	} else {
 		for _, player := range e.Players {
 			participants = append(participants, player.Name.ToPlainString())
+		}
+	}
+
+	return strings.Join(participants, " vs ")
+}
+
+func (e Entry) Scores() string {
+	frags := make([]string, 0)
+
+	if len(e.Teams) > 0 {
+		for _, team := range e.Teams {
+			frags = append(frags, strconv.Itoa(team.Frags()))
+		}
+	} else {
+		for _, player := range e.Players {
 			frags = append(frags, strconv.Itoa(player.Frags))
 		}
 	}
 
-	return fmt.Sprintf("%s - %s: %s [%s] %s",
-		timestampStr,
-		e.Mode,
-		strings.Join(participants, " vs "),
-		e.Map,
-		strings.Join(frags, ":"),
-	)
+	return strings.Join(frags, ":")
 }
 
 func (e Entry) MarshalJSON() ([]byte, error) {
 	type entryJson struct {
-		Title     string           `json:"title"`
-		Timestamp time.Time        `json:"timestamp"`
-		Mode      string           `json:"mode"`
-		Players   []qclient.Client `json:"players"`
-		Teams     []qteam.Team     `json:"teams"`
-		Map       string           `json:"map"`
+		Title        string           `json:"title"`
+		Demo         string           `json:"demo"`
+		Timestamp    string           `json:"timestamp"`
+		TimestampIso time.Time        `json:"timestamp_iso"`
+		Mode         string           `json:"mode"`
+		Participants string           `json:"participants"`
+		Map          string           `json:"map"`
+		Scores       string           `json:"scores"`
+		Players      []qclient.Client `json:"players"`
+		Teams        []qteam.Team     `json:"teams"`
 	}
 
 	return json.Marshal(&entryJson{
-		Title:     e.String(),
-		Timestamp: e.Timestamp,
-		Mode:      e.Mode,
-		Players:   e.Players,
-		Teams:     e.Teams,
-		Map:       e.Map,
+		Title:        e.String(),
+		Demo:         e.Demo,
+		Timestamp:    e.Timestamp.Format("2006-01-02 15:04"),
+		TimestampIso: e.Timestamp,
+		Mode:         e.Mode,
+		Participants: e.Participants(),
+		Map:          e.Map,
+		Scores:       e.Scores(),
+		Players:      e.Players,
+		Teams:        e.Teams,
 	})
 }

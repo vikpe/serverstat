@@ -37,6 +37,7 @@ func TestNewFromLastStatsEntry(t *testing.T) {
 		expect := lastscores.Entry{
 			Timestamp: expectTimestamp,
 			Mode:      "duel",
+			Demo:      "duel_blue_vs_red[dm6]20221031-1958.mvd",
 			Teams:     make([]qteam.Team, 0),
 			Players:   []qclient.Client{clientXantoM, clientXterm},
 			Map:       "dm6",
@@ -58,6 +59,7 @@ func TestNewFromLastStatsEntry(t *testing.T) {
 		expect := lastscores.Entry{
 			Timestamp: expectTimestamp,
 			Mode:      "2on2",
+			Demo:      "2on2_blue_vs_red[dm6]20221031-1958.mvd",
 			Teams:     qteam.FromPlayers([]qclient.Client{clientXantoM, clientXterm, clientBps, clientCara}),
 			Players:   []qclient.Client{},
 			Map:       "dm6",
@@ -79,6 +81,7 @@ func TestNewFromLastStatsEntry(t *testing.T) {
 		expect := lastscores.Entry{
 			Timestamp: expectTimestamp,
 			Mode:      "ffa",
+			Demo:      "ffa_2[dm6]20221031-1958.mvd",
 			Teams:     make([]qteam.Team, 0),
 			Players:   []qclient.Client{clientXantoM, clientXterm},
 			Map:       "dm6",
@@ -131,12 +134,20 @@ func TestEntry_MarshalJSON(t *testing.T) {
 	timestamp, _ := time.Parse("2006-01-02 15:04:05 -0700", "2022-10-31 19:59:46 +0100")
 	entry := lastscores.Entry{
 		Timestamp: timestamp,
+		Demo:      "2on2_-s-_f0m[dm6]20221031-1958.mvd",
 		Mode:      "2on2",
 		Teams:     qteam.FromPlayers([]qclient.Client{clientXantoM, clientXterm, clientBps, clientCara}),
 		Players:   []qclient.Client{},
 		Map:       "dm6",
 	}
 	entryAsJson, err := json.Marshal(entry)
-	assert.Contains(t, string(entryAsJson), `"title":"2022-10-31 19:59 - 2on2: -s- vs f0m [dm6] 30:10"`)
+	jsonStr := string(entryAsJson)
+	assert.Contains(t, jsonStr, `"title":"2022-10-31 19:59 - 2on2: -s- vs f0m [dm6] 30:10"`)
+	assert.Contains(t, jsonStr, `"demo":"2on2_-s-_f0m[dm6]20221031-1958.mvd"`)
+	assert.Contains(t, jsonStr, `"timestamp":"2022-10-31 19:59"`)
+	assert.Contains(t, jsonStr, `"mode":"2on2"`)
+	assert.Contains(t, jsonStr, `"participants":"-s- vs f0m`)
+	assert.Contains(t, jsonStr, `"map":"dm6"`)
+	assert.Contains(t, jsonStr, `"scores":"30:10"`)
 	assert.Nil(t, err)
 }
