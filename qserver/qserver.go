@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/ssoroka/slice"
+	"github.com/samber/lo"
 	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
 	"github.com/vikpe/serverstat/qserver/qclient"
@@ -26,13 +26,13 @@ type GenericServer struct {
 }
 
 func (server GenericServer) Players() []qclient.Client {
-	return slice.Select(server.Clients, func(i int, c qclient.Client) bool {
+	return lo.Filter(server.Clients, func(c qclient.Client, i int) bool {
 		return c.IsPlayer()
 	})
 }
 
 func (server GenericServer) Spectators() []qclient.Client {
-	return slice.Select(server.Clients, func(i int, c qclient.Client) bool {
+	return lo.Filter(server.Clients, func(c qclient.Client, i int) bool {
 		return c.IsSpectator()
 	})
 }

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/samber/lo"
 	"github.com/vikpe/serverstat/qserver/qsettings"
-	"golang.org/x/exp/slices"
 )
 
 const (
@@ -43,7 +43,7 @@ func (m Mode) IsUnknown() bool   { return m.Is(modeUnknown) }
 func (m Mode) IsCustom() bool    { return !(m.IsFfa() || m.IsXonX()) }
 func (m Mode) IsXonX() bool {
 	xonxModes := []string{mode1on1, mode2on2, mode3on3, mode4on4, mode10on10}
-	return slices.Contains(xonxModes, string(m))
+	return lo.Contains(xonxModes, string(m))
 }
 
 func Parse(settings qsettings.Settings) Mode {
@@ -82,7 +82,7 @@ func Parse(settings qsettings.Settings) Mode {
 	if teamplay > 0 {
 		deathmatch := settings.GetInt("deathmatch", 0)
 
-		if 2 == teamplay && slices.Contains([]int{26, 24, 12}, maxClients) {
+		if 2 == teamplay && lo.Contains([]int{26, 24, 12}, maxClients) {
 			return modeCoop
 		} else if 4 == teamplay {
 			if 16 == maxClients {

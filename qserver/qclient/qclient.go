@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ssoroka/slice"
+	"github.com/samber/lo"
 	"github.com/vikpe/serverstat/qserver/mvdsv/commands/laststats"
 	"github.com/vikpe/serverstat/qserver/qclient/bot"
 	"github.com/vikpe/serverstat/qtext/qstring"
@@ -165,7 +165,7 @@ func NewFromLastStatsPlayer(player laststats.Player) Client {
 }
 
 func ClientNames(clients []Client) []string {
-	return slice.Map[Client, string](clients, func(client Client) string {
+	return lo.Map(clients, func(client Client, _ int) string {
 		return client.Name.ToPlainString()
 	})
 }
