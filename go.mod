@@ -9,7 +9,7 @@ require (
 	github.com/samber/lo v1.38.1
 	github.com/stretchr/testify v1.8.4
 	github.com/valyala/fastjson v1.6.4
-	github.com/vikpe/qw-hub-api v0.3.12
+	github.com/vikpe/qw-hub-api v0.3.14
 	github.com/vikpe/udpclient v1.0.0
 	github.com/vikpe/udphelper v1.0.1
 	github.com/vikpe/wildcard v0.1.0

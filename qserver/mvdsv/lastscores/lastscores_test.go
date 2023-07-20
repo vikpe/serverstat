@@ -46,6 +46,28 @@ func TestNewFromLastStatsEntry(t *testing.T) {
 		assert.Equal(t, expect, lastscores.NewFromLastStatsEntry(laststatsEntry))
 	})
 
+	t.Run("duel - midair", func(t *testing.T) {
+		laststatsEntry := laststats.Entry{
+			Date:    "2022-10-31 19:59:46 +0100",
+			Map:     "endif",
+			Mode:    "duel",
+			Demo:    "duel_midair_xantom_vs_xterm[endif]20221031-1958.mvd",
+			Teams:   []string{"blue", "red"},
+			Players: []laststats.Player{playerXantoM, playerXterm},
+		}
+
+		expect := lastscores.Entry{
+			Timestamp: expectTimestamp,
+			Mode:      "duel",
+			Demo:      "duel_midair_xantom_vs_xterm[endif]20221031-1958.mvd",
+			Teams:     make([]qteam.Team, 0),
+			Players:   []qclient.Client{clientXantoM, clientXterm},
+			Map:       "endif",
+		}
+
+		assert.Equal(t, expect, lastscores.NewFromLastStatsEntry(laststatsEntry))
+	})
+
 	t.Run("teamplay", func(t *testing.T) {
 		laststatsEntry := laststats.Entry{
 			Date:    "2022-10-31 19:59:46 +0100",

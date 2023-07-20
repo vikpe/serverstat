@@ -30,8 +30,8 @@ github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcU
 github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
 github.com/valyala/fastjson v1.6.4 h1:uAUNq9Z6ymTgGhcm0UynUAB6tlbakBrz6CQFax3BXVQ=
 github.com/valyala/fastjson v1.6.4/go.mod h1:CLCAqky6SMuOcxStkYQvblddUtoRxhYMGLrsQns1aXY=
-github.com/vikpe/qw-hub-api v0.3.12 h1:HoZP7Ft+luCcwe2FU64ULta2SNkS1cGnk5Zpp5e22rw=
-github.com/vikpe/qw-hub-api v0.3.12/go.mod h1:1D/2FYWPXH4xJFiRh8XcuU0cVomBhO0flgso0HZOWM0=
+github.com/vikpe/qw-hub-api v0.3.14 h1:7g1ShJcDGMn5zuLfLKNAhaYLgQIZ/ECWZDCjegIdEC4=
+github.com/vikpe/qw-hub-api v0.3.14/go.mod h1:odwDkRbdqU47oTEl4awUROGWn142WlJRI7PqAbgD3DQ=
 github.com/vikpe/udpclient v1.0.0 h1:xamjn2Vbwz9bEFTo9FJM2mAFdH4j3TXD7KHysyxK+lI=
 github.com/vikpe/udpclient v1.0.0/go.mod h1:zJgymSC/B3JTeyCncp0lrbbQnusOc7/CP/VDR29lpGY=
 github.com/vikpe/udphelper v1.0.1 h1:yx5/Pbbir5a3Ya0QLcHWNI95KlWPQE76Zclpc3MSDa4=
