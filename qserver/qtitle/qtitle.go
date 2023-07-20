@@ -23,7 +23,7 @@ func New(settings qsettings.Settings, players []qclient.Client) string {
 	}
 
 	// mode
-	mode := qmode.Parse(settings)
+	mode, _ := qmode.Parse(settings)
 	title.WriteString(string(mode))
 
 	if 0 == len(players) || mode.IsFfa() {

@@ -23,6 +23,7 @@ const VersionPrefix = Name
 type Mvdsv struct {
 	Address        string              `json:"address"`
 	Mode           qmode.Mode          `json:"mode"`
+	Submode        string              `json:"submode"`
 	Title          string              `json:"title"`
 	Status         qstatus.Status      `json:"status"`
 	Time           qtime.Time          `json:"time"`

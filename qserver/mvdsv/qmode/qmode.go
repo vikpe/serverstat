@@ -46,7 +46,7 @@ func (m Mode) IsXonX() bool {
 	return lo.Contains(xonxModes, string(m))
 }
 
-func Parse(settings qsettings.Settings) Mode {
+func Parse(settings qsettings.Settings) (Mode, string) {
 	gameDir := strings.ToLower(settings.Get("*gamedir", modeUnknown))
 
 	// check gamedir
@@ -55,24 +55,31 @@ func Parse(settings qsettings.Settings) Mode {
 	}
 
 	if modeName, ok := customGameDirs[gameDir]; ok {
-		return Mode(modeName)
+		return Mode(modeName), ""
 	}
 
 	if "qw" != gameDir {
-		return Mode(gameDir)
+		return Mode(gameDir), ""
 	}
 
 	// check mode and ktx mode
 	if settingsMode, ok := settings["mode"]; ok {
 		if strings.HasSuffix(settingsMode, modeRace) {
-			return modeRace
+			return modeRace, ""
 		}
 
-		return Mode(strings.ToLower(settingsMode))
+		settingsMode := strings.ToLower(settingsMode)
+
+		if strings.Contains(settingsMode, "-") {
+			parts := strings.SplitN(settingsMode, "-", 2)
+			return Mode(parts[0]), parts[1]
+		}
+
+		return Mode(settingsMode), ""
 	}
 
 	if ktxMode, ok := settings["ktxmode"]; ok {
-		return Mode(strings.ToLower(ktxMode))
+		return Mode(strings.ToLower(ktxMode)), ""
 	}
 
 	// derive from settings
@@ -83,25 +90,25 @@ func Parse(settings qsettings.Settings) Mode {
 		deathmatch := settings.GetInt("deathmatch", 0)
 
 		if 2 == teamplay && lo.Contains([]int{26, 24, 12}, maxClients) {
-			return modeCoop
+			return modeCoop, ""
 		} else if 4 == teamplay {
 			if 16 == maxClients {
-				return modeCtf
+				return modeCtf, ""
 			}
 
 			if 5 == deathmatch {
-				return modeClanArena
+				return modeClanArena, ""
 			}
 		}
 
 		playersPerTeam := maxClients / 2
 		modeName := fmt.Sprintf("%don%d", playersPerTeam, playersPerTeam)
-		return Mode(modeName)
+		return Mode(modeName), ""
 	}
 
 	if 2 == maxClients {
-		return mode1on1
+		return mode1on1, ""
 	}
 
-	return modeFfa
+	return modeFfa, ""
 }

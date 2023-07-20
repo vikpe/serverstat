@@ -12,30 +12,33 @@ import (
 func TestParse(t *testing.T) {
 	type testCase struct {
 		mode     string
+		submode  string
 		settings qsettings.Settings
 	}
 
 	testCases := []testCase{
-		{"1on1", qsettings.Settings{"*gamedir": "qw", "maxclients": "2"}},
-		{"2on2", qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2"}},
-		{"4on4", qsettings.Settings{"*gamedir": "qw", "maxclients": "8", "teamplay": "2"}},
-		{"clan arena", qsettings.Settings{"*gamedir": "qw", "deathmatch": "5", "teamplay": "4"}},
-		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "12"}},
-		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "24"}},
-		{"coop", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "26"}},
-		{"ctf", qsettings.Settings{"*gamedir": "qw", "maxclients": "16", "teamplay": "4"}},
-		{"ffa", qsettings.Settings{"*gamedir": "ktx-ffa"}},
-		{"ffa", qsettings.Settings{"*gamedir": "qw", "maxclients": "8"}},
-		{"fortress", qsettings.Settings{"*gamedir": "fortress"}},
-		{"race", qsettings.Settings{"*gamedir": "qw", "ktxmode": "race"}},
-		{"race", qsettings.Settings{"*gamedir": "qw", "mode": "ffa-race"}},
-		{"2on2", qsettings.Settings{"*gamedir": "qw", "mode": "2on2"}},
+		{"1on1", "", qsettings.Settings{"*gamedir": "qw", "maxclients": "2"}},
+		{"2on2", "", qsettings.Settings{"*gamedir": "qw", "maxclients": "4", "teamplay": "2"}},
+		{"4on4", "", qsettings.Settings{"*gamedir": "qw", "maxclients": "8", "teamplay": "2"}},
+		{"clan arena", "", qsettings.Settings{"*gamedir": "qw", "deathmatch": "5", "teamplay": "4"}},
+		{"coop", "", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "12"}},
+		{"coop", "", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "24"}},
+		{"coop", "", qsettings.Settings{"*gamedir": "qw", "teamplay": "2", "maxclients": "26"}},
+		{"ctf", "", qsettings.Settings{"*gamedir": "qw", "maxclients": "16", "teamplay": "4"}},
+		{"ffa", "", qsettings.Settings{"*gamedir": "ktx-ffa"}},
+		{"ffa", "", qsettings.Settings{"*gamedir": "qw", "maxclients": "8"}},
+		{"fortress", "", qsettings.Settings{"*gamedir": "fortress"}},
+		{"race", "", qsettings.Settings{"*gamedir": "qw", "ktxmode": "race"}},
+		{"race", "", qsettings.Settings{"*gamedir": "qw", "mode": "ffa-race"}},
+		{"2on2", "", qsettings.Settings{"*gamedir": "qw", "mode": "2on2"}},
+		{"2on2", "midair", qsettings.Settings{"*gamedir": "qw", "mode": "2on2-midair"}},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.mode, func(t *testing.T) {
-			expect := qmode.Mode(tc.mode)
-			assert.Equal(t, expect, qmode.Parse(tc.settings), tc.mode)
+			mode, submode := qmode.Parse(tc.settings)
+			assert.Equal(t, qmode.Mode(tc.mode), mode, tc.mode)
+			assert.Equal(t, tc.submode, submode, tc.submode)
 		})
 	}
 }
