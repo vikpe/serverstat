@@ -26,6 +26,7 @@ func TestCalculate(t *testing.T) {
 
 	const s4on4Div0To1 = "4on4 div0-1"
 	const s4on4Div1 = "4on4 div1"
+	const sWipeoutDiv1 = "wipeout div1"
 	const s4on4Div1Need1 = "4on4 div1 need 1"
 	const s4on4Div1Need2 = "4on4 div1 need 2"
 	const s4on4Div1To2 = "4on4 div1-2"
@@ -54,6 +55,11 @@ func TestCalculate(t *testing.T) {
 		{
 			s4on4Div1,
 			"4on4",
+			[]string{one, one, one, one, one, one, one, one},
+		},
+		{
+			sWipeoutDiv1,
+			"wipeout",
 			[]string{one, one, one, one, one, one, one, one},
 		},
 		{
@@ -177,6 +183,7 @@ func TestCalculate(t *testing.T) {
 	expect := []string{
 		s4on4Div0To1,
 		s4on4Div1,
+		sWipeoutDiv1,
 		sCtfDiv1,
 		s4on4Div1Need1,
 		s4on4Div1To2,
