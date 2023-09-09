@@ -81,6 +81,8 @@ func getMaxScoreByMode(mode string) float64 {
 		return 50
 	case "2on2":
 		return 70
+	case "2on2on2":
+		return 75
 	case "3on3":
 		return 75
 	case "4on4":
@@ -108,6 +110,8 @@ func getExpectedPlayerCountByMode(mode string) int {
 		return 2
 	case "2on2":
 		return 4
+	case "2on2on2":
+		return 6
 	case "3on3":
 		return 6
 	case "4on4":
