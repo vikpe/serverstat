@@ -16,6 +16,7 @@ func TestStripQuakeFixes(t *testing.T) {
 		assert.Equal(t, []string{"alpha", "alphabet"}, qutil.StripQuakeFixes([]string{"dc•alpha", "dc•alphabet"}))
 		assert.Equal(t, []string{".alpha", ".beta"}, qutil.StripQuakeFixes([]string{".alpha", ".beta"}))
 		assert.Equal(t, []string{"---a", "---"}, qutil.StripQuakeFixes([]string{"---a", "---"}))
+		assert.Equal(t, []string{"alpha", "beta"}, qutil.StripQuakeFixes([]string{"::: alpha", ":::    beta"}))
 	})
 
 	t.Run("suffix", func(t *testing.T) {
@@ -25,6 +26,7 @@ func TestStripQuakeFixes(t *testing.T) {
 		assert.Equal(t, []string{"alpha", "beta"}, qutil.StripQuakeFixes([]string{"alpha••", "beta••"}))
 		assert.Equal(t, []string{"alpha.", "beta."}, qutil.StripQuakeFixes([]string{"alpha.", "beta."}))
 		assert.Equal(t, []string{"a---", "---"}, qutil.StripQuakeFixes([]string{"a---", "---"}))
+		assert.Equal(t, []string{"alpha", "beta"}, qutil.StripQuakeFixes([]string{"alpha :::", "beta     :::"}))
 	})
 
 	t.Run("prefix and suffix", func(t *testing.T) {

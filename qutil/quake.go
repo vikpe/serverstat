@@ -6,7 +6,7 @@ import (
 	"github.com/jpillora/longestcommon"
 )
 
-const delimiterChars = `."_-|[]{}()`
+const delimiterChars = `."_-|[]{}():`
 const minFixLength = 2
 
 func StripQuakeFixes(strs []string) []string {
@@ -48,6 +48,11 @@ func StripQuakeFixes(strs []string) []string {
 	// restore utf8
 	for index := range strs {
 		strs[index] = strings.ReplaceAll(strs[index], `"`, "•")
+	}
+
+	// trim spaces
+	for index := range strs {
+		strs[index] = strings.TrimSpace(strs[index])
 	}
 
 	return strs
