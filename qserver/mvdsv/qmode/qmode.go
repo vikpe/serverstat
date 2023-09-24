@@ -47,7 +47,7 @@ func (m Mode) IsXonX() bool {
 }
 
 func Parse(settings qsettings.Settings) (Mode, string) {
-	gameDir := strings.ToLower(settings.Get("*gamedir", modeUnknown))
+	gameDir := strings.ToLower(settings.Get("*gamedir", "qw"))
 
 	// check gamedir
 	customGameDirs := map[string]string{
