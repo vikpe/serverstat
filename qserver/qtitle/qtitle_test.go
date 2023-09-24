@@ -28,7 +28,7 @@ func TestMvdsv_Title(t *testing.T) {
 			{Name: qstring.New("XantoM")},
 			{Name: qstring.New("Xterm")},
 		}
-		settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "2", "map": "dm6"}
+		settings := qsettings.Settings{"*gamedir": "qw", "maxclients": "2", "map": "dm6", "teamplay": "2"}
 		assert.Equal(t, "1on1: XantoM vs Xterm [dm6]", qtitle.New(settings, players))
 	})
 
