@@ -68,6 +68,9 @@ func New(settings qsettings.Settings, players []qclient.Client) string {
 }
 
 func fmtMap(value string) string {
+	if value == "" {
+		return ""
+	}
 	return fmt.Sprintf(" [%s]", value)
 }
 

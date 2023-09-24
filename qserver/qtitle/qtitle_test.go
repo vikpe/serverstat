@@ -14,7 +14,7 @@ func TestMvdsv_Title(t *testing.T) {
 	t.Run("matchtag", func(t *testing.T) {
 		players := []qclient.Client{}
 		settings := qsettings.Settings{"matchtag": "kombat"}
-		assert.Equal(t, "kombat / unknown []", qtitle.New(settings, players))
+		assert.Equal(t, "kombat / ffa", qtitle.New(settings, players))
 	})
 
 	t.Run("ffa", func(t *testing.T) {
