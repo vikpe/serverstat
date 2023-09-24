@@ -76,7 +76,7 @@ func TeamCount(players []qclient.Client) int {
 		return len(players)
 	}
 
-	teams := make(map[string]bool, 0)
+	teams := make(map[string]bool)
 
 	for _, p := range players {
 		teams[p.Team.ToPlainString()] = true

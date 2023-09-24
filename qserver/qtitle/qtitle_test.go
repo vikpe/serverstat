@@ -204,3 +204,35 @@ func BenchmarkParseMatchtag(b *testing.B) {
 		}
 	})
 }
+
+func TestTeamCount(t *testing.T) {
+	t.Run("no players", func(t *testing.T) {
+		assert.Equal(t, 0, qtitle.TeamCount(nil))
+	})
+
+	t.Run("one player", func(t *testing.T) {
+		players := []qclient.Client{{Team: qstring.New("1")}}
+		assert.Equal(t, 1, qtitle.TeamCount(players))
+	})
+
+	t.Run("many players", func(t *testing.T) {
+		players := []qclient.Client{
+			{Team: qstring.New("1")},
+			{Team: qstring.New("2")},
+			{Team: qstring.New("3")},
+			{Team: qstring.New("4")},
+			{Team: qstring.New("5")},
+			{Team: qstring.New("6")},
+		}
+		assert.Equal(t, 6, qtitle.TeamCount(players))
+	})
+
+	t.Run("many players - one team", func(t *testing.T) {
+		players := []qclient.Client{
+			{Team: qstring.New("1")},
+			{Team: qstring.New("1")},
+			{Team: qstring.New("1")},
+		}
+		assert.Equal(t, 1, qtitle.TeamCount(players))
+	})
+}
