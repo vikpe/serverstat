@@ -216,6 +216,19 @@ func TestFromPlayers(t *testing.T) {
 		assert.Equal(t, expect, qteam.FromPlayers(players))
 		assert.Equal(t, []qclient.Client{xantom, xterm, bps, valla, teamless}, players) // ensure players slice is unchanged
 	})
+
+	t.Run("same team in different colors", func(t *testing.T) {
+		teamInWhite := qstring.New("red")
+		teamInBrown := qstring.New(string([]byte{114 + 128, 101 + 128, 100 + 128}))
+		playerWhiteTeam := qclient.Client{Name: qstring.New("white"), Team: teamInWhite}
+		playerBrownTeam := qclient.Client{Name: qstring.New("brown"), Team: teamInBrown}
+		expect := []qteam.Team{
+			{Name: teamInWhite, Players: []qclient.Client{playerWhiteTeam}},
+			{Name: teamInBrown, Players: []qclient.Client{playerBrownTeam}},
+		}
+
+		assert.Equal(t, expect, qteam.FromPlayers([]qclient.Client{playerWhiteTeam, playerBrownTeam}))
+	})
 }
 
 func BenchmarkFromPlayers(b *testing.B) {

@@ -136,18 +136,18 @@ func FromPlayers(players []qclient.Client) []Team {
 
 	teams := make([]Team, 0)
 	currentTeamIndex := -1
-	currentTeamName := "____________________"
+	currentTeamKey := "____________________"
 
 	for _, player := range qclient.SortPlayersByTeamName(players) {
-		playerTeamName := player.Team.ToPlainString()
+		playerTeamKey := strings.Join([]string{player.Team.ToPlainString(), player.Team.ToColorCodes()}, "_")
 
-		if currentTeamName != playerTeamName {
+		if currentTeamKey != playerTeamKey {
 			teams = append(teams, Team{
 				Name:    player.Team,
 				Players: []qclient.Client{player},
 			})
 			currentTeamIndex++
-			currentTeamName = playerTeamName
+			currentTeamKey = playerTeamKey
 		} else {
 			teams[currentTeamIndex].Players = append(teams[currentTeamIndex].Players, player)
 		}
