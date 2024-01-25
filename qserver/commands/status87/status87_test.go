@@ -31,6 +31,7 @@ func TestParseResponse(t *testing.T) {
 		}
 		expectClients := []qclient.Client{
 			{
+				Id:     66,
 				Name:   qstring.New("NL"),
 				Team:   qstring.New("red"),
 				Skin:   "",
@@ -41,6 +42,7 @@ func TestParseResponse(t *testing.T) {
 				CC:     "SE",
 			},
 			{
+				Id:     65,
 				Name:   qstring.New("[ServeMe]"),
 				Team:   qstring.New("lqwc"),
 				Skin:   "",

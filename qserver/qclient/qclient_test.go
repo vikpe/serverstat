@@ -26,6 +26,7 @@ func TestNewFromString(t *testing.T) {
 
 	t.Run("valid", func(t *testing.T) {
 		expect := qclient.Client{
+			Id:     585,
 			Name:   qstring.New("XantoM"),
 			Team:   qstring.New("f0m"),
 			Skin:   "xantom",
@@ -62,6 +63,7 @@ func TestFromStrings(t *testing.T) {
 
 	expect := []qclient.Client{
 		{
+			Id:     63,
 			Name:   qstring.New("Pitbull"),
 			Team:   qstring.New("red"),
 			Skin:   "",
@@ -71,6 +73,7 @@ func TestFromStrings(t *testing.T) {
 			Time:   4,
 		},
 		{
+			Id:     66,
 			Name:   qstring.New("NL"),
 			Team:   qstring.New("red"),
 			Skin:   "",
@@ -80,6 +83,7 @@ func TestFromStrings(t *testing.T) {
 			Time:   4,
 		},
 		{
+			Id:     65,
 			Name:   qstring.New("[ServeMe]"),
 			Team:   qstring.New("lqwc"),
 			Skin:   "",
@@ -89,6 +93,7 @@ func TestFromStrings(t *testing.T) {
 			Time:   16,
 		},
 		{
+			Id:     67,
 			Name:   qstring.New("Final"),
 			Team:   qstring.New("red"),
 			Skin:   "",
@@ -196,6 +201,7 @@ func BenchmarkSortPlayers(b *testing.B) {
 
 func TestClient_MarshalJSON(t *testing.T) {
 	client := qclient.Client{
+		Id:     67,
 		Name:   qstring.New("Final"),
 		Team:   qstring.New("red"),
 		Skin:   "",
@@ -206,7 +212,7 @@ func TestClient_MarshalJSON(t *testing.T) {
 	}
 
 	jsonValue, _ := json.Marshal(client)
-	expect := `{"name":"Final","name_color":"wwwww","team":"red","team_color":"www","skin":"","colors":[2,3],"frags":-9999,"ping":-68,"time":122,"cc":"","is_bot":false}`
+	expect := `{"id":67,"name":"Final","name_color":"wwwww","team":"red","team_color":"www","skin":"","colors":[2,3],"frags":-9999,"ping":-68,"time":122,"cc":"","is_bot":false}`
 	assert.Equal(t, expect, string(jsonValue))
 }
 

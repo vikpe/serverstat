@@ -52,6 +52,7 @@ func TestClient_GetInfo(t *testing.T) {
 			Address: ":8001",
 			Clients: []qclient.Client{
 				{
+					Id:     66,
 					Name:   qstring.New("NL"),
 					Team:   qstring.New("red"),
 					Skin:   "",
@@ -61,6 +62,7 @@ func TestClient_GetInfo(t *testing.T) {
 					Time:   4,
 				},
 				{
+					Id:     65,
 					Name:   qstring.New("[ServeMe]"),
 					Team:   qstring.New("lqwc"),
 					Skin:   "",
@@ -126,6 +128,7 @@ func TestClient_GetInfoFromMany(t *testing.T) {
 			Address: ":7001",
 			Clients: []qclient.Client{
 				{
+					Id:     65,
 					Name:   qstring.New("[ServeMe]"),
 					Team:   qstring.New("lqwc"),
 					Skin:   "",

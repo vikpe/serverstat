@@ -308,13 +308,13 @@ func TestExport(t *testing.T) {
 }
 
 func TestTeam_MarshalJSON(t *testing.T) {
-	player1 := qclient.Client{Name: qstring.New("XantoM"), Colors: [2]uint8{4, 2}, Frags: 12, Ping: 30}
-	player2 := qclient.Client{Name: qstring.New("bps"), Colors: [2]uint8{13, 5}, Frags: 8, Ping: 20}
+	player1 := qclient.Client{Id: 1, Name: qstring.New("XantoM"), Colors: [2]uint8{4, 2}, Frags: 12, Ping: 30}
+	player2 := qclient.Client{Id: 2, Name: qstring.New("bps"), Colors: [2]uint8{13, 5}, Frags: 8, Ping: 20}
 	team := qteam.Team{
 		Name:    qstring.New("red"),
 		Players: []qclient.Client{player1, player2},
 	}
 	jsonValue, _ := json.Marshal(team)
-	expect := `{"name":"red","name_color":"www","frags":20,"ping":25,"colors":[4,2],"players":[{"name":"XantoM","name_color":"wwwwww","team":"","team_color":"","skin":"","colors":[4,2],"frags":12,"ping":30,"time":0,"cc":"","is_bot":false},{"name":"bps","name_color":"www","team":"","team_color":"","skin":"","colors":[13,5],"frags":8,"ping":20,"time":0,"cc":"","is_bot":false}]}`
+	expect := `{"name":"red","name_color":"www","frags":20,"ping":25,"colors":[4,2],"players":[{"id":1,"name":"XantoM","name_color":"wwwwww","team":"","team_color":"","skin":"","colors":[4,2],"frags":12,"ping":30,"time":0,"cc":"","is_bot":false},{"id":2,"name":"bps","name_color":"www","team":"","team_color":"","skin":"","colors":[13,5],"frags":8,"ping":20,"time":0,"cc":"","is_bot":false}]}`
 	assert.Equal(t, expect, string(jsonValue))
 }

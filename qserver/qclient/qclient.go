@@ -15,6 +15,7 @@ import (
 )
 
 type Client struct {
+	Id     int                 `json:"id"`
 	Name   qstring.QuakeString `json:"name"`
 	Team   qstring.QuakeString `json:"team"`
 	Skin   string              `json:"skin"`
@@ -46,6 +47,7 @@ func (client Client) MarshalJSON() ([]byte, error) {
 }
 
 type ClientExport struct {
+	Id        int                 `json:"id"`
 	Name      qstring.QuakeString `json:"name"`
 	NameColor string              `json:"name_color"`
 	Team      qstring.QuakeString `json:"team"`
@@ -61,6 +63,7 @@ type ClientExport struct {
 
 func Export(client Client) ClientExport {
 	return ClientExport{
+		Id:        client.Id,
 		Name:      client.Name,
 		NameColor: client.Name.ToColorCodes(),
 		Team:      client.Team,
@@ -109,6 +112,7 @@ func NewFromString(clientString string) (Client, error) {
 	}
 
 	const (
+		IndexId                 = 0
 		IndexFrags              = 1
 		IndexTime               = 2
 		IndexPing               = 3
@@ -143,6 +147,7 @@ func NewFromString(clientString string) (Client, error) {
 	}
 
 	return Client{
+		Id:     qutil.StringToInt(clientRecord[IndexId]),
 		Name:   qstring.New(nameQuakeStr),
 		Team:   team,
 		Skin:   clientRecord[IndexSkin],
