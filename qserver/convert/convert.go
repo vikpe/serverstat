@@ -2,6 +2,7 @@ package convert
 
 import (
 	"fmt"
+	"net"
 
 	"github.com/goccy/go-json"
 	"github.com/valyala/fastjson"
@@ -18,6 +19,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/qtitle"
 	"github.com/vikpe/serverstat/qserver/qtv"
 	"github.com/vikpe/serverstat/qserver/qwfwd"
+	"github.com/vikpe/serverstat/qutil"
 )
 
 func ToMvdsv(server qserver.GenericServer) mvdsv.Mvdsv {
@@ -99,6 +101,11 @@ func ToJson(server qserver.GenericServer) string {
 
 	value := fastjson.MustParseBytes(serverJsonBytes)
 	value.Set("type", fastjson.MustParse(fmt.Sprintf(`"%s"`, server.Version.GetType())))
+
+	host, port, _ := net.SplitHostPort(server.Address)
+	value.Set("host", fastjson.MustParse(fmt.Sprintf(`"%s"`, host)))
+	value.Set("port", fastjson.MustParse(fmt.Sprintf(`%d`, qutil.StringToInt(port))))
+
 	buff := value.MarshalTo(nil)
 	return string(buff)
 }
