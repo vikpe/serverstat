@@ -9,6 +9,14 @@ import (
 	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
+func TestGenericServer_Host(t *testing.T) {
+	server := qserver.GenericServer{Address: "quake.se:28501"}
+	assert.Equal(t, "quake.se", server.Host())
+
+	server = qserver.GenericServer{Address: "quake.se"}
+	assert.Equal(t, "quake.se", server.Host())
+}
+
 func TestGenericServer_Players(t *testing.T) {
 	player1 := qclient.Client{Name: qstring.New("player 1"), Ping: 25}
 	player2 := qclient.Client{Name: qstring.New("player 2"), Ping: 12}

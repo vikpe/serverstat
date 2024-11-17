@@ -25,6 +25,10 @@ type GenericServer struct {
 	} `json:"extra_info"`
 }
 
+func (server GenericServer) Host() string {
+	return strings.SplitN(server.Address, ":", 2)[0]
+}
+
 func (server GenericServer) Players() []qclient.Client {
 	return lo.Filter(server.Clients, func(c qclient.Client, i int) bool {
 		return c.IsPlayer()
