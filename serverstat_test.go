@@ -40,8 +40,8 @@ func TestClient_GetInfo(t *testing.T) {
 		go func() {
 			responseHeader := string([]byte{0xff, 0xff, 0xff, 0xff, 'n', '\\'})
 			responseBody := `\hostname\troopers.fi:28501\maxfps\77\pm_ktjump\1\*version\MVDSV 0.35-dev
-66 2 4 38 "NL" "" 13 13 "red"
-65 -9999 16 -666 "\s\[ServeMe]" "" 12 11 "lqwc"`
+66 2 4 38 "NL" "" 13 13 "red" "SE" "h"
+65 -9999 16 -666 "\s\[ServeMe]" "" 12 11 "lqwc" "" "h"`
 			udphelper.New(":8001").Respond([]byte((responseHeader + responseBody)))
 		}()
 		time.Sleep(10 * time.Millisecond)
@@ -52,24 +52,28 @@ func TestClient_GetInfo(t *testing.T) {
 			Address: ":8001",
 			Clients: []qclient.Client{
 				{
-					Id:     66,
-					Name:   qstring.New("NL"),
-					Team:   qstring.New("red"),
-					Skin:   "",
-					Colors: [2]uint8{13, 13},
-					Frags:  2,
-					Ping:   38,
-					Time:   4,
+					Id:         66,
+					Name:       qstring.New("NL"),
+					Team:       qstring.New("red"),
+					Skin:       "",
+					Colors:     [2]uint8{13, 13},
+					Frags:      2,
+					Ping:       38,
+					Time:       4,
+					CC:         "SE",
+					ClientType: "h",
 				},
 				{
-					Id:     65,
-					Name:   qstring.New("[ServeMe]"),
-					Team:   qstring.New("lqwc"),
-					Skin:   "",
-					Colors: [2]uint8{12, 11},
-					Frags:  -9999,
-					Ping:   -666,
-					Time:   16,
+					Id:         65,
+					Name:       qstring.New("[ServeMe]"),
+					Team:       qstring.New("lqwc"),
+					Skin:       "",
+					Colors:     [2]uint8{12, 11},
+					Frags:      -9999,
+					Ping:       -666,
+					Time:       16,
+					CC:         "",
+					ClientType: "h",
 				},
 			},
 			Settings: map[string]string{

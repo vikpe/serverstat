@@ -24,9 +24,15 @@ type Client struct {
 	Ping   int                 `json:"ping"`
 	Time   int                 `json:"time"`
 	CC     string              `json:"cc"`
+	// ClientType is "b" (bot) or "h" (human), empty if not reported by the server.
+	ClientType string `json:"client_type"`
 }
 
 func (client Client) IsBot() bool {
+	if "" != client.ClientType {
+		return "b" == client.ClientType
+	}
+
 	return bot.IsBotPing(client.Ping) || bot.IsBotName(client.Name.ToPlainString())
 }
 
@@ -122,6 +128,7 @@ func NewFromString(clientString string) (Client, error) {
 		IndexColorBottom        = 7
 		IndexTeam               = 8
 		IndexFlag               = 9
+		IndexClientType         = 10
 		SpectatorPrefix  string = "\\s\\"
 	)
 
@@ -146,16 +153,23 @@ func NewFromString(clientString string) (Client, error) {
 		flag = clientRecord[IndexFlag]
 	}
 
+	clientType := ""
+
+	if indexCount >= IndexClientType {
+		clientType = clientRecord[IndexClientType]
+	}
+
 	return Client{
-		Id:     qutil.StringToInt(clientRecord[IndexId]),
-		Name:   qstring.New(nameQuakeStr),
-		Team:   team,
-		Skin:   clientRecord[IndexSkin],
-		Colors: [2]uint8{uint8(colorTop), uint8(colorBottom)},
-		Frags:  qutil.StringToInt(clientRecord[IndexFrags]),
-		Ping:   ping,
-		Time:   qutil.StringToInt(clientRecord[IndexTime]),
-		CC:     flag,
+		Id:         qutil.StringToInt(clientRecord[IndexId]),
+		Name:       qstring.New(nameQuakeStr),
+		Team:       team,
+		Skin:       clientRecord[IndexSkin],
+		Colors:     [2]uint8{uint8(colorTop), uint8(colorBottom)},
+		Frags:      qutil.StringToInt(clientRecord[IndexFrags]),
+		Ping:       ping,
+		Time:       qutil.StringToInt(clientRecord[IndexTime]),
+		CC:         flag,
+		ClientType: clientType,
 	}, nil
 }
 

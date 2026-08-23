@@ -41,6 +41,25 @@ func TestNewFromString(t *testing.T) {
 		assert.Equal(t, expect, client)
 		assert.Nil(t, err)
 	})
+
+	t.Run("valid with client type", func(t *testing.T) {
+		expect := qclient.Client{
+			Id:         585,
+			Name:       qstring.New("XantoM"),
+			Team:       qstring.New("f0m"),
+			Skin:       "xantom",
+			Colors:     [2]uint8{4, 2},
+			Frags:      17,
+			Ping:       12,
+			Time:       25,
+			CC:         "SE",
+			ClientType: "h",
+		}
+		clientString := `585 17 25 12 "XantoM" "xantom" 4 2 "f0m" "SE" "h"`
+		client, err := qclient.NewFromString(clientString)
+		assert.Equal(t, expect, client)
+		assert.Nil(t, err)
+	})
 }
 
 func BenchmarkNewFromString(b *testing.B) {
@@ -126,15 +145,26 @@ func TestClient_IsPlayer(t *testing.T) {
 }
 
 func TestClient_IsBot(t *testing.T) {
-	assert.True(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 10}.IsBot())    // bot ping
-	assert.True(t, qclient.Client{Name: qstring.New("[ServeMe]"), Ping: 12}.IsBot()) // bot name
-	assert.False(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 12}.IsBot())   // human name and ping
+	t.Run("client type not reported", func(t *testing.T) {
+		assert.True(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 10}.IsBot())    // bot ping
+		assert.True(t, qclient.Client{Name: qstring.New("[ServeMe]"), Ping: 12}.IsBot()) // bot name
+		assert.False(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 12}.IsBot())   // human name and ping
+	})
+
+	t.Run("client type reported", func(t *testing.T) {
+		assert.True(t, qclient.Client{Name: qstring.New("eyeball"), Ping: 10, ClientType: "b"}.IsBot())    // bot client type
+		assert.False(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 10, ClientType: "h"}.IsBot())    // human at bot ping
+		assert.False(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 12, ClientType: "h"}.IsBot())    // human name and ping
+		assert.False(t, qclient.Client{Name: qstring.New("[ServeMe]"), Ping: 12, ClientType: "h"}.IsBot()) // bot name, human client type
+	})
 }
 
 func TestClient_IsHuman(t *testing.T) {
-	assert.False(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 10}.IsHuman())    // bot ping
-	assert.False(t, qclient.Client{Name: qstring.New("[ServeMe]"), Ping: 12}.IsHuman()) // bot name
-	assert.True(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 12}.IsHuman())     // human name and ping
+	assert.False(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 10}.IsHuman())                   // bot ping
+	assert.False(t, qclient.Client{Name: qstring.New("[ServeMe]"), Ping: 12}.IsHuman())                // bot name
+	assert.True(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 12}.IsHuman())                    // human name and ping
+	assert.True(t, qclient.Client{Name: qstring.New("XantoM"), Ping: 10, ClientType: "h"}.IsHuman())   // human at bot ping
+	assert.False(t, qclient.Client{Name: qstring.New("eyeball"), Ping: 10, ClientType: "b"}.IsHuman()) // bot client type
 }
 
 func TestSortPlayers(t *testing.T) {

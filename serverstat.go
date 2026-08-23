@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/vikpe/serverstat/qserver"
-	"github.com/vikpe/serverstat/qserver/commands/status87"
+	"github.com/vikpe/serverstat/qserver/commands/status215"
 	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qtvstream"
@@ -40,8 +40,8 @@ func getServerInfo(address string) (qserver.GenericServer, error) {
 		return qserver.GenericServer{}, errors.New("invalid server address")
 	}
 
-	settings, clients, err := status87.ParseResponse(
-		udpclient.New().SendCommand(address, status87.Command),
+	settings, clients, err := status215.ParseResponse(
+		udpclient.New().SendCommand(address, status215.Command),
 	)
 
 	if err != nil {
